@@ -52,9 +52,12 @@ class MainController extends Controller
         return view('store', compact('products', 'categories'));
     }
 
-    public function single($id)
+    public function single($locale, $id)
     {
+        app()->setLocale($locale);
+
         $product = Product::findOrFail($id);
+
         return view('single', compact('product'));
     }
 }

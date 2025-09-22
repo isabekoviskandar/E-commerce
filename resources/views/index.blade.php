@@ -48,13 +48,14 @@
                                     <a href="{{ route('home', app()->getLocale()) }}">{{ __('messages.home') }}</a>
                                 </li>
 
-                                <li><a href="{{ route('store', app()->getLocale()) }}">{{  __('messages.store') }}</a></li>
+                                <li><a href="{{ route('store', app()->getLocale()) }}">{{ __('messages.store') }}</a>
+                                </li>
                                 {{-- <li><a href="{{ route('about', app()->getLocale()) }}">About</a></li> --}}
                                 {{-- <li><a href="{{ route('contact', app()->getLocale()) }}">Contact</a></li> --}}
 
                                 {{-- Language Switcher --}}
                                 <li class="has-children">
-                                    <a href="#">Language</a>
+                                    <a href="#">{{ __('messages.language') }}</a>
                                     <ul class="dropdown">
                                         <li><a
                                                 href="{{ route(\Illuminate\Support\Facades\Route::currentRouteName(), array_merge(request()->route()->parameters(), ['locale' => 'uz'])) }}">🇺🇿
@@ -92,13 +93,15 @@
                     <div class="row">
                         <div class="col-lg-12 mx-auto align-self-center">
                             <div class="site-block-cover-content text-center">
-                                <h1 class="mb-0"><strong class="text-primary">Pharmative</strong> Opens 24 Hours</h1>
+                                <h1 class="mb-0"><strong class="text-primary">Pharmative</strong>
+                                    {{ __('messages.open_message') }}</h1>
                                 <div class="row justify-content-center mb-5">
                                     <div class="col-lg-6 text-center">
                                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
                                     </div>
                                 </div>
-                                <p><a href="{{ url('/store') }}" class="btn btn-primary px-5 py-3">Shop Now</a></p>
+                                <p><a href="{{ url('/store') }}"
+                                        class="btn btn-primary px-5 py-3">{{ __('messages.shop_now') }}</a></p>
                             </div>
                         </div>
                     </div>
@@ -166,26 +169,24 @@
                 <div class="row">
                     <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
                         <div class="block-7">
-                            <h3 class="footer-heading mb-4">About <strong class="text-primary">Pharmative</strong>
-                            </h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius quae reiciendis distinctio
-                                voluptates sed dolorum excepturi iure eaque, aut unde.</p>
+                            <h3 class="footer-heading mb-4">{{ __('messages.about_title') }}</h3>
+                            <p>{{ __('messages.about_text') }}</p>
                         </div>
                     </div>
                     <div class="col-lg-3 mx-auto mb-5 mb-lg-0">
-                        <h3 class="footer-heading mb-4">Navigation</h3>
+                        <h3 class="footer-heading mb-4">{{ __('messages.navigation') }}</h3>
                         <ul class="list-unstyled">
-                            <li><a href="#">Supplements</a></li>
-                            <li><a href="#">Vitamins</a></li>
-                            <li><a href="#">Diet &amp; Nutrition</a></li>
-                            <li><a href="#">Tea &amp; Coffee</a></li>
+                            <li><a href="#">{{ __('messages.supplements') }}</a></li>
+                            <li><a href="#">{{ __('messages.vitamins') }}</a></li>
+                            <li><a href="#">{{ __('messages.diet') }}</a></li>
+                            <li><a href="#">{{ __('messages.tea') }}</a></li>
                         </ul>
                     </div>
                     <div class="col-md-6 col-lg-3">
                         <div class="block-5 mb-5">
-                            <h3 class="footer-heading mb-4">Contact Info</h3>
+                            <h3 class="footer-heading mb-4">{{ __('messages.contact_info') }}</h3>
                             <ul class="list-unstyled">
-                                <li class="address">203 Fake St. Mountain View, San Francisco, USA</li>
+                                <li class="address">{{ __('messages.address') }}</li>
                                 <li class="phone"><a href="tel://23923929210">+2 392 3929 210</a></li>
                                 <li class="email">emailaddress@domain.com</li>
                             </ul>
@@ -195,11 +196,11 @@
                 <div class="row pt-5 mt-5 text-center">
                     <div class="col-md-12">
                         <p>
-                            Copyright &copy;
+                            &copy;
                             <script>
                                 document.write(new Date().getFullYear());
-                            </script> All rights reserved | Template by
-                            <a href="https://colorlib.com" target="_blank" class="text-primary">Colorlib</a>
+                            </script>
+                            {{ __('messages.copyright') }}
                         </p>
                     </div>
                 </div>

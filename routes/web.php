@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => '{locale}', 'middleware' => 'setlocale'], function () {
     Route::get('/', [MainController::class, 'index'])->name('home');
-    Route::get('/store', [MainController::class, 'store'])->name('store');
+    Route::get('/store', [MainController::class, 'shop'])->name('store');
     Route::get('/product/{id}', [MainController::class, 'single'])->name('product.single');
     // Route::get('/about', fn () => view('about'))->name('about');
     // Route::get('/contact', fn () => view('contact'))->name('contact');
