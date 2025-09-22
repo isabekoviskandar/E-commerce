@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Pharmative &mdash; Colorlib Template</title>
+    <title>Store &mdash; Pharmative</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -16,17 +16,11 @@
     <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/aos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-
-
 </head>
 
 <body>
-
     <div class="site-wrap">
-
-
         <div class="site-navbar py-2">
-
             <div class="search-wrap">
                 <div class="container">
                     <a href="#" class="search-close js-search-close"><span class="icon-close2"></span></a>
@@ -40,8 +34,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="logo">
                         <div class="site-logo">
-                            <a href="index.html" class="js-logo-clone"><strong
-                                    class="text-primary">Pharma</strong>tive</a>
+                            <a href="/" class="js-logo-clone"><strong class="text-primary">Pharma</strong>tive</a>
                         </div>
                     </div>
                     <div class="main-nav d-none d-lg-block">
@@ -57,9 +50,9 @@
                     <div class="icons">
                         <a href="#" class="icons-btn d-inline-block js-search-open"><span
                                 class="icon-search"></span></a>
-                        <a href="cart.html" class="icons-btn d-inline-block bag">
+                        <a href="{{ route('cart.index') }}" class="icons-btn d-inline-block bag">
                             <span class="icon-shopping-bag"></span>
-                            <span class="number">2</span>
+                            <span class="number">{{ count(session('cart', [])) }}</span>
                         </a>
                         <a href="#" class="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"><span
                                 class="icon-menu"></span></a>
@@ -68,141 +61,112 @@
             </div>
         </div>
 
-
         <div class="bg-light py-3">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-12 mb-0"><a href="/">Home</a> <span class="mx-2 mb-0">/</span> <strong
-                            class="text-black">Store</strong></div>
+                    <div class="col-md-12 mb-0">
+                        <a href="/">Home</a> <span class="mx-2 mb-0">/</span>
+                        <strong class="text-black">Store</strong>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="py-5">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 text-lg-right">
-                        <h3 class="mb-3 h6 text-uppercase text-black d-block">Filter</h3>
-                        <button type="button" class="btn btn-primary btn-md dropdown-toggle px-4"
-                            id="dropdownMenuReference" data-toggle="dropdown">Category</button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuReference">
-                            <a class="dropdown-item" href="#">Relevance</a>
-                            <a class="dropdown-item" href="#">Name, A to Z</a>
-                            <a class="dropdown-item" href="#">Name, Z to A</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Price, low to high</a>
-                            <a class="dropdown-item" href="#">Price, high to low</a>
+                <form method="GET" action="{{ route('store') }}" class="mb-4">
+                    <div class="row">
+                        <div class="col-lg-6 mb-3">
+                            <h3 class="mb-3 h6 text-uppercase text-black d-block">Filter by Category</h3>
+                            <select name="category_id" class="form-control" onchange="this.form.submit()">
+                                <option value="">All Categories</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}"
+                                        {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name_uz }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-lg-6 text-lg-right">
+                            <h3 class="mb-3 h6 text-uppercase text-black d-block">Sort By</h3>
+                            <select name="sort" class="form-control" onchange="this.form.submit()">
+                                <option value="">Default</option>
+                                <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name, A
+                                    to Z</option>
+                                <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name,
+                                    Z to A</option>
+                                <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price,
+                                    Low to High</option>
+                                <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>
+                                    Price, High to Low</option>
+                            </select>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
+
         <div class="site-section bg-light">
             <div class="container">
-
-
-
                 <div class="row">
-                    <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
-                        <span class="onsale">Sale</span>
-                        <a href="shop-single.html"> <img src="images/product_01.png" alt="Image"></a>
-                        <h3 class="text-dark"><a href="shop-single.html">Bioderma</a></h3>
-                        <p class="price"><del>95.00</del> &mdash; $55.00</p>
-                    </div>
-                    <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
-                        <a href="shop-single.html"> <img src="images/product_02.png" alt="Image"></a>
-                        <h3 class="text-dark"><a href="shop-single.html">Chanca Piedra</a></h3>
-                        <p class="price">$70.00</p>
-                    </div>
-                    <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
-                        <a href="shop-single.html"> <img src="images/product_03.png" alt="Image"></a>
-                        <h3 class="text-dark"><a href="shop-single.html">Umcka Cold Care</a></h3>
-                        <p class="price">$120.00</p>
-                    </div>
-
-                    <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
-
-                        <a href="shop-single.html"> <img src="images/product_04.png" alt="Image"></a>
-                        <h3 class="text-dark"><a href="shop-single.html">Cetyl Pure</a></h3>
-                        <p class="price"><del>45.00</del> &mdash; $20.00</p>
-                    </div>
-                    <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
-                        <a href="shop-single.html"> <img src="images/product_05.png" alt="Image"></a>
-                        <h3 class="text-dark"><a href="shop-single.html">CLA Core</a></h3>
-                        <p class="price">$38.00</p>
-                    </div>
-                    <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
-                        <span class="onsale">Sale</span>
-                        <a href="shop-single.html"> <img src="images/product_06.png" alt="Image"></a>
-                        <h3 class="text-dark"><a href="shop-single.html">Poo Pourri</a></h3>
-                        <p class="price"><del>$89</del> &mdash; $38.00</p>
-                    </div>
-
-                    <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
-                        <span class="onsale">Sale</span>
-                        <a href="shop-single.html"> <img src="images/product_01.png" alt="Image"></a>
-                        <h3 class="text-dark"><a href="shop-single.html">Bioderma</a></h3>
-                        <p class="price"><del>95.00</del> &mdash; $55.00</p>
-                    </div>
-                    <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
-                        <a href="shop-single.html"> <img src="images/product_02.png" alt="Image"></a>
-                        <h3 class="text-dark"><a href="shop-single.html">Chanca Piedra</a></h3>
-                        <p class="price">$70.00</p>
-                    </div>
-                    <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
-                        <a href="shop-single.html"> <img src="images/product_03.png" alt="Image"></a>
-                        <h3 class="text-dark"><a href="shop-single.html">Umcka Cold Care</a></h3>
-                        <p class="price">$120.00</p>
-                    </div>
-
-                    <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
-
-                        <a href="shop-single.html"> <img src="images/product_04.png" alt="Image"></a>
-                        <h3 class="text-dark"><a href="shop-single.html">Cetyl Pure</a></h3>
-                        <p class="price"><del>45.00</del> &mdash; $20.00</p>
-                    </div>
-                    <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
-                        <a href="shop-single.html"> <img src="images/product_05.png" alt="Image"></a>
-                        <h3 class="text-dark"><a href="shop-single.html">CLA Core</a></h3>
-                        <p class="price">$38.00</p>
-                    </div>
-                    <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
-                        <span class="onsale">Sale</span>
-                        <a href="shop-single.html"> <img src="images/product_06.png" alt="Image"></a>
-                        <h3 class="text-dark"><a href="shop-single.html">Poo Pourri</a></h3>
-                        <p class="price"><del>$89</del> &mdash; $38.00</p>
-                    </div>
+                    @if ($products->count() > 0)
+                        @foreach ($products as $product)
+                            <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
+                                <a href="{{ route('product.single', $product->id) }}">
+                                    <img src="{{ asset('storage/' . $product->image) }}"
+                                        alt="{{ $product->name_uz }}">
+                                </a>
+                                <h3 class="text-dark">
+                                    <a href="{{ route('product.single', $product->id) }}">{{ $product->name_uz }}</a>
+                                </h3>
+                                <p class="price">{{ number_format($product->price) }} uzs</p>
+                                @if ($product->category)
+                                    <small class="text-muted">{{ $product->category->name_uz }}</small>
+                                @endif
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="col-12 text-center">
+                            <div class="alert alert-info">
+                                <h4>No Products Found</h4>
+                                <p>Sorry, no products match your current filter criteria.</p>
+                                <a href="{{ route('store') }}" class="btn btn-primary">View All Products</a>
+                            </div>
+                        </div>
+                    @endif
                 </div>
-                <div class="row mt-5">
-                    <div class="col-md-12 text-center">
-                        <div class="site-block-27">
-                            <ul>
-                                <li><a href="#">&lt;</a></li>
-                                <li class="active"><span>1</span></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">4</a></li>
-                                <li><a href="#">5</a></li>
-                                <li><a href="#">&gt;</a></li>
-                            </ul>
+
+                @if ($products->count() > 12)
+                    <div class="row mt-5">
+                        <div class="col-md-12 text-center">
+                            <div class="site-block-27">
+                                <ul>
+                                    <li><a href="#">&lt;</a></li>
+                                    <li class="active"><span>1</span></li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#">4</a></li>
+                                    <li><a href="#">5</a></li>
+                                    <li><a href="#">&gt;</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
             </div>
         </div>
+
         <footer class="site-footer bg-light">
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-
                         <div class="block-7">
                             <h3 class="footer-heading mb-4">About <strong class="text-primary">Pharmative</strong>
                             </h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius quae reiciendis distinctio
-                                voluptates
-                                sed dolorum excepturi iure eaque, aut unde.</p>
+                                voluptates sed dolorum excepturi iure eaque, aut unde.</p>
                         </div>
-
                     </div>
                     <div class="col-lg-3 mx-auto mb-5 mb-lg-0">
                         <h3 class="footer-heading mb-4">Navigation</h3>
@@ -213,7 +177,6 @@
                             <li><a href="#">Tea &amp; Coffee</a></li>
                         </ul>
                     </div>
-
                     <div class="col-md-6 col-lg-3">
                         <div class="block-5 mb-5">
                             <h3 class="footer-heading mb-4">Contact Info</h3>
@@ -223,24 +186,20 @@
                                 <li class="email">emailaddress@domain.com</li>
                             </ul>
                         </div>
-
-
                     </div>
                 </div>
                 <div class="row pt-5 mt-5 text-center">
                     <div class="col-md-12">
                         <p>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                             Copyright &copy;
                             <script>
                                 document.write(new Date().getFullYear());
-                            </script> All rights reserved | This template is made
-                            with <i class="icon-heart text-danger" aria-hidden="true"></i> by <a
-                                href="https://colorlib.com" target="_blank" class="text-primary">Colorlib</a>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            </script>
+                            All rights reserved | This template is made with
+                            <i class="icon-heart text-danger" aria-hidden="true"></i> by
+                            <a href="https://colorlib.com" target="_blank" class="text-primary">Colorlib</a>
                         </p>
                     </div>
-
                 </div>
             </div>
         </footer>
@@ -254,8 +213,6 @@
     <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
     <script src="{{ asset('js/aos.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
-
-
 </body>
 
 </html>
