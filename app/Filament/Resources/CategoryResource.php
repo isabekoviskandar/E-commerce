@@ -25,7 +25,9 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name'),
+                TextInput::make('name_uz'),
+                TextInput::make('name_ru'),
+                TextInput::make('name_eng'),
             ]);
     }
 
@@ -34,8 +36,12 @@ class CategoryResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id'),
-                TextColumn::make('name')
-                            ->searchable(),
+                TextColumn::make('name_uz')
+                    ->searchable(),
+                TextColumn::make('name_ru')
+                    ->searchable(),
+                TextColumn::make('name_eng')
+                    ->searchable(),
             ])
             ->filters([
                 //
