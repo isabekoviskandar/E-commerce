@@ -1,0 +1,62 @@
+version: '3.9'
+
+services:
+  # PHP Service
+  app:
+    image: php:8.3-fpm
+    container_name: laravel_app
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - laravel
+
+  # Composer Service (only for install/update)
+  composer:
+    image: composer:2
+    container_name: laravel_composer
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - app
+    networks:
+      - laravel
+
+  # Nginx Service
+  nginx:
+    image: nginx:alpine
+    container_name: laravel_nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+    networks:
+      - laravel
+
+  # MySQL Service
+  mysql:
+    image: mysql:8.0
+    container_name: laravel_mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: laravel
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - laravel
+
+networks:
+  laravel:
+
+volumes:
+  mysql_data:

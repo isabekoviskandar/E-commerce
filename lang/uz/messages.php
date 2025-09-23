@@ -41,5 +41,8 @@ return [
     'product_id' => 'Mahsulot ID',
     'available' => 'Mavjud',
     'view_all' => 'Hammasini ko‘rish',
-
+    'cart' => 'Kart',
+    'image' => 'Surat',
+    'quantity' => 'Soni',
+    'total' => 'Hammasi',
 ];

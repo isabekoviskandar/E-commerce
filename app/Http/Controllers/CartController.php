@@ -9,16 +9,18 @@ class CartController extends Controller
 {
     public function index()
     {
-        return view('cart');
+        $cart = session()->get('cart', []);
+        return view('cart', compact('cart'));
     }
+
 
     public function add(Request $request, $id)
     {
         $product = Product::findOrFail($id);
-        
+
         $cart = session()->get('cart', []);
-        
-        if(isset($cart[$id])) {
+
+        if (isset($cart[$id])) {
             $cart[$id]['quantity'] += $request->get('quantity', 1);
         } else {
             $cart[$id] = [
@@ -28,47 +30,47 @@ class CartController extends Controller
                 "image" => $product->image
             ];
         }
-        
+
         session()->put('cart', $cart);
-        
+
         return redirect()->back()->with('success', 'Product added to cart successfully!');
     }
 
     public function update(Request $request)
     {
         $cart = session()->get('cart');
-        
-        if($request->quantities) {
-            foreach($request->quantities as $id => $quantity) {
-                if($quantity <= 0) {
+
+        if ($request->quantities) {
+            foreach ($request->quantities as $id => $quantity) {
+                if ($quantity <= 0) {
                     unset($cart[$id]);
                 } else {
                     $cart[$id]["quantity"] = $quantity;
                 }
             }
         }
-        
+
         session()->put('cart', $cart);
-        
+
         return redirect()->route('cart.index')->with('success', 'Cart updated successfully!');
     }
 
     public function remove($id)
     {
         $cart = session()->get('cart');
-        
-        if(isset($cart[$id])) {
+
+        if (isset($cart[$id])) {
             unset($cart[$id]);
             session()->put('cart', $cart);
         }
-        
+
         return redirect()->route('cart.index')->with('success', 'Product removed from cart!');
     }
 
     public function clear()
     {
         session()->forget('cart');
-        
+
         return redirect()->route('cart.index')->with('success', 'Cart cleared successfully!');
     }
 
@@ -76,11 +78,11 @@ class CartController extends Controller
     {
         $cart = session()->get('cart', []);
         $count = 0;
-        
-        foreach($cart as $item) {
+
+        foreach ($cart as $item) {
             $count += $item['quantity'];
         }
-        
+
         return response()->json(['count' => $count]);
     }
 }

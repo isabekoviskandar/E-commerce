@@ -75,7 +75,7 @@
                     <div class="icons">
                         <a href="#" class="icons-btn d-inline-block js-search-open"><span
                                 class="icon-search"></span></a>
-                        <a href="{{ route('cart.index') }}" class="icons-btn d-inline-block bag">
+                        <a href="{{ route('cart.index', app()->getLocale()) }}" class="icons-btn d-inline-block bag">
                             <span class="icon-shopping-bag"></span>
                             <span class="number">{{ count(session('cart', [])) }}</span>
                         </a>

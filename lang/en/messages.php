@@ -44,6 +44,9 @@ return [
     'product_id' => 'Product ID',
     'available' => 'Available',
     'view_all' => 'View All',
-
+    'cart' => 'Cart',
+    'image' => 'Image',
+    'quantity' => 'Quantity',
+    'total' => 'Total',
 
 ];
