@@ -50,7 +50,7 @@
 
                                 <li><a href="{{ route('store', app()->getLocale()) }}">{{ __('messages.store') }}</a>
                                 </li>
-                                {{-- <li><a href="{{ route('about', app()->getLocale()) }}">About</a></li> --}}
+                                <li><a href="{{ route('about', app()->getLocale()) }}">{{ __('messages.about') }}</a></li>
                                 {{-- <li><a href="{{ route('contact', app()->getLocale()) }}">Contact</a></li> --}}
 
                                 {{-- Language Switcher --}}
@@ -188,8 +188,8 @@
                             <h3 class="footer-heading mb-4">{{ __('messages.contact_info') }}</h3>
                             <ul class="list-unstyled">
                                 <li class="address">{{ __('messages.address') }}</li>
-                                <li class="phone"><a href="tel://23923929210">+2 392 3929 210</a></li>
-                                <li class="email">emailaddress@domain.com</li>
+                                <li class="phone"><a href="#">+998 94 783 69 96</a></li>
+                                <li class="email">jurayevyunus783@gmail.com</li>
                             </ul>
                         </div>
                     </div>

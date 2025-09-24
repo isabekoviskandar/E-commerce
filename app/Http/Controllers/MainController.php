@@ -60,4 +60,9 @@ class MainController extends Controller
 
         return view('single', compact('product'));
     }
+
+    public function about()
+    {
+        return view('about');
+    }
 }
