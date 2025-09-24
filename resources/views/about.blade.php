@@ -19,7 +19,7 @@
 
     <style>
         .hero-about {
-            background: linear-gradient(135deg, #28a745, #20c997);
+            background: linear-gradient(135deg, #1037b4, #2540d8c4);
             color: white;
             padding: 100px 0 80px;
             position: relative;
@@ -133,7 +133,7 @@
             width: 20px;
             height: 20px;
             right: -10px;
-            background-color: #28a745;
+            background-color: #1bb13e;
             border: 4px solid white;
             top: 20px;
             border-radius: 50%;
@@ -163,7 +163,7 @@
 
         .social-media-section {
             padding: 60px 0;
-            background: linear-gradient(135deg, #28a745, #20c997);
+            background: linear-gradient(135deg, #1037b4, #2540d8c4);
             color: white;
         }
 
@@ -245,392 +245,292 @@
 </head>
 
 <body>
-    <div class="site-wrap">
-        <!-- Navigation -->
-        <div class="site-navbar py-2">
-            <div class="search-wrap">
-                <div class="container">
-                    <a href="#" class="search-close js-search-close"><span class="icon-close2"></span></a>
-                    <form action="#" method="post">
-                        <input type="text" class="form-control" placeholder="Search keyword and hit enter...">
-                    </form>
-                </div>
-            </div>
+    <!-- Navigation -->
+    @include('helpers.navbar')
 
-            <div class="container">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div class="logo">
-                        <div class="site-logo">
-                            <a href="index.html" class="js-logo-clone"><strong
-                                    class="text-primary">Pharma</strong>tive</a>
+    <!-- Hero Section -->
+    <div class="hero-about">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-5 mb-5 mb-lg-0" data-aos="fade-right">
+                    <img src="{{ asset('images/profile.jpg') }}" alt="Dr. Abdushukur Jurayev"
+                        class="doctor-profile-img">
+                </div>
+                <div class="col-lg-7" data-aos="fade-left">
+                    <h1 class="display-4 font-weight-bold mb-4">{{ __('messages.full_name') }}</h1>
+                    <h4 class="mb-4">{{ __('messages.specialist') }}</h4>
+                    <p class="lead mb-4">{{ __('messages.info') }}</p>
+
+                    <div class="row mt-5">
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <div class="stat-box">
+                                <span class="stat-number">30+</span>
+                                <small>{{ __('messages.years_experience') }}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <div class="stat-box">
+                                <span class="stat-number">66</span>
+                                <small>{{ __('messages.years_of_age') }}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <div class="stat-box">
+                                <span class="stat-number">10+</span>
+                                <small>{{ __('messages.cities_practiced') }}</small>
+                            </div>
                         </div>
                     </div>
-                    <div class="main-nav d-none d-lg-block">
-                        <nav class="site-navigation text-right text-md-center" role="navigation">
-                            <ul class="site-menu js-clone-nav d-none d-lg-block">
-                                <li><a href="{{ route('home', app()->getLocale()) }}">{{ __('messages.home') }}</a>
-                                </li>
-                                <li><a href="{{ route('store', app()->getLocale()) }}">{{ __('messages.store') }}</a>
-                                </li>
-                                <li class="active"><a
-                                        href="{{ route('about', app()->getLocale()) }}">{{ __('messages.about') }}</a>
-                                </li>
 
-                                <li class="has-children">
-                                    <a href="#">{{ __('messages.language') }}</a>
-                                    <ul class="dropdown">
-                                        <li><a
-                                                href="{{ route(\Illuminate\Support\Facades\Route::currentRouteName(), array_merge(request()->route()->parameters(), ['locale' => 'uz'])) }}">🇺🇿
-                                                Uzbek</a></li>
-                                        <li><a
-                                                href="{{ route(\Illuminate\Support\Facades\Route::currentRouteName(), array_merge(request()->route()->parameters(), ['locale' => 'ru'])) }}">🇷🇺
-                                                Russian</a></li>
-                                        <li><a
-                                                href="{{ route(\Illuminate\Support\Facades\Route::currentRouteName(), array_merge(request()->route()->parameters(), ['locale' => 'en'])) }}">🇬🇧
-                                                English</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Personal Info Section -->
+    <div class="site-section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">{{ __('messages.personal_information') }}</h2>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="expertise-card">
+                        <div class="expertise-icon">
+                            <span class="icon-calendar"></span>
+                        </div>
+                        <h5>{{ __('messages.date_of_birth') }}</h5>
+                        <p class="text-muted">{{ __('messages.dob_value') }}</p>
                     </div>
-                    <div class="icons">
-                        <a href="#" class="icons-btn d-inline-block js-search-open"><span
-                                class="icon-search"></span></a>
-                        <a href="cart.html" class="icons-btn d-inline-block bag">
-                            <span class="icon-shopping-bag"></span>
-                            <span class="number">2</span>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="expertise-card">
+                        <div class="expertise-icon">
+                            <span class="flaticon-stethoscope"></span>
+                        </div>
+                        <h5>{{ __('messages.specialization') }}</h5>
+                        <p class="text-muted">{{ __('messages.specialization_value') }}</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="expertise-card">
+                        <div class="expertise-icon">
+                            <span class="icon-globe"></span>
+                        </div>
+                        <h5>{{ __('messages.international_experience') }}</h5>
+                        <p class="text-muted">{{ __('messages.international_experience_value') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Expertise Section -->
+    <div class="expertise-section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">{{ __('messages.areas_of_expertise') }}</h2>
+            <div class="row">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="expertise-card">
+                        <div class="expertise-icon">
+                            <span class="flaticon-doctor"></span>
+                        </div>
+                        <h4>{{ __('messages.clinical_nutrition') }}</h4>
+                        <p>{{ __('messages.clinical_nutrition_desc') }}</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="expertise-card">
+                        <div class="expertise-icon">
+                            <span class="flaticon-scale"></span>
+                        </div>
+                        <h4>{{ __('messages.weight_management') }}</h4>
+                        <p>{{ __('messages.weight_management_desc') }}</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="expertise-card">
+                        <div class="expertise-icon">
+                            <span class="flaticon-organic"></span>
+                        </div>
+                        <h4>{{ __('messages.holistic_wellness') }}</h4>
+                        <p>{{ __('messages.holistic_wellness_desc') }}</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="expertise-card">
+                        <div class="expertise-icon">
+                            <span class="flaticon-heart-1"></span>
+                        </div>
+                        <h4>{{ __('messages.lifestyle_medicine') }}</h4>
+                        <p>{{ __('messages.lifestyle_medicine_desc') }}</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                    <div class="expertise-card">
+                        <div class="expertise-icon">
+                            <span class="flaticon-dumbbell"></span>
+                        </div>
+                        <h4>{{ __('messages.sports_nutrition') }}</h4>
+                        <p>{{ __('messages.sports_nutrition_desc') }}</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                    <div class="expertise-card">
+                        <div class="expertise-icon">
+                            <span class="flaticon-family"></span>
+                        </div>
+                        <h4>{{ __('messages.community_health') }}</h4>
+                        <p>{{ __('messages.community_health_desc') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Professional Journey Timeline -->
+    <div class="timeline-section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">{{ __('messages.professional_journey') }}</h2>
+            <div class="timeline">
+                <div class="timeline-container timeline-left" data-aos="fade-right">
+                    <div class="timeline-content">
+                        <h4>{{ __('messages.timeline_early_title') }}</h4>
+                        <p><strong>{{ __('messages.timeline_early_period') }}</strong></p>
+                        <p>{{ __('messages.timeline_early_desc') }}</p>
+                    </div>
+                </div>
+
+                <div class="timeline-container timeline-right" data-aos="fade-left">
+                    <div class="timeline-content">
+                        <h4>{{ __('messages.timeline_tibet_title') }}</h4>
+                        <p><strong>{{ __('messages.timeline_tibet_period') }}</strong></p>
+                        <p>{{ __('messages.timeline_tibet_desc') }}</p>
+                    </div>
+                </div>
+
+                <div class="timeline-container timeline-left" data-aos="fade-right">
+                    <div class="timeline-content">
+                        <h4>{{ __('messages.timeline_sea_title') }}</h4>
+                        <p><strong>{{ __('messages.timeline_sea_period') }}</strong></p>
+                        <p>{{ __('messages.timeline_sea_desc') }}</p>
+                    </div>
+                </div>
+
+                <div class="timeline-container timeline-right" data-aos="fade-left">
+                    <div class="timeline-content">
+                        <h4>{{ __('messages.timeline_india_title') }}</h4>
+                        <p><strong>{{ __('messages.timeline_india_period') }}</strong></p>
+                        <p>{{ __('messages.timeline_india_desc') }}</p>
+                    </div>
+                </div>
+
+                <div class="timeline-container timeline-left" data-aos="fade-right">
+                    <div class="timeline-content">
+                        <h4>{{ __('messages.timeline_digital_title') }}</h4>
+                        <p><strong>{{ __('messages.timeline_digital_period') }}</strong></p>
+                        <p>{{ __('messages.timeline_digital_desc') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Philosophy Section -->
+    <div class="site-section bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8" data-aos="fade-up">
+                    <h2 class="section-title">{{ __('messages.philosophy_title') }}</h2>
+                    <blockquote class="blockquote text-center">
+                        <p class="mb-4 lead">{{ __('messages.philosophy_quote') }}</p>
+                        <footer class="blockquote-footer">{{ __('messages.philosophy_author') }}</footer>
+                    </blockquote>
+
+                    <div class="row mt-5">
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex">
+                                <div class="mr-3">
+                                    <span class="icon-check text-success" style="font-size: 1.5rem;"></span>
+                                </div>
+                                <div>
+                                    <h5>{{ __('messages.personalized_care_title') }}</h5>
+                                    <p>{{ __('messages.personalized_care_text') }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex">
+                                <div class="mr-3">
+                                    <span class="icon-check text-success" style="font-size: 1.5rem;"></span>
+                                </div>
+                                <div>
+                                    <h5>{{ __('messages.holistic_integration_title') }}</h5>
+                                    <p>{{ __('messages.holistic_integration_text') }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex">
+                                <div class="mr-3">
+                                    <span class="icon-check text-success" style="font-size: 1.5rem;"></span>
+                                </div>
+                                <div>
+                                    <h5>{{ __('messages.sustainable_practices_title') }}</h5>
+                                    <p>{{ __('messages.sustainable_practices_text') }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex">
+                                <div class="mr-3">
+                                    <span class="icon-check text-success" style="font-size: 1.5rem;"></span>
+                                </div>
+                                <div>
+                                    <h5>{{ __('messages.education_focus_title') }}</h5>
+                                    <p>{{ __('messages.education_focus_text') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Social Media Section -->
+    <div class="social-media-section">
+        <div class="container">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-8" data-aos="fade-up">
+                    <h2 class="mb-4">{{ __('messages.social_title') }}</h2>
+                    <p class="lead mb-5">{{ __('messages.social_text') }}</p>
+
+
+                    <div class="d-flex justify-content-center align-items-center">
+                        <a href="https://www.instagram.com/abdushukur_tabib?igsh=MWRhNzhoM2ZheXlpMw=="
+                            class="social-link" target="_blank">
+                            <span class="icon-instagram"></span>
                         </a>
-                        <a href="#" class="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"><span
-                                class="icon-menu"></span></a>
+                        <a href="https://www.youtube.com/@Abdushukur_tabib" class="social-link" target="_blank">
+                            <span class="icon-youtube"></span>
+                        </a>
+                        <a href="https://www.facebook.com/share/165SPhGpc5/" class="social-link" target="_blank">
+                            <span class="icon-facebook"></span>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Hero Section -->
-        <div class="hero-about">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-5 mb-5 mb-lg-0" data-aos="fade-right">
-                        <img src="{{ asset('images/profile.jpg') }}" alt="Dr. Abdushukur Jurayev"
-                            class="doctor-profile-img">
-                    </div>
-                    <div class="col-lg-7" data-aos="fade-left">
-                        <h1 class="display-4 font-weight-bold mb-4">{{ __('messages.full_name') }}</h1>
-                        <h4 class="mb-4">{{ __('messages.specialist') }}</h4>
-                        <p class="lead mb-4">{{ __('messages.info') }}</p>
-
-                        <div class="row mt-5">
-                            <div class="col-md-4 col-sm-6 mb-3">
-                                <div class="stat-box">
-                                    <span class="stat-number">30+</span>
-                                    <small>{{ __('messages.years_experience') }}</small>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-sm-6 mb-3">
-                                <div class="stat-box">
-                                    <span class="stat-number">66</span>
-                                    <small>{{ __('messages.years_of_age') }}</small>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-sm-6 mb-3">
-                                <div class="stat-box">
-                                    <span class="stat-number">10+</span>
-                                    <small>{{ __('messages.cities_practiced') }}</small>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Personal Info Section -->
-        <div class="site-section">
-            <div class="container">
-                <h2 class="section-title" data-aos="fade-up">{{ __('messages.personal_information') }}</h2>
-                <div class="row">
-                    <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-                        <div class="expertise-card">
-                            <div class="expertise-icon">
-                                <span class="icon-calendar"></span>
-                            </div>
-                            <h5>{{ __('messages.date_of_birth') }}</h5>
-                            <p class="text-muted">{{ __('messages.dob_value') }}</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-                        <div class="expertise-card">
-                            <div class="expertise-icon">
-                                <span class="flaticon-stethoscope"></span>
-                            </div>
-                            <h5>{{ __('messages.specialization') }}</h5>
-                            <p class="text-muted">{{ __('messages.specialization_value') }}</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
-                        <div class="expertise-card">
-                            <div class="expertise-icon">
-                                <span class="icon-globe"></span>
-                            </div>
-                            <h5>{{ __('messages.international_experience') }}</h5>
-                            <p class="text-muted">{{ __('messages.international_experience_value') }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Expertise Section -->
-        <div class="expertise-section">
-            <div class="container">
-                <h2 class="section-title" data-aos="fade-up">{{ __('messages.areas_of_expertise') }}</h2>
-                <div class="row">
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                        <div class="expertise-card">
-                            <div class="expertise-icon">
-                                <span class="flaticon-doctor"></span>
-                            </div>
-                            <h4>{{ __('messages.clinical_nutrition') }}</h4>
-                            <p>{{ __('messages.clinical_nutrition_desc') }}</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                        <div class="expertise-card">
-                            <div class="expertise-icon">
-                                <span class="flaticon-scale"></span>
-                            </div>
-                            <h4>{{ __('messages.weight_management') }}</h4>
-                            <p>{{ __('messages.weight_management_desc') }}</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                        <div class="expertise-card">
-                            <div class="expertise-icon">
-                                <span class="flaticon-organic"></span>
-                            </div>
-                            <h4>{{ __('messages.holistic_wellness') }}</h4>
-                            <p>{{ __('messages.holistic_wellness_desc') }}</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-                        <div class="expertise-card">
-                            <div class="expertise-icon">
-                                <span class="flaticon-heart-1"></span>
-                            </div>
-                            <h4>{{ __('messages.lifestyle_medicine') }}</h4>
-                            <p>{{ __('messages.lifestyle_medicine_desc') }}</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
-                        <div class="expertise-card">
-                            <div class="expertise-icon">
-                                <span class="flaticon-dumbbell"></span>
-                            </div>
-                            <h4>{{ __('messages.sports_nutrition') }}</h4>
-                            <p>{{ __('messages.sports_nutrition_desc') }}</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
-                        <div class="expertise-card">
-                            <div class="expertise-icon">
-                                <span class="flaticon-family"></span>
-                            </div>
-                            <h4>{{ __('messages.community_health') }}</h4>
-                            <p>{{ __('messages.community_health_desc') }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Professional Journey Timeline -->
-        <div class="timeline-section">
-            <div class="container">
-                <h2 class="section-title" data-aos="fade-up">{{ __('messages.professional_journey') }}</h2>
-                <div class="timeline">
-                    <div class="timeline-container timeline-left" data-aos="fade-right">
-                        <div class="timeline-content">
-                            <h4>{{ __('messages.timeline_early_title') }}</h4>
-                            <p><strong>{{ __('messages.timeline_early_period') }}</strong></p>
-                            <p>{{ __('messages.timeline_early_desc') }}</p>
-                        </div>
-                    </div>
-
-                    <div class="timeline-container timeline-right" data-aos="fade-left">
-                        <div class="timeline-content">
-                            <h4>{{ __('messages.timeline_tibet_title') }}</h4>
-                            <p><strong>{{ __('messages.timeline_tibet_period') }}</strong></p>
-                            <p>{{ __('messages.timeline_tibet_desc') }}</p>
-                        </div>
-                    </div>
-
-                    <div class="timeline-container timeline-left" data-aos="fade-right">
-                        <div class="timeline-content">
-                            <h4>{{ __('messages.timeline_sea_title') }}</h4>
-                            <p><strong>{{ __('messages.timeline_sea_period') }}</strong></p>
-                            <p>{{ __('messages.timeline_sea_desc') }}</p>
-                        </div>
-                    </div>
-
-                    <div class="timeline-container timeline-right" data-aos="fade-left">
-                        <div class="timeline-content">
-                            <h4>{{ __('messages.timeline_india_title') }}</h4>
-                            <p><strong>{{ __('messages.timeline_india_period') }}</strong></p>
-                            <p>{{ __('messages.timeline_india_desc') }}</p>
-                        </div>
-                    </div>
-
-                    <div class="timeline-container timeline-left" data-aos="fade-right">
-                        <div class="timeline-content">
-                            <h4>{{ __('messages.timeline_digital_title') }}</h4>
-                            <p><strong>{{ __('messages.timeline_digital_period') }}</strong></p>
-                            <p>{{ __('messages.timeline_digital_desc') }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Philosophy Section -->
-        <div class="site-section bg-light">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8" data-aos="fade-up">
-                        <h2 class="section-title">{{ __('messages.philosophy_title') }}</h2>
-                        <blockquote class="blockquote text-center">
-                            <p class="mb-4 lead">{{ __('messages.philosophy_quote') }}</p>
-                            <footer class="blockquote-footer">{{ __('messages.philosophy_author') }}</footer>
-                        </blockquote>
-
-                        <div class="row mt-5">
-                            <div class="col-md-6 mb-4">
-                                <div class="d-flex">
-                                    <div class="mr-3">
-                                        <span class="icon-check text-success" style="font-size: 1.5rem;"></span>
-                                    </div>
-                                    <div>
-                                        <h5>{{ __('messages.personalized_care_title') }}</h5>
-                                        <p>{{ __('messages.personalized_care_text') }}</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-4">
-                                <div class="d-flex">
-                                    <div class="mr-3">
-                                        <span class="icon-check text-success" style="font-size: 1.5rem;"></span>
-                                    </div>
-                                    <div>
-                                        <h5>{{ __('messages.holistic_integration_title') }}</h5>
-                                        <p>{{ __('messages.holistic_integration_text') }}</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-4">
-                                <div class="d-flex">
-                                    <div class="mr-3">
-                                        <span class="icon-check text-success" style="font-size: 1.5rem;"></span>
-                                    </div>
-                                    <div>
-                                        <h5>{{ __('messages.sustainable_practices_title') }}</h5>
-                                        <p>{{ __('messages.sustainable_practices_text') }}</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-4">
-                                <div class="d-flex">
-                                    <div class="mr-3">
-                                        <span class="icon-check text-success" style="font-size: 1.5rem;"></span>
-                                    </div>
-                                    <div>
-                                        <h5>{{ __('messages.education_focus_title') }}</h5>
-                                        <p>{{ __('messages.education_focus_text') }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Social Media Section -->
-        <div class="social-media-section">
-            <div class="container">
-                <div class="row justify-content-center text-center">
-                    <div class="col-lg-8" data-aos="fade-up">
-                        <h2 class="mb-4">{{ __('messages.social_title') }}</h2>
-                        <p class="lead mb-5">{{ __('messages.social_text') }}</p>
-
-
-                        <div class="d-flex justify-content-center align-items-center">
-                            <a href="https://www.instagram.com/abdushukur_tabib?igsh=MWRhNzhoM2ZheXlpMw=="
-                                class="social-link" target="_blank">
-                                <span class="icon-instagram"></span>
-                            </a>
-                            <a href="https://www.youtube.com/@Abdushukur_tabib" class="social-link" target="_blank">
-                                <span class="icon-youtube"></span>
-                            </a>
-                            <a href="https://www.facebook.com/share/165SPhGpc5/" class="social-link" target="_blank">
-                                <span class="icon-facebook"></span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="site-footer bg-light">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                        <div class="block-7">
-                            <h3 class="footer-heading mb-4">{{ __('messages.about_title') }}</h3>
-                            <p>{{ __('messages.about_text') }}</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 mx-auto mb-5 mb-lg-0">
-                        <h3 class="footer-heading mb-4">{{ __('messages.navigation') }}</h3>
-                        <ul class="list-unstyled">
-                            <li><a href="#">{{ __('messages.supplements') }}</a></li>
-                            <li><a href="#">{{ __('messages.vitamins') }}</a></li>
-                            <li><a href="#">{{ __('messages.diet') }}</a></li>
-                            <li><a href="#">{{ __('messages.tea') }}</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6 col-lg-3">
-                        <div class="block-5 mb-5">
-                            <h3 class="footer-heading mb-4">{{ __('messages.contact_info') }}</h3>
-                            <ul class="list-unstyled">
-                                <li class="address">{{ __('messages.address') }}</li>
-                                <li class="phone"><a href="#">+998 94 783 69 96</a></li>
-                                <li class="email">jurayevyunus783@gmail.com</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="row pt-5 mt-5 text-center">
-                    <div class="col-md-12">
-                        <p>
-                            &copy;
-                            <script>
-                                document.write(new Date().getFullYear());
-                            </script>
-                            {{ __('messages.copyright') }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </footer>
+    <!-- Footer -->
+    @include('helpers.footer')
     </div>
 
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>

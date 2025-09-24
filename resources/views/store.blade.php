@@ -16,212 +16,398 @@
     <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/aos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    
+    <style>
+        /* Enhanced Product Card Styles */
+        .product-card {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            position: relative;
+            overflow: hidden;
+            height: 250px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+        }
+
+        .product-info {
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        .product-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            transition: color 0.3s ease;
+        }
+
+        .product-title:hover {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .product-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #28a745;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .product-price::after {
+            content: 'UZS';
+            font-size: 14px;
+            font-weight: 500;
+            color: #6c757d;
+        }
+
+        .product-category {
+            background: #f8f9fa;
+            color: #6c757d;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* Horizontal Categories */
+        /* .categories-horizontal {
+            background: linear-gradient(135deg, #e91e63, #ad1457);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(233, 30, 99, 0.2);
+        }
+
+        .category-scroll {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.3) transparent;
+        } */
+
+        .category-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .category-scroll::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+        }
+
+        .category-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+        }
+
+        .category-pill {
+            /* background: rgba(255, 253, 253, 0.15); */
+            color: rgb(0, 0, 0);
+            padding: 5px 10px;
+            border-radius: 25px;
+            text-decoration: none;
+            white-space: nowrap;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            /* border: 2px solid transparent;
+            backdrop-filter: blur(10px); */
+        }
+
+        /* .category-pill:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+        } */
+
+        .category-pill.active {
+            background: white;
+            color: #000000;
+            font-weight: 600;
+            border-color: white;
+        }
+
+        /* Add to Cart Button */
+        .add-to-cart-form {
+            margin-top: 15px;
+        }
+
+        .btn-add-to-cart {
+            background: linear-gradient(45deg, #181a9e, #172496);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-add-to-cart:hover {
+            background: linear-gradient(45deg, #1b1da8, #1ea085);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(17, 56, 139, 0.3);
+        }
+
+        .btn-add-to-cart:active {
+            transform: translateY(0);
+        }
+
+        .btn-add-to-cart svg {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-add-to-cart:hover svg {
+            transform: scale(1.1);
+        }
+
+        /* No Products Message */
+        .no-products {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .no-products h4 {
+            color: #495057;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .no-products p {
+            color: #6c757d;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        .no-products .btn {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .no-products .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .product-card {
+                margin-bottom: 25px;
+            }
+            
+            .categories-horizontal {
+                padding: 15px;
+                margin-bottom: 25px;
+            }
+            
+            .category-pill {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            .product-info {
+                padding: 20px 15px;
+            }
+            
+            .product-title {
+                font-size: 16px;
+            }
+            
+            .product-price {
+                font-size: 20px;
+            }
+            
+            .btn-add-to-cart {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="site-wrap">
-        <div class="site-navbar py-2">
-            <div class="search-wrap">
-                <div class="container">
-                    <a href="#" class="search-close js-search-close"><span class="icon-close2"></span></a>
-                    <form action="#" method="post">
-                        <input type="text" class="form-control"
-                            placeholder="{{ __('messages.search_placeholder') }}">
-                    </form>
-                </div>
-            </div>
 
-            <div class="container">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div class="logo">
-                        <div class="site-logo">
-                            <a href="/" class="js-logo-clone"><strong class="text-primary">Pharma</strong>tive</a>
-                        </div>
-                    </div>
-                    <div class="main-nav d-none d-lg-block">
-                        <nav class="site-navigation text-right text-md-center" role="navigation">
-                            <ul class="site-menu js-clone-nav d-none d-lg-block">
-                                <li>
-                                    <a href="{{ route('home', ['locale' => app()->getLocale()]) }}">
-                                        {{ __('messages.home') }}
-                                    </a>
-                                </li>
-                                <li class="active">
-                                    <a href="{{ route('store', ['locale' => app()->getLocale()]) }}">
-                                        {{ __('messages.store') }}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('about', app()->getLocale()) }}">{{ __('messages.about') }}</a>
-                                </li>
+    @include('helpers.navbar')
 
-
-                                <li class="has-children">
-                                    <a href="#">{{ __('messages.language') }}</a>
-                                    <ul class="dropdown">
-                                        <li><a
-                                                href="{{ route(\Illuminate\Support\Facades\Route::currentRouteName(), array_merge(request()->route()->parameters(), ['locale' => 'uz'])) }}">🇺🇿
-                                                Uzbek</a></li>
-                                        <li><a
-                                                href="{{ route(\Illuminate\Support\Facades\Route::currentRouteName(), array_merge(request()->route()->parameters(), ['locale' => 'ru'])) }}">🇷🇺
-                                                Russian</a></li>
-                                        <li><a
-                                                href="{{ route(\Illuminate\Support\Facades\Route::currentRouteName(), array_merge(request()->route()->parameters(), ['locale' => 'en'])) }}">🇬🇧
-                                                English</a></li>
-                                    </ul>
-                                </li>
-
-                                {{-- <li><a href="/about">{{ __('messages.about') }}</a></li> --}}
-                                {{-- <li><a href="/contact">{{ __('messages.contact') }}</a></li> --}}
-                            </ul>
-                        </nav>
-                    </div>
-                    <div class="icons">
-                        <a href="#" class="icons-btn d-inline-block js-search-open"><span
-                                class="icon-search"></span></a>
-                        <a href="{{ route('cart.index', app()->getLocale()) }}" class="icons-btn d-inline-block bag">
-                            <span class="icon-shopping-bag"></span>
-                            <span class="number">{{ count(session('cart', [])) }}</span>
+    <div class="py-4">
+        <div class="container">
+            <div class="categories-horizontal">
+                <div class="category-scroll">
+                    <a href="{{ route('store', app()->getLocale()) }}" 
+                       class="category-pill {{ request('category_id') ? '' : 'active' }}">
+                        {{ __('messages.all_categories') }}
+                    </a>
+                    @foreach ($categories as $category)
+                        <a href="{{ route('store', array_merge(['locale' => app()->getLocale()], ['category_id' => $category->id])) }}" 
+                           class="category-pill {{ request('category_id') == $category->id ? 'active' : '' }}">
+                            {{ $category->name_uz }}
                         </a>
-                        <a href="#" class="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none"><span
-                                class="icon-menu"></span></a>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="bg-light py-3">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 mb-0">
-                        <a href="/">{{ __('messages.home') }}</a> <span class="mx-2 mb-0">/</span>
-                        <strong class="text-black">{{ __('messages.store') }}</strong>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="py-5">
-            <div class="container">
-                <form method="GET" action="{{ route('store', app()->getLocale()) }}" class="mb-4">
-
-                    <div class="row">
-                        <div class="col-lg-6 mb-3">
-                            <h3 class="mb-3 h6 text-uppercase text-black d-block">{{ __('messages.filter_category') }}
-                            </h3>
-                            <select name="category_id" class="form-control" onchange="this.form.submit()">
-                                <option value="">{{ __('messages.all_categories') }}</option>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}"
-                                        {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name_uz }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-lg-6 text-lg-right">
-                            <h3 class="mb-3 h6 text-uppercase text-black d-block">{{ __('messages.sort_by') }}</h3>
-                            <select name="sort" class="form-control" onchange="this.form.submit()">
-                                <option value="">{{ __('messages.default') }}</option>
-                                <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>
-                                    {{ __('messages.name_asc') }}</option>
-                                <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>
-                                    {{ __('messages.name_desc') }}</option>
-                                <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>
-                                    {{ __('messages.price_asc') }}</option>
-                                <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>
-                                    {{ __('messages.price_desc') }}</option>
-                            </select>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div class="site-section bg-light">
-            <div class="container">
-                <div class="row">
-                    @if ($products->count() > 0)
-                        @foreach ($products as $product)
-                            <div class="col-sm-6 col-lg-4 text-center item mb-4 item-v2">
-                                <a
-                                    href="{{ route('product.single', ['locale' => app()->getLocale(), 'id' => $product->id]) }}">
-                                    <img src="{{ asset('storage/' . $product->image) }}"
-                                        alt="{{ $product->name_uz }}">
-                                </a>
-
-                                <h3 class="text-dark">
-                                    <a
-                                        href="{{ route('product.single', ['locale' => app()->getLocale(), 'id' => $product->id]) }}">
-                                        {{ $product->name_uz }}
+    <div class="site-section bg-light">
+        <div class="container">
+            <div class="row">
+                @if ($products->count() > 0)
+                    @foreach ($products as $product)
+                        <div class="col-sm-6 col-lg-4">
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <a href="{{ route('product.single', ['locale' => app()->getLocale(), 'id' => $product->id]) }}">
+                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name_uz }}">
                                     </a>
-                                </h3>
-
-                                <p class="price">{{ number_format($product->price) }} uzs</p>
-                                @if ($product->category)
-                                    <small class="text-muted">{{ $product->category->name_uz }}</small>
-                                @endif
-                            </div>
-                        @endforeach
-                    @else
-                        <div class="col-12 text-center">
-                            <div class="alert alert-info">
-                                <h4>{{ __('messages.no_products') }}</h4>
-                                <p>{{ __('messages.no_products_text') }}</p>
-                                <a href="{{ route('store', app()->getLocale()) }}" class="btn btn-primary">
-                                    {{ __('messages.view_all') }}
-                                </a>
-
+                                </div>
+                                
+                                <div class="product-info">
+                                    <h3 class="product-title">
+                                        <a href="{{ route('product.single', ['locale' => app()->getLocale(), 'id' => $product->id]) }}">
+                                            {{ $product->name_uz }}
+                                        </a>
+                                    </h3>
+                                    
+                                    <div class="product-price">{{ number_format($product->price) }}</div>
+                                    
+                                    <form action="{{ route('cart.add', ['locale' => app()->getLocale(), 'id' => $product->id]) }}" method="POST" class="add-to-cart-form">
+                                        @csrf
+                                        <button type="submit" class="btn-add-to-cart">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16 5 16H17M17 13V17C17 17.6 16.6 18 16 18H8C7.4 18 7 17.6 7 17V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                <circle cx="9" cy="20" r="1" stroke="currentColor" stroke-width="2"/>
+                                                <circle cx="20" cy="20" r="1" stroke="currentColor" stroke-width="2"/>
+                                            </svg>
+                                            {{ __('messages.add_to_cart') }}
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-
-        <footer class="site-footer bg-light">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                        <div class="block-7">
-                            <h3 class="footer-heading mb-4">{{ __('messages.about_title') }}</h3>
-                            <p>{{ __('messages.about_text') }}</p>
+                    @endforeach
+                @else
+                    <div class="col-12">
+                        <div class="no-products">
+                            <h4>{{ __('messages.no_products') }}</h4>
+                            <p>{{ __('messages.no_products_text') }}</p>
+                            <a href="{{ route('store', app()->getLocale()) }}" class="btn btn-primary">
+                                {{ __('messages.view_all') }}
+                            </a>
                         </div>
                     </div>
-                    <div class="col-lg-3 mx-auto mb-5 mb-lg-0">
-                        <h3 class="footer-heading mb-4">{{ __('messages.navigation') }}</h3>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                    <div class="block-7">
+                        <h3 class="footer-heading mb-4">{{ __('messages.about_title') }}</h3>
+                        <p>{{ __('messages.about_text') }}</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 mx-auto mb-5 mb-lg-0">
+                    <h3 class="footer-heading mb-4">{{ __('messages.navigation') }}</h3>
+                    <ul class="list-unstyled">
+                        <li><a href="#">{{ __('messages.supplements') }}</a></li>
+                        <li><a href="#">{{ __('messages.vitamins') }}</a></li>
+                        <li><a href="#">{{ __('messages.diet') }}</a></li>
+                        <li><a href="#">{{ __('messages.tea') }}</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="block-5 mb-5">
+                        <h3 class="footer-heading mb-4">{{ __('messages.contact_info') }}</h3>
                         <ul class="list-unstyled">
-                            <li><a href="#">{{ __('messages.supplements') }}</a></li>
-                            <li><a href="#">{{ __('messages.vitamins') }}</a></li>
-                            <li><a href="#">{{ __('messages.diet') }}</a></li>
-                            <li><a href="#">{{ __('messages.tea') }}</a></li>
+                            <li class="address">{{ __('messages.address') }}</li>
+                            <li class="phone"><a href="#">+998 94 783 69 96</a></li>
+                            <li class="email">jurayevyunus783@gmail.com</li>
                         </ul>
                     </div>
-                    <div class="col-md-6 col-lg-3">
-                        <div class="block-5 mb-5">
-                            <h3 class="footer-heading mb-4">{{ __('messages.contact_info') }}</h3>
-                            <ul class="list-unstyled">
-                                <li class="address">{{ __('messages.address') }}</li>
-                                <li class="phone"><a href="#">+998 94 783 69 96</a></li>
-                                <li class="email">jurayevyunus783@gmail.com</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="row pt-5 mt-5 text-center">
-                    <div class="col-md-12">
-                        <p>
-                            &copy;
-                            <script>
-                                document.write(new Date().getFullYear());
-                            </script>
-                            {{ __('messages.copyright') }}
-                        </p>
-                    </div>
                 </div>
             </div>
-        </footer>
-    </div>
+            <div class="row pt-5 mt-5 text-center">
+                <div class="col-md-12">
+                    <p>
+                        &copy;
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script>
+                        {{ __('messages.copyright') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('js/jquery-ui.js') }}"></script>
