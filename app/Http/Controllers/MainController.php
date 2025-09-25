@@ -10,10 +10,7 @@ class MainController extends Controller
 {
     public function index()
     {
-        $products = Product::orderBy('created_at', 'desc')
-            ->limit(6)
-            ->get();
-        return view('index', compact('products'));
+        return view('about');
     }
 
     public function shop(Request $request)
@@ -61,8 +58,8 @@ class MainController extends Controller
         return view('single', compact('product'));
     }
 
-    public function about()
-    {
-        return view('about');
-    }
+    // public function about()
+    // {
+    //     return view('about');
+    // }
 }

@@ -7,14 +7,7 @@ use App\Models\Product;
 
 class CartController extends Controller
 {
-    public function index()
-    {
-        $cart = session()->get('cart', []);
-        return view('cart', compact('cart'));
-    }
-
-
-    public function add(Request $request, $id)
+    public function add(Request $request, $locale, $id)
     {
         $product = Product::findOrFail($id);
 
@@ -36,7 +29,7 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Product added to cart successfully!');
     }
 
-    public function update(Request $request)
+    public function update(Request $request , $locale)
     {
         $cart = session()->get('cart');
 
@@ -55,7 +48,13 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('success', 'Cart updated successfully!');
     }
 
-    public function remove($id)
+    public function index($locale) // locale qo'shing
+    {
+        $cart = session()->get('cart', []);
+        return view('cart', compact('cart'));
+    }
+
+    public function remove($locale, $id) // locale qo'shing
     {
         $cart = session()->get('cart');
 
@@ -64,25 +63,12 @@ class CartController extends Controller
             session()->put('cart', $cart);
         }
 
-        return redirect()->route('cart.index')->with('success', 'Product removed from cart!');
+        return redirect()->route('cart.index', ['locale' => $locale])->with('success', 'Product removed from cart!');
     }
 
-    public function clear()
+    public function clear($locale) // locale qo'shing
     {
         session()->forget('cart');
-
-        return redirect()->route('cart.index')->with('success', 'Cart cleared successfully!');
-    }
-
-    public function count()
-    {
-        $cart = session()->get('cart', []);
-        $count = 0;
-
-        foreach ($cart as $item) {
-            $count += $item['quantity'];
-        }
-
-        return response()->json(['count' => $count]);
+        return redirect()->route('cart.index', ['locale' => $locale])->with('success', 'Cart cleared successfully!');
     }
 }

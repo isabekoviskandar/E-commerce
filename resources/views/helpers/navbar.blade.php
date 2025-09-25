@@ -28,13 +28,6 @@
                                     <a href="{{ route('store', app()->getLocale()) }}">{{ __('messages.store') }}</a>
                                 </li>
 
-                                <li class="{{ request()->routeIs('about') ? 'active' : '' }}">
-                                    <a href="{{ route('about', app()->getLocale()) }}">{{ __('messages.about') }}</a>
-                                </li>
-
-                                {{-- <li><a href="{{ route('contact', app()->getLocale()) }}">Contact</a></li> --}}
-
-                                {{-- Language Switcher --}}
                                 <li class="has-children">
                                     <a href="#">{{ __('messages.language') }}</a>
                                     <ul class="dropdown">
