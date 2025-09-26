@@ -24,8 +24,8 @@ return [
     'view_all' => 'View All Products',
 
     // Footer
-    'about_title' => 'About Pharmative',
-    'about_text' => 'Pharmative is your trusted source for medical products, supplements, and health solutions.',
+    'about_title' => 'About Sinotib',
+    'about_text' => 'Sinotib is your trusted source for medical products, supplements, and health solutions.',
     'navigation' => 'Navigation',
     'supplements' => 'Supplements',
     'vitamins' => 'Vitamins',
@@ -49,7 +49,7 @@ return [
     'quantity' => 'Quantity',
     'total' => 'Total',
     'about' => 'About',
-    'full_name' => 'Dr. Abdushukur Ismoil Jurayev',
+    'full_name' => 'Abdushukur Ismoil Jurayev',
     'specialist' => 'Professional Dietologist & Nutrition Expert',
     'info' => 'With over 30 years of dedicated experience in dietology and nutrition, Dr. Abdushukur has transformed thousands of lives through personalized dietary interventions and holistic health approaches across multiple countries.',
     'years_experience' => 'Years Experience',
@@ -106,7 +106,7 @@ return [
     'timeline_digital_desc' => 'Embracing modern technology to reach wider audiences through social media platforms, sharing valuable nutritional insights and guidance globally.',
     'philosophy_title' => 'Philosophy & Approach',
     'philosophy_quote' => '"True health is not just the absence of disease, but a state of complete physical, mental, and social well-being achieved through proper nutrition and lifestyle balance."',
-    'philosophy_author' => 'Dr. Abdushukur Jurayev',
+    'philosophy_author' => 'Abdushukur Jurayev',
 
     'personalized_care_title' => 'Personalized Care',
     'personalized_care_text' => 'Every individual is unique, requiring tailored nutritional approaches based on their specific health conditions, lifestyle, and goals.',
@@ -119,7 +119,7 @@ return [
 
     'education_focus_title' => 'Education Focus',
     'education_focus_text' => 'Empowering patients with knowledge to make informed decisions about their health and nutrition.',
-    'social_title' => 'Connect With Dr. Abdushukur',
-    'social_text' => 'Stay updated with the latest nutritional insights and health tips. Follow Dr. Abdushukur on social media for regular updates and expert advice.',
+    'social_title' => 'Connect With Abdushukur',
+    'social_text' => 'Stay updated with the latest nutritional insights and health tips. Follow Abdushukur on social media for regular updates and expert advice.',
 
 ];

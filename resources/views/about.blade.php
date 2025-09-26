@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <link rel="stylesheet" href="{{ asset('fonts/icomoon/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('fonts/flaticon/font/flaticon.css') }}">
@@ -19,7 +21,7 @@
 
     <style>
         .hero-about {
-            background: linear-gradient(135deg, #1037b4, #2540d8c4);
+            background: linear-gradient(135deg, #0fa842, #13973bc4);
             color: white;
             padding: 100px 0 80px;
             position: relative;
@@ -163,7 +165,7 @@
 
         .social-media-section {
             padding: 60px 0;
-            background: linear-gradient(135deg, #1037b4, #2540d8c4);
+            background: linear-gradient(135deg, #0d9737, #119247c4);
             color: white;
         }
 
@@ -304,12 +306,13 @@
                 <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
                     <div class="expertise-card">
                         <div class="expertise-icon">
-                            <span class="flaticon-stethoscope"></span>
+                            <i class="fa-solid fa-user-doctor"></i>
                         </div>
                         <h5>{{ __('messages.specialization') }}</h5>
                         <p class="text-muted">{{ __('messages.specialization_value') }}</p>
                     </div>
                 </div>
+
                 <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
                     <div class="expertise-card">
                         <div class="expertise-icon">
@@ -332,7 +335,7 @@
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="expertise-card">
                         <div class="expertise-icon">
-                            <span class="flaticon-doctor"></span>
+                            <i class="fa-solid fa-user-doctor"></i>
                         </div>
                         <h4>{{ __('messages.clinical_nutrition') }}</h4>
                         <p>{{ __('messages.clinical_nutrition_desc') }}</p>
@@ -341,7 +344,7 @@
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
                     <div class="expertise-card">
                         <div class="expertise-icon">
-                            <span class="flaticon-scale"></span>
+                            <i class="fa-solid fa-scale-balanced"></i>
                         </div>
                         <h4>{{ __('messages.weight_management') }}</h4>
                         <p>{{ __('messages.weight_management_desc') }}</p>
@@ -350,7 +353,7 @@
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
                     <div class="expertise-card">
                         <div class="expertise-icon">
-                            <span class="flaticon-organic"></span>
+                            <i class="fa-solid fa-leaf"></i>
                         </div>
                         <h4>{{ __('messages.holistic_wellness') }}</h4>
                         <p>{{ __('messages.holistic_wellness_desc') }}</p>
@@ -359,7 +362,7 @@
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
                     <div class="expertise-card">
                         <div class="expertise-icon">
-                            <span class="flaticon-heart-1"></span>
+                            <i class="fa-solid fa-heart-pulse"></i>
                         </div>
                         <h4>{{ __('messages.lifestyle_medicine') }}</h4>
                         <p>{{ __('messages.lifestyle_medicine_desc') }}</p>
@@ -368,7 +371,7 @@
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
                     <div class="expertise-card">
                         <div class="expertise-icon">
-                            <span class="flaticon-dumbbell"></span>
+                            <i class="fa-solid fa-dumbbell"></i>
                         </div>
                         <h4>{{ __('messages.sports_nutrition') }}</h4>
                         <p>{{ __('messages.sports_nutrition_desc') }}</p>
@@ -377,7 +380,7 @@
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
                     <div class="expertise-card">
                         <div class="expertise-icon">
-                            <span class="flaticon-family"></span>
+                            <i class="fa-solid fa-people-group"></i>
                         </div>
                         <h4>{{ __('messages.community_health') }}</h4>
                         <p>{{ __('messages.community_health_desc') }}</p>
@@ -511,23 +514,23 @@
                     <h2 class="mb-4">{{ __('messages.social_title') }}</h2>
                     <p class="lead mb-5">{{ __('messages.social_text') }}</p>
 
-
-                    <div class="d-flex justify-content-center align-items-center">
+                    <div class="d-flex justify-content-center align-items-center gap-3">
                         <a href="https://www.instagram.com/abdushukur_tabib?igsh=MWRhNzhoM2ZheXlpMw=="
                             class="social-link" target="_blank">
-                            <span class="icon-instagram"></span>
+                            <i class="fa-brands fa-instagram"></i>
                         </a>
                         <a href="https://www.youtube.com/@Abdushukur_tabib" class="social-link" target="_blank">
-                            <span class="icon-youtube"></span>
+                            <i class="fa-brands fa-youtube"></i>
                         </a>
                         <a href="https://www.facebook.com/share/165SPhGpc5/" class="social-link" target="_blank">
-                            <span class="icon-facebook"></span>
+                            <i class="fa-brands fa-facebook"></i>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Footer -->
     @include('helpers.footer')

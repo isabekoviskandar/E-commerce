@@ -21,8 +21,8 @@ return [
     'no_products_text' => 'Kechirasiz, bu turkumda hozircha mahsulot yo‘q.',
     'view_all' => 'Barcha mahsulotlarni ko‘rish',
 
-    'about_title' => 'Pharmative haqida',
-    'about_text' => 'Pharmative — tibbiy mahsulotlar, qo‘shimchalar va sog‘liq uchun yechimlar manbai.',
+    'about_title' => 'Sinotib haqida',
+    'about_text' => 'Sinotib — tibbiy mahsulotlar, qo‘shimchalar va sog‘liq uchun yechimlar manbai.',
     'navigation' => 'Navigatsiya',
     'supplements' => 'Qo‘shimchalar',
     'vitamins' => 'Vitaminlar',
@@ -46,12 +46,12 @@ return [
     'quantity' => 'Soni',
     'total' => 'Hammasi',
     'about' => 'Haqida',
-    'full_name' => 'Dr. Abdushukur Ismoil Jurayev',
+    'full_name' => 'Abdushukur Ismoil Jurayev',
     'specialist' => 'Professional dietolog va ovqatlanish bo\'yicha mutaxassis',
     'info' => 'Dietologiya va ovqatlanish bo\'yicha 30 yildan ortiq maxsus tajribaga ega bo\'lgan doktor Abdushukur ko\'plab mamlakatlarda shaxsiylashtirilgan parhez aralashuvi va sog\'liqni saqlashning yaxlit yondashuvlari orqali minglab odamlarning hayotini o\'zgartirdi.',
     'years_experience' => 'Yillik tajriba',
     'years_of_age' => 'Yosh',
-    'cities_practiced' => 'Amaliyot o‘tkazilgan shaharlar',
+    'cities_practiced' => 'Chetelda',
     'personal_information' => 'Shaxsiy maʼlumotlar',
     'date_of_birth' => 'Tug‘ilgan sana',
     'specialization' => 'Mutaxassislik',
@@ -103,7 +103,7 @@ return [
     'timeline_digital_desc' => 'Ijtimoiy tarmoqlar orqali keng auditoriyaga yetib borish uchun zamonaviy texnologiyalardan foydalanib, foydali ovqatlanish bilimlarini butun dunyo bilan bo‘lishmoqda.',
     'philosophy_title' => 'Falsafa va Yondashuv',
     'philosophy_quote' => '"Haqiqiy sog‘liq — bu kasallikning yo‘qligi emas, balki to‘g‘ri ovqatlanish va hayot tarzi muvozanati orqali erishiladigan to‘liq jismoniy, ruhiy va ijtimoiy farovonlik holatidir."',
-    'philosophy_author' => 'Dr. Abdushukur Jurayev',
+    'philosophy_author' => 'Abdushukur Jurayev',
 
     'personalized_care_title' => 'Shaxsiylashtirilgan yondashuv',
     'personalized_care_text' => 'Har bir inson noyobdir, shuning uchun uning sog‘lig‘i, turmush tarzi va maqsadlariga moslashtirilgan ovqatlanish yondashuvi talab etiladi.',
@@ -116,6 +116,6 @@ return [
 
     'education_focus_title' => 'Ta’limga e’tibor',
     'education_focus_text' => 'Bemorlarni o‘z sog‘lig‘i va ovqatlanishi haqida ongli qaror qabul qilishlari uchun bilim bilan quvvatlantirish.',
-    'social_title' => 'Dr. Abdushukur bilan bog‘laning',
-    'social_text' => 'So‘nggi ovqatlanish bo‘yicha maslahatlar va sog‘liq bo‘yicha tavsiyalardan xabardor bo‘ling. Dr. Abdushukurni ijtimoiy tarmoqlarda kuzatib boring va doimiy yangilanishlar hamda mutaxassis maslahatlariga ega bo‘ling.',
+    'social_title' => 'Abdushukur bilan bog‘laning',
+    'social_text' => 'So‘nggi ovqatlanish bo‘yicha maslahatlar va sog‘liq bo‘yicha tavsiyalardan xabardor bo‘ling. Abdushukurni ijtimoiy tarmoqlarda kuzatib boring va doimiy yangilanishlar hamda mutaxassis maslahatlariga ega bo‘ling.',
 ];
