@@ -58,8 +58,9 @@ class MainController extends Controller
         return view('single', compact('product'));
     }
 
-    // public function about()
-    // {
-    //     return view('about');
-    // }
+    public function footerCategory()
+    {
+        $categories = Category::limit(5)->get();
+        return view('helpers.footer' , compact('categories'));
+    }
 }

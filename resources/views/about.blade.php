@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Dr. Abdushukur Jurayev &mdash; Pharmative</title>
+    <title>Abdushukur Jurayev Sinotip</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -255,7 +255,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-5 mb-5 mb-lg-0" data-aos="fade-right">
-                    <img src="{{ asset('images/profile.jpg') }}" alt="Dr. Abdushukur Jurayev"
+                    <img src="{{ asset('images/profile.jpg') }}" 
                         class="doctor-profile-img">
                 </div>
                 <div class="col-lg-7" data-aos="fade-left">

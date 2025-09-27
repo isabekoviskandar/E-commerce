@@ -45,7 +45,7 @@
             <div class="logo">
                 <div class="site-logo">
                     <a href="{{ url('/') }}" class="js-logo-clone">
-                        <img src="{{ asset('images/sinotip.jpg') }}" alt="Dr Abdushukur Logo"
+                        <img src="{{ asset('images/sinotip.jpg') }}"
                             class="site-logo-img">
                     </a>
                 </div>

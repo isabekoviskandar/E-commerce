@@ -18,6 +18,46 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 
+
+<style>
+    /* Gradient Blur Button */
+    .btn-gradient {
+        background: linear-gradient(45deg, #181a9e, #172496);
+        border: none;
+        color: #fff;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        padding: 10px 20px;
+    }
+
+    .btn-gradient:hover {
+        background: linear-gradient(45deg, #1b1da8, #1ea085);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(24, 26, 158, 0.3);
+    }
+
+    .btn-gradient:active {
+        transform: translateY(0);
+    }
+
+    /* Gradient Outline for +/- */
+    .btn-gradient-outline {
+        background: transparent;
+        border: 2px solid #181a9e;
+        color: #181a9e;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-gradient-outline:hover {
+        background: linear-gradient(45deg, #181a9e, #172496);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+</style>
+
 <body>
     @include('helpers.navbar')
 
@@ -62,41 +102,35 @@
                         <div class="mb-5">
                             <div class="input-group mb-3" style="max-width: 220px;">
                                 <div class="input-group-prepend">
-                                    <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+                                    <button class="btn btn-gradient-outline js-btn-minus"
+                                        type="button">&minus;</button>
                                 </div>
                                 <input type="number" name="quantity" class="form-control text-center" value="1"
-                                    min="1" placeholder="" aria-label="Example text with button addon"
-                                    aria-describedby="button-addon1">
+                                    min="1">
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
+                                    <button class="btn btn-gradient-outline js-btn-plus" type="button">&plus;</button>
                                 </div>
+
                             </div>
                         </div>
 
-                        <p><button type="submit" class="buy-now btn btn-sm height-auto px-4 py-3 btn-primary">Add
-                                To Cart</button></p>
+                        <p>
+                            <button type="submit" class="buy-now btn btn-sm height-auto px-4 py-3 btn-gradient">
+                                Add To Cart
+                            </button>
+                        </p>
+
+
                     </form>
 
                     <div class="mt-5">
                         <ul class="nav nav-pills mb-3 custom-pill" id="pills-tab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home"
-                                    role="tab" aria-controls="pills-home" aria-selected="true">Product
-                                    Information</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile"
-                                    role="tab" aria-controls="pills-profile"
-                                    aria-selected="false">Specifications</a>
-                            </li>
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
                             <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
                                 aria-labelledby="pills-home-tab">
                                 <table class="table custom-table">
                                     <thead>
-                                        <th>Property</th>
-                                        <th>Value</th>
                                     </thead>
                                     <tbody>
                                         <tr>
@@ -113,6 +147,9 @@
                                                 <td>{{ $product->category->name_uz }}</td>
                                             </tr>
                                         @endif
+                                        <tr>
+                                            <td></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

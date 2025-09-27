@@ -41,7 +41,7 @@ return [
     'product_id' => 'Mahsulot ID',
     'available' => 'Mavjud',
     'view_all' => 'Hammasini ko‘rish',
-    'cart' => 'Kart',
+    'cart' => 'Savat',
     'image' => 'Surat',
     'quantity' => 'Soni',
     'total' => 'Hammasi',
