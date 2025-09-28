@@ -118,4 +118,6 @@ return [
     'education_focus_text' => 'Bemorlarni o‘z sog‘lig‘i va ovqatlanishi haqida ongli qaror qabul qilishlari uchun bilim bilan quvvatlantirish.',
     'social_title' => 'Abdushukur bilan bog‘laning',
     'social_text' => 'So‘nggi ovqatlanish bo‘yicha maslahatlar va sog‘liq bo‘yicha tavsiyalardan xabardor bo‘ling. Abdushukurni ijtimoiy tarmoqlarda kuzatib boring va doimiy yangilanishlar hamda mutaxassis maslahatlariga ega bo‘ling.',
+    'cart_empty' => 'Savatchat bo\'sh',
+    'actions' => 'Harakatlar',
 ];

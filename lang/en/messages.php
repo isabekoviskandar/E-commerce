@@ -121,5 +121,7 @@ return [
     'education_focus_text' => 'Empowering patients with knowledge to make informed decisions about their health and nutrition.',
     'social_title' => 'Connect With Abdushukur',
     'social_text' => 'Stay updated with the latest nutritional insights and health tips. Follow Abdushukur on social media for regular updates and expert advice.',
+    'cart_empty' => 'Cart is empty',
+    'actions' => 'Actions',
 
 ];

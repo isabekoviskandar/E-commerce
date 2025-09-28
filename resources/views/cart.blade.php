@@ -104,7 +104,6 @@
 </style>
 
 <body>
-    <div class="site-wrap">
         <!-- Navbar -->
         @include('helpers.navbar')
         
@@ -195,20 +194,9 @@
                         </table>
 
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="mt-3">
-                                    <button type="submit" class="btn btn-gradient mr-3">Update Cart</button>
-                                    <a href="{{ route('cart.clear', app()->getLocale()) }}" 
-                                       class="btn btn-danger-outline"
-                                       onclick="return confirm('Are you sure you want to clear the cart?')">
-                                        Clear Cart
-                                    </a>
-                                </div>
-                            </div>
                             
                             <div class="col-md-6">
                                 <div class="cart-total">
-                                    <h4>Cart Summary</h4>
                                     <div class="d-flex justify-content-between">
                                         <strong>Grand Total:</strong>
                                         <strong class="grand-total">{{ number_format($grandTotal) }} uzs</strong>
