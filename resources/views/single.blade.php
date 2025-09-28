@@ -18,7 +18,6 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 
-
 <style>
     /* Gradient Blur Button */
     .btn-gradient {
@@ -55,6 +54,11 @@
         background: linear-gradient(45deg, #181a9e, #172496);
         color: #fff;
         transform: translateY(-2px);
+    }
+
+    /* Price display styling */
+    .total-price {
+        transition: all 0.3s ease;
     }
 </style>
 
@@ -94,7 +98,10 @@
                             voluptas, distinctio, aperiam, ratione dolore.</p>
                     @endif
 
-                    <p><strong class="text-primary h4">{{ $product->price }} uzs</strong></p>
+                    <div class="price-section mb-3">
+                        <p class="mb-1"><small class="text-muted">Unit Price: <span class="unit-price">{{ $product->price }}</span> uzs</small></p>
+                        <p><strong class="text-primary h4 total-price">{{ $product->price }} uzs</strong></p>
+                    </div>
 
                     <form action="{{ route('cart.add', ['locale' => app()->getLocale(), 'id' => $product->id]) }}"
                         method="POST">
@@ -105,12 +112,11 @@
                                     <button class="btn btn-gradient-outline js-btn-minus"
                                         type="button">&minus;</button>
                                 </div>
-                                <input type="number" name="quantity" class="form-control text-center" value="1"
+                                <input type="number" name="quantity" id="quantity-input" class="form-control text-center" value="1"
                                     min="1">
                                 <div class="input-group-append">
                                     <button class="btn btn-gradient-outline js-btn-plus" type="button">&plus;</button>
                                 </div>
-
                             </div>
                         </div>
 
@@ -119,8 +125,6 @@
                                 Add To Cart
                             </button>
                         </p>
-
-
                     </form>
 
                     <div class="mt-5">
@@ -138,8 +142,12 @@
                                             <td>{{ $product->name_uz }}</td>
                                         </tr>
                                         <tr>
-                                            <td>Price</td>
-                                            <td>{{ $product->price }} uzs</td>
+                                            <td>Unit Price</td>
+                                            <td class="unit-price-table">{{ $product->price }} uzs</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Price</td>
+                                            <td class="total-price-table">{{ $product->price }} uzs</td>
                                         </tr>
                                         @if ($product->category)
                                             <tr>
@@ -176,7 +184,6 @@
     </div>
 
     @include('helpers.footer')
-    </div>
 
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('js/jquery-ui.js') }}"></script>
@@ -186,6 +193,70 @@
     <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
     <script src="{{ asset('js/aos.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Get the unit price from PHP (remove any non-numeric characters and parse as float)
+            const unitPrice = parseFloat('{{ $product->price }}'.replace(/[^\d.-]/g, ''));
+            
+            // Function to update the total price display
+            function updateTotalPrice() {
+                const quantity = parseInt($('#quantity-input').val()) || 1;
+                const totalPrice = unitPrice * quantity;
+                
+                // Format the price with thousand separators if needed
+                const formattedPrice = totalPrice.toLocaleString();
+                
+                // Update all price displays without animation
+                $('.total-price').text(formattedPrice + ' uzs');
+                $('.total-price-table').text(formattedPrice + ' uzs');
+            }
+            
+            // Remove any existing event handlers to prevent conflicts
+            $('.js-btn-plus').off('click');
+            $('.js-btn-minus').off('click');
+            
+            // Plus button click handler
+            $('.js-btn-plus').on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const quantityInput = $('#quantity-input');
+                let currentQuantity = parseInt(quantityInput.val()) || 1;
+                quantityInput.val(currentQuantity + 1);
+                updateTotalPrice();
+            });
+            
+            // Minus button click handler
+            $('.js-btn-minus').on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const quantityInput = $('#quantity-input');
+                let currentQuantity = parseInt(quantityInput.val()) || 1;
+                if (currentQuantity > 1) {
+                    quantityInput.val(currentQuantity - 1);
+                    updateTotalPrice();
+                }
+            });
+            
+            // Handle manual input changes
+            $('#quantity-input').on('input', function() {
+                let quantity = parseInt($(this).val());
+                
+                // Ensure minimum quantity is 1
+                if (quantity < 1 || isNaN(quantity)) {
+                    quantity = 1;
+                    $(this).val(1);
+                }
+                
+                updateTotalPrice();
+            });
+            
+            // Initialize with correct price on page load
+            updateTotalPrice();
+        });
+    </script>
 </body>
 
 </html>

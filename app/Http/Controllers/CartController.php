@@ -45,7 +45,7 @@ class CartController extends Controller
 
         session()->put('cart', $cart);
 
-        return redirect()->route('cart.index')->with('success', 'Cart updated successfully!');
+        return redirect()->route('cart.index' , ['locale' , $locale])->with('success', 'Cart updated successfully!');
     }
 
     public function index($locale) // locale qo'shing
