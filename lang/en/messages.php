@@ -123,5 +123,10 @@ return [
     'social_text' => 'Stay updated with the latest nutritional insights and health tips. Follow Abdushukur on social media for regular updates and expert advice.',
     'cart_empty' => 'Cart is empty',
     'actions' => 'Actions',
+    'go_to_store' => 'Go to store',
+    'empty_message' => 'Your cart is currently empty. Start shopping to add items to your cart.',
+    'continue_shopping' => 'Continue shopping',
+    'formalization' => 'Formalization',
+    'cart_remove' => 'Remove',
 
 ];

@@ -185,7 +185,7 @@
                                             <a href="{{ route('cart.remove', [app()->getLocale(), $id]) }}" 
                                                class="btn btn-danger-outline btn-sm"
                                                onclick="return confirm('Are you sure you want to remove this item?')">
-                                                Remove
+                                                {{ __('messages.cart_remove') }}
                                             </a>
                                         </td>
                                     </tr>
@@ -203,8 +203,8 @@
                                     </div>
                                     <hr>
                                     <div class="mt-3">
-                                        <a href="{{ route('store', app()->getLocale()) }}" class="btn btn-outline-secondary mr-2">Continue Shopping</a>
-                                        <button type="button" class="btn btn-gradient">Proceed to Checkout</button>
+                                        <a href="{{ route('store', app()->getLocale()) }}" class="btn btn-outline-secondary mr-2">{{ __('messages.continue_shopping') }}</a>
+                                        <button type="button" class="btn btn-gradient">{{ __('messages.formalization') }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -213,8 +213,8 @@
                 @else
                     <div class="text-center py-5">
                         <h4>{{ __('messages.cart_empty') }}</h4>
-                        <p>Your cart is currently empty. Start shopping to add items to your cart.</p>
-                        <a href="{{ route('store', app()->getLocale()) }}" class="btn btn-gradient">Go to Store</a>
+                        <p>{{ __('messages.empty_message') }}<p>
+                        <a href="{{ route('store', app()->getLocale()) }}" class="btn btn-gradient">{{ __('messages.go_to_store') }}</a>
                     </div>
                 @endif
             </div>

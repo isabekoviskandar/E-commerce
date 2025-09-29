@@ -120,4 +120,9 @@ return [
     'social_text' => 'So‘nggi ovqatlanish bo‘yicha maslahatlar va sog‘liq bo‘yicha tavsiyalardan xabardor bo‘ling. Abdushukurni ijtimoiy tarmoqlarda kuzatib boring va doimiy yangilanishlar hamda mutaxassis maslahatlariga ega bo‘ling.',
     'cart_empty' => 'Savatchat bo\'sh',
     'actions' => 'Harakatlar',
+    'go_to_store' => 'Do\'konga o\'tish',
+    'empty_message' => 'Savatingiz hozir boʻsh. Savatingizga narsalarni qo\'shish uchun xarid qilishni boshlang',
+    'continue_shopping' => 'Savdoni davom ettiring',
+    'formalization' => 'Rasmiylashtirish',
+    'cart_remove' => 'Olib tashlash',
 ];
