@@ -16,7 +16,7 @@ class MainController extends Controller
 
     public function shop(Request $request)
     {
-
+        $slider_products = Product::latest()->limit(4)->get();
         $footer_categories = Category::limit(4)->get();
         $query = Product::with('category');
 
@@ -49,7 +49,7 @@ class MainController extends Controller
 
         $products = $query->get();
 
-        return view('store', compact('products', 'categories' , 'footer_categories'));
+        return view('store', compact('products', 'categories' , 'footer_categories' , 'slider_products'));
     }
 
     public function single($locale, $id)

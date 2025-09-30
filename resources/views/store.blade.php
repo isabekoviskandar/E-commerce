@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="{{ asset('css/aos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
+
+
     <style>
         /* Enhanced Product Card Styles */
         .product-card {
@@ -117,23 +119,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Horizontal Categories */
-        /* .categories-horizontal {
-            background: linear-gradient(135deg, #e91e63, #ad1457);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 20px rgba(233, 30, 99, 0.2);
-        }
-
-        .category-scroll {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255,255,255,0.3) transparent;
-        } */
 
         .category-scroll::-webkit-scrollbar {
             height: 4px;
@@ -162,12 +147,6 @@
             backdrop-filter: blur(10px); */
         }
 
-        /* .category-pill:hover {
-            background: rgba(255, 255, 255, 0.25);
-            color: white;
-            text-decoration: none;
-            transform: translateY(-2px);
-        } */
 
         .category-pill.active {
             background: white;
@@ -288,6 +267,18 @@
                 font-size: 13px;
             }
         }
+
+        .carousel-item {
+            height: 410px;
+            /* product-card balandligi qanchaligini o'lchab qo'yasiz */
+        }
+
+        .carousel-item img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
     </style>
 </head>
 
@@ -313,6 +304,37 @@
             </div>
         </div>
     </div>
+    <div class="container carousel-container">
+        <div id="carouselExampleRide" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                @foreach ($slider_products as $key => $product)
+                    <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                        <a
+                            href="{{ route('product.single', ['locale' => app()->getLocale(), 'id' => $product->id]) }}">
+                            <img src="{{ asset('storage/' . $product->image) }}" class="d-block w-100"
+                                alt="{{ $product->{'name_' . app()->getLocale()} }}">
+                        </a>
+                        {{-- <div class="carousel-caption d-none d-md-block">
+                            <h5>{{ $product->{'name_' . app()->getLocale()} }}</h5>
+                            <p>{{ \Illuminate\Support\Str::limit($product->{'description_' . app()->getLocale()}, 50) }}
+                            </p>
+                        </div> --}}
+                    </div>
+                @endforeach
+            </div>
+
+            <a class="carousel-control-prev" href="#carouselExampleRide" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleRide" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+
+
 
     <div class="site-section bg-light">
         <div class="container">
@@ -391,8 +413,7 @@
                     <ul class="list-unstyled">
                         @foreach ($footer_categories as $category)
                             <li>
-                                <a
-                                    href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">
+                                <a href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">
                                     {{ $category->name_uz }}
                                 </a>
                             </li>
