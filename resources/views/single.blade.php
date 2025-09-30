@@ -99,7 +99,8 @@
                     @endif
 
                     <div class="price-section mb-3">
-                        <p class="mb-1"><small class="text-muted">Unit Price: <span class="unit-price">{{ $product->price }}</span> uzs</small></p>
+                        <p class="mb-1"><small class="text-muted">Unit Price: <span
+                                    class="unit-price">{{ $product->price }}</span> uzs</small></p>
                         <p><strong class="text-primary h4 total-price">{{ $product->price }} uzs</strong></p>
                     </div>
 
@@ -112,8 +113,8 @@
                                     <button class="btn btn-gradient-outline js-btn-minus"
                                         type="button">&minus;</button>
                                 </div>
-                                <input type="number" name="quantity" id="quantity-input" class="form-control text-center" value="1"
-                                    min="1">
+                                <input type="number" name="quantity" id="quantity-input"
+                                    class="form-control text-center" value="1" min="1">
                                 <div class="input-group-append">
                                     <button class="btn btn-gradient-outline js-btn-plus" type="button">&plus;</button>
                                 </div>
@@ -183,7 +184,53 @@
         </div>
     </div>
 
-    @include('helpers.footer')
+    <footer class="site-footer bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                    <div class="block-7">
+                        <h3 class="footer-heading mb-4">{{ __('messages.about_title') }}</h3>
+                        <p>{{ __('messages.about_text') }}</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 mx-auto mb-5 mb-lg-0">
+                    <h3 class="footer-heading mb-4">{{ __('messages.navigation') }}</h3>
+                    <ul class="list-unstyled">
+                        @foreach ($footer_categories as $category)
+                            <li>
+                                <a
+                                    href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">
+                                    {{ $category->name_uz }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="block-5 mb-5">
+                        <h3 class="footer-heading mb-4">{{ __('messages.contact_info') }}</h3>
+                        <ul class="list-unstyled">
+                            <li class="address">{{ __('messages.address') }}</li>
+                            <li class="phone"><a href="#">+998 94 783 69 96</a></li>
+                            <li class="email">jurayevyunus783@gmail.com</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row pt-5 mt-5 text-center">
+                <div class="col-md-12">
+                    <p>
+                        &copy;
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script>
+                        {{ __('messages.copyright') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('js/jquery-ui.js') }}"></script>
@@ -198,40 +245,40 @@
         $(document).ready(function() {
             // Get the unit price from PHP (remove any non-numeric characters and parse as float)
             const unitPrice = parseFloat('{{ $product->price }}'.replace(/[^\d.-]/g, ''));
-            
+
             // Function to update the total price display
             function updateTotalPrice() {
                 const quantity = parseInt($('#quantity-input').val()) || 1;
                 const totalPrice = unitPrice * quantity;
-                
+
                 // Format the price with thousand separators if needed
                 const formattedPrice = totalPrice.toLocaleString();
-                
+
                 // Update all price displays without animation
                 $('.total-price').text(formattedPrice + ' uzs');
                 $('.total-price-table').text(formattedPrice + ' uzs');
             }
-            
+
             // Remove any existing event handlers to prevent conflicts
             $('.js-btn-plus').off('click');
             $('.js-btn-minus').off('click');
-            
+
             // Plus button click handler
             $('.js-btn-plus').on('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                
+
                 const quantityInput = $('#quantity-input');
                 let currentQuantity = parseInt(quantityInput.val()) || 1;
                 quantityInput.val(currentQuantity + 1);
                 updateTotalPrice();
             });
-            
+
             // Minus button click handler
             $('.js-btn-minus').on('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                
+
                 const quantityInput = $('#quantity-input');
                 let currentQuantity = parseInt(quantityInput.val()) || 1;
                 if (currentQuantity > 1) {
@@ -239,20 +286,20 @@
                     updateTotalPrice();
                 }
             });
-            
+
             // Handle manual input changes
             $('#quantity-input').on('input', function() {
                 let quantity = parseInt($(this).val());
-                
+
                 // Ensure minimum quantity is 1
                 if (quantity < 1 || isNaN(quantity)) {
                     quantity = 1;
                     $(this).val(1);
                 }
-                
+
                 updateTotalPrice();
             });
-            
+
             // Initialize with correct price on page load
             updateTotalPrice();
         });

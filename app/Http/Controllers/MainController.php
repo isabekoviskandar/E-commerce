@@ -10,11 +10,14 @@ class MainController extends Controller
 {
     public function index()
     {
-        return view('about');
+        $footer_categories = Category::limit(5)->get();
+        return view('about' , compact('footer_categories'));
     }
 
     public function shop(Request $request)
     {
+
+        $footer_categories = Category::limit(4)->get();
         $query = Product::with('category');
 
         $categories = Category::all();
@@ -46,21 +49,17 @@ class MainController extends Controller
 
         $products = $query->get();
 
-        return view('store', compact('products', 'categories'));
+        return view('store', compact('products', 'categories' , 'footer_categories'));
     }
 
     public function single($locale, $id)
     {
+        $footer_categories = Category::limit(4)->get();
         app()->setLocale($locale);
 
         $product = Product::findOrFail($id);
 
-        return view('single', compact('product'));
+        return view('single', compact('product' , 'footer_categories'));
     }
 
-    public function footerCategory()
-    {
-        $categories = Category::limit(5)->get();
-        return view('helpers.footer' , compact('categories'));
-    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Product;
 
@@ -50,8 +51,9 @@ class CartController extends Controller
 
     public function index($locale) // locale qo'shing
     {
+        $footer_categories = Category::limit(4)->get();
         $cart = session()->get('cart', []);
-        return view('cart', compact('cart'));
+        return view('cart', compact('cart' , 'footer_categories'));
     }
 
     public function remove($locale, $id) // locale qo'shing

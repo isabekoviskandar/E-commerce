@@ -16,13 +16,13 @@
     <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/aos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    
+
     <style>
         /* Enhanced Product Card Styles */
         .product-card {
             background: #fff;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             overflow: hidden;
             margin-bottom: 30px;
@@ -31,7 +31,7 @@
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
         }
 
         .product-image {
@@ -140,12 +140,12 @@
         }
 
         .category-scroll::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 2px;
         }
 
         .category-scroll::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 2px;
         }
 
@@ -260,29 +260,29 @@
             .product-card {
                 margin-bottom: 25px;
             }
-            
+
             .categories-horizontal {
                 padding: 15px;
                 margin-bottom: 25px;
             }
-            
+
             .category-pill {
                 padding: 8px 16px;
                 font-size: 14px;
             }
-            
+
             .product-info {
                 padding: 20px 15px;
             }
-            
+
             .product-title {
                 font-size: 16px;
             }
-            
+
             .product-price {
                 font-size: 20px;
             }
-            
+
             .btn-add-to-cart {
                 padding: 8px 16px;
                 font-size: 13px;
@@ -299,13 +299,13 @@
         <div class="container">
             <div class="categories-horizontal">
                 <div class="category-scroll">
-                    <a href="{{ route('store', app()->getLocale()) }}" 
-                       class="category-pill {{ request('category_id') ? '' : 'active' }}">
+                    <a href="{{ route('store', app()->getLocale()) }}"
+                        class="category-pill {{ request('category_id') ? '' : 'active' }}">
                         {{ __('messages.all_categories') }}
                     </a>
                     @foreach ($categories as $category)
-                        <a href="{{ route('store', array_merge(['locale' => app()->getLocale()], ['category_id' => $category->id])) }}" 
-                           class="category-pill {{ request('category_id') == $category->id ? 'active' : '' }}">
+                        <a href="{{ route('store', array_merge(['locale' => app()->getLocale()], ['category_id' => $category->id])) }}"
+                            class="category-pill {{ request('category_id') == $category->id ? 'active' : '' }}">
                             {{ $category->name_uz }}
                         </a>
                     @endforeach
@@ -322,27 +322,38 @@
                         <div class="col-sm-6 col-lg-4">
                             <div class="product-card">
                                 <div class="product-image">
-                                    <a href="{{ route('product.single', ['locale' => app()->getLocale(), 'id' => $product->id]) }}">
-                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name_uz }}">
+                                    <a
+                                        href="{{ route('product.single', ['locale' => app()->getLocale(), 'id' => $product->id]) }}">
+                                        <img src="{{ asset('storage/' . $product->image) }}"
+                                            alt="{{ $product->name_uz }}">
                                     </a>
                                 </div>
-                                
+
                                 <div class="product-info">
                                     <h3 class="product-title">
-                                        <a href="{{ route('product.single', ['locale' => app()->getLocale(), 'id' => $product->id]) }}">
+                                        <a
+                                            href="{{ route('product.single', ['locale' => app()->getLocale(), 'id' => $product->id]) }}">
                                             {{ $product->name_uz }}
                                         </a>
                                     </h3>
-                                    
+
                                     <div class="product-price">{{ number_format($product->price) }}</div>
-                                    
-                                    <form action="{{ route('cart.add', ['locale' => app()->getLocale(), 'id' => $product->id]) }}" method="POST" class="add-to-cart-form">
+
+                                    <form
+                                        action="{{ route('cart.add', ['locale' => app()->getLocale(), 'id' => $product->id]) }}"
+                                        method="POST" class="add-to-cart-form">
                                         @csrf
                                         <button type="submit" class="btn-add-to-cart">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16 5 16H17M17 13V17C17 17.6 16.6 18 16 18H8C7.4 18 7 17.6 7 17V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                                <circle cx="9" cy="20" r="1" stroke="currentColor" stroke-width="2"/>
-                                                <circle cx="20" cy="20" r="1" stroke="currentColor" stroke-width="2"/>
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16 5 16H17M17 13V17C17 17.6 16.6 18 16 18H8C7.4 18 7 17.6 7 17V13"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                                <circle cx="9" cy="20" r="1" stroke="currentColor"
+                                                    stroke-width="2" />
+                                                <circle cx="20" cy="20" r="1" stroke="currentColor"
+                                                    stroke-width="2" />
                                             </svg>
                                             {{ __('messages.add_to_cart') }}
                                         </button>
@@ -366,7 +377,53 @@
         </div>
     </div>
 
-    @include('helpers.footer')
+    <footer class="site-footer bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                    <div class="block-7">
+                        <h3 class="footer-heading mb-4">{{ __('messages.about_title') }}</h3>
+                        <p>{{ __('messages.about_text') }}</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 mx-auto mb-5 mb-lg-0">
+                    <h3 class="footer-heading mb-4">{{ __('messages.navigation') }}</h3>
+                    <ul class="list-unstyled">
+                        @foreach ($footer_categories as $category)
+                            <li>
+                                <a
+                                    href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">
+                                    {{ $category->name_uz }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="block-5 mb-5">
+                        <h3 class="footer-heading mb-4">{{ __('messages.contact_info') }}</h3>
+                        <ul class="list-unstyled">
+                            <li class="address">{{ __('messages.address') }}</li>
+                            <li class="phone"><a href="#">+998 94 783 69 96</a></li>
+                            <li class="email">jurayevyunus783@gmail.com</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row pt-5 mt-5 text-center">
+                <div class="col-md-12">
+                    <p>
+                        &copy;
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script>
+                        {{ __('messages.copyright') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('js/jquery-ui.js') }}"></script>

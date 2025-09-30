@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
+
 <head>
     <title>Pharmative</title>
     <meta charset="utf-8">
@@ -104,123 +105,170 @@
 </style>
 
 <body>
-        <!-- Navbar -->
-        @include('helpers.navbar')
-        
-        <!-- Breadcrumb -->
-        <div class="bg-light py-3">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 mb-0">
-                        <a href="{{ route('home', app()->getLocale()) }}">{{ __('messages.home') }}</a>
-                        <span class="mx-2 mb-0">/</span>
-                        <a href="{{ route('store', app()->getLocale()) }}">{{ __('messages.store') }}</a>
-                        <span class="mx-2 mb-0">/</span>
-                        <strong class="text-black">{{ __('messages.cart') }}</strong>
-                    </div>
+    <!-- Navbar -->
+    @include('helpers.navbar')
+
+    <!-- Breadcrumb -->
+    <div class="bg-light py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 mb-0">
+                    <a href="{{ route('home', app()->getLocale()) }}">{{ __('messages.home') }}</a>
+                    <span class="mx-2 mb-0">/</span>
+                    <a href="{{ route('store', app()->getLocale()) }}">{{ __('messages.store') }}</a>
+                    <span class="mx-2 mb-0">/</span>
+                    <strong class="text-black">{{ __('messages.cart') }}</strong>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Cart Content -->
-        <div class="site-section">
-            <div class="container">
-                <h2>{{ __('messages.cart') }}</h2>
-                
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @endif
+    <!-- Cart Content -->
+    <div class="site-section">
+        <div class="container">
+            <h2>{{ __('messages.cart') }}</h2>
 
-                @if(!empty($cart))
-                    <form action="{{ route('cart.update', app()->getLocale()) }}" method="POST" id="cart-form">
-                        @csrf
-                        
-                        <table class="table custom-table">
-                            <thead>
-                                <tr>
-                                    <th>{{ __('messages.image') }}</th>
-                                    <th>{{ __('messages.product_name') }}</th>
-                                    <th>{{ __('messages.price') }}</th>
-                                    <th>{{ __('messages.quantity') }}</th>
-                                    <th>{{ __('messages.total') }}</th>
-                                    <th>{{ __('messages.actions') ?? 'Actions' }}</th>
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
+
+            @if (!empty($cart))
+                <form action="{{ route('cart.update', app()->getLocale()) }}" method="POST" id="cart-form">
+                    @csrf
+
+                    <table class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th>{{ __('messages.image') }}</th>
+                                <th>{{ __('messages.product_name') }}</th>
+                                <th>{{ __('messages.price') }}</th>
+                                <th>{{ __('messages.quantity') }}</th>
+                                <th>{{ __('messages.total') }}</th>
+                                <th>{{ __('messages.actions') ?? 'Actions' }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php $grandTotal = 0; @endphp
+                            @foreach ($cart as $id => $item)
+                                @php $itemTotal = $item['price'] * $item['quantity']; @endphp
+                                @php $grandTotal += $itemTotal; @endphp
+                                <tr data-product-id="{{ $id }}">
+                                    <td>
+                                        <img src="{{ asset('storage/' . $item['image']) }}" width="80"
+                                            class="product-image" alt="{{ $item['name'] }}">
+                                    </td>
+                                    <td>{{ $item['name'] }}</td>
+                                    <td class="unit-price" data-price="{{ $item['price'] }}">
+                                        {{ number_format($item['price']) }} uzs
+                                    </td>
+                                    <td>
+                                        <div class="quantity-controls">
+                                            <button type="button"
+                                                class="btn btn-gradient-outline btn-sm qty-minus">−</button>
+                                            <input type="number" name="quantities[{{ $id }}]"
+                                                value="{{ $item['quantity'] }}" min="1" class="quantity-input">
+                                            <button type="button"
+                                                class="btn btn-gradient-outline btn-sm qty-plus">+</button>
+                                        </div>
+                                    </td>
+                                    <td class="item-total">
+                                        {{ number_format($itemTotal) }} uzs
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('cart.remove', [app()->getLocale(), $id]) }}"
+                                            class="btn btn-danger-outline btn-sm"
+                                            onclick="return confirm('Are you sure you want to remove this item?')">
+                                            {{ __('messages.cart_remove') }}
+                                        </a>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @php $grandTotal = 0; @endphp
-                                @foreach($cart as $id => $item)
-                                    @php $itemTotal = $item['price'] * $item['quantity']; @endphp
-                                    @php $grandTotal += $itemTotal; @endphp
-                                    <tr data-product-id="{{ $id }}">
-                                        <td>
-                                            <img src="{{ asset('storage/' . $item['image']) }}" 
-                                                 width="80" 
-                                                 class="product-image"
-                                                 alt="{{ $item['name'] }}">
-                                        </td>
-                                        <td>{{ $item['name'] }}</td>
-                                        <td class="unit-price" data-price="{{ $item['price'] }}">
-                                            {{ number_format($item['price']) }} uzs
-                                        </td>
-                                        <td>
-                                            <div class="quantity-controls">
-                                                <button type="button" class="btn btn-gradient-outline btn-sm qty-minus">−</button>
-                                                <input type="number" 
-                                                       name="quantities[{{ $id }}]" 
-                                                       value="{{ $item['quantity'] }}" 
-                                                       min="1" 
-                                                       class="quantity-input">
-                                                <button type="button" class="btn btn-gradient-outline btn-sm qty-plus">+</button>
-                                            </div>
-                                        </td>
-                                        <td class="item-total">
-                                            {{ number_format($itemTotal) }} uzs
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('cart.remove', [app()->getLocale(), $id]) }}" 
-                                               class="btn btn-danger-outline btn-sm"
-                                               onclick="return confirm('Are you sure you want to remove this item?')">
-                                                {{ __('messages.cart_remove') }}
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                            @endforeach
+                        </tbody>
+                    </table>
 
-                        <div class="row">
-                            
-                            <div class="col-md-6">
-                                <div class="cart-total">
-                                    <div class="d-flex justify-content-between">
-                                        <strong>Grand Total:</strong>
-                                        <strong class="grand-total">{{ number_format($grandTotal) }} uzs</strong>
-                                    </div>
-                                    <hr>
-                                    <div class="mt-3">
-                                        <a href="{{ route('store', app()->getLocale()) }}" class="btn btn-outline-secondary mr-2">{{ __('messages.continue_shopping') }}</a>
-                                        <button type="button" class="btn btn-gradient">{{ __('messages.formalization') }}</button>
-                                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="cart-total">
+                                <div class="d-flex justify-content-between">
+                                    <strong>Grand Total:</strong>
+                                    <strong class="grand-total">{{ number_format($grandTotal) }} uzs</strong>
+                                </div>
+                                <hr>
+                                <div class="mt-3">
+                                    <a href="{{ route('store', app()->getLocale()) }}"
+                                        class="btn btn-outline-secondary mr-2">{{ __('messages.continue_shopping') }}</a>
+                                    <button type="button"
+                                        class="btn btn-gradient">{{ __('messages.formalization') }}</button>
                                 </div>
                             </div>
                         </div>
-                    </form>
-                @else
-                    <div class="text-center py-5">
-                        <h4>{{ __('messages.cart_empty') }}</h4>
-                        <p>{{ __('messages.empty_message') }}<p>
-                        <a href="{{ route('store', app()->getLocale()) }}" class="btn btn-gradient">{{ __('messages.go_to_store') }}</a>
                     </div>
-                @endif
+                </form>
+            @else
+                <div class="text-center py-5">
+                    <h4>{{ __('messages.cart_empty') }}</h4>
+                    <p>{{ __('messages.empty_message') }}
+                    <p>
+                        <a href="{{ route('store', app()->getLocale()) }}"
+                            class="btn btn-gradient">{{ __('messages.go_to_store') }}</a>
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <footer class="site-footer bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                    <div class="block-7">
+                        <h3 class="footer-heading mb-4">{{ __('messages.about_title') }}</h3>
+                        <p>{{ __('messages.about_text') }}</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 mx-auto mb-5 mb-lg-0">
+                    <h3 class="footer-heading mb-4">{{ __('messages.navigation') }}</h3>
+                    <ul class="list-unstyled">
+                        @foreach ($footer_categories as $category)
+                            <li>
+                                <a
+                                    href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">
+                                    {{ $category->name_uz }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="block-5 mb-5">
+                        <h3 class="footer-heading mb-4">{{ __('messages.contact_info') }}</h3>
+                        <ul class="list-unstyled">
+                            <li class="address">{{ __('messages.address') }}</li>
+                            <li class="phone"><a href="#">+998 94 783 69 96</a></li>
+                            <li class="email">jurayevyunus783@gmail.com</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row pt-5 mt-5 text-center">
+                <div class="col-md-12">
+                    <p>
+                        &copy;
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script>
+                        {{ __('messages.copyright') }}
+                    </p>
+                </div>
             </div>
         </div>
-
-        @include('helpers.footer')
+    </footer>
     </div>
 
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
@@ -237,20 +285,20 @@
             // Function to update item total and grand total
             function updateTotals() {
                 let grandTotal = 0;
-                
+
                 $('.quantity-input').each(function() {
                     const row = $(this).closest('tr');
                     const quantity = parseInt($(this).val()) || 1;
                     const unitPrice = parseFloat(row.find('.unit-price').data('price'));
                     const itemTotal = unitPrice * quantity;
-                    
+
                     // Update item total
                     row.find('.item-total').text(itemTotal.toLocaleString() + ' uzs');
-                    
+
                     // Add to grand total
                     grandTotal += itemTotal;
                 });
-                
+
                 // Update grand total
                 $('.grand-total').text(grandTotal.toLocaleString() + ' uzs');
             }
@@ -278,13 +326,13 @@
             // Handle manual input changes
             $(document).on('input', '.quantity-input', function() {
                 let quantity = parseInt($(this).val());
-                
+
                 // Ensure minimum quantity is 1
                 if (quantity < 1 || isNaN(quantity)) {
                     quantity = 1;
                     $(this).val(1);
                 }
-                
+
                 updateTotals();
             });
 
@@ -298,4 +346,5 @@
         });
     </script>
 </body>
+
 </html>
