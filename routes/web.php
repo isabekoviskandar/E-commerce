@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BotController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\OrderController;
@@ -30,6 +31,7 @@ Route::group(['prefix' => '{locale}', 'middleware' => 'setlocale'], function () 
     Route::post('/checkout/place', [OrderController::class, 'placeOrder'])->name('checkout.place');
     Route::get('/checkout/thankyou/{order}', [OrderController::class, 'thankYou'])->name('checkout.thankyou');
 });
+
 
 
 // Add these to your web.php routes file

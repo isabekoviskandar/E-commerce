@@ -14,6 +14,7 @@ class Order extends Model
         'address',
         'phone',
         'total',
+        'chat_id'
     ];
 
     public function items()
