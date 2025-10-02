@@ -24,7 +24,8 @@
     .icons .bag {
         position: relative;
         display: inline-block;
-        font-size: 20px; /* adjust cart icon size */
+        font-size: 20px;
+        /* adjust cart icon size */
     }
 
     .icons .bag .number {
@@ -45,8 +46,7 @@
             <div class="logo">
                 <div class="site-logo">
                     <a href="{{ url('/') }}" class="js-logo-clone">
-                        <img src="{{ asset('images/sinotip.jpg') }}"
-                            class="site-logo-img">
+                        <img src="{{ asset('images/sinotip.jpg') }}" class="site-logo-img">
                     </a>
                 </div>
             </div>
@@ -81,7 +81,13 @@
             <div class="icons">
                 <a href="{{ route('cart.index', app()->getLocale()) }}" class="icons-btn d-inline-block bag">
                     <i class="fas fa-shopping-cart"></i>
-                    <span class="number">{{ count(session('cart', [])) }}</span>
+                    @php
+                        $cart = \App\Models\Cart::where('session_id', session()->getId())->first();
+                        $cartCount = $cart ? $cart->items()->sum('quantity') : 0;
+                    @endphp
+
+                    <span class="number">{{ $cartCount }}</span>
+
                 </a>
 
                 <a href="#" class="site-menu-toggle js-menu-toggle ml-3 d-inline-block d-lg-none">

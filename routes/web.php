@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -25,6 +26,9 @@ Route::group(['prefix' => '{locale}', 'middleware' => 'setlocale'], function () 
     Route::get('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
     Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
     // Route::get('/about' , [MainController::class, 'about'])->name('about');
+    Route::get('/checkout' , [CartController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout/place', [OrderController::class, 'placeOrder'])->name('checkout.place');
+    Route::get('/checkout/thankyou/{order}', [OrderController::class, 'thankYou'])->name('checkout.thankyou');
 });
 
 

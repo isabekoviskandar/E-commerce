@@ -18,7 +18,6 @@
 </head>
 
 <style>
-    /* Custom styles for cart */
     .btn-danger-outline {
         background: transparent;
         border: 2px solid #dc3545;
@@ -105,10 +104,8 @@
 </style>
 
 <body>
-    <!-- Navbar -->
     @include('helpers.navbar')
 
-    <!-- Breadcrumb -->
     <div class="bg-light py-3">
         <div class="container">
             <div class="row">
@@ -123,7 +120,6 @@
         </div>
     </div>
 
-    <!-- Cart Content -->
     <div class="site-section">
         <div class="container">
             <h2>{{ __('messages.cart') }}</h2>
@@ -137,7 +133,14 @@
                 </div>
             @endif
 
-            @if (!empty($cart))
+            @php
+                $cart = \App\Models\Cart::where('session_id', session()->getId())->first();
+                $cartItems = $cart ? $cart->items()->with('product')->get() : collect();
+                $grandTotal = 0;
+            @endphp
+
+
+            @if ($cartItems->count() > 0)
                 <form action="{{ route('cart.update', app()->getLocale()) }}" method="POST" id="cart-form">
                     @csrf
 
@@ -149,29 +152,30 @@
                                 <th>{{ __('messages.price') }}</th>
                                 <th>{{ __('messages.quantity') }}</th>
                                 <th>{{ __('messages.total') }}</th>
-                                <th>{{ __('messages.actions') ?? 'Actions' }}</th>
+                                <th>{{ __('messages.actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @php $grandTotal = 0; @endphp
-                            @foreach ($cart as $id => $item)
-                                @php $itemTotal = $item['price'] * $item['quantity']; @endphp
-                                @php $grandTotal += $itemTotal; @endphp
-                                <tr data-product-id="{{ $id }}">
+                            @foreach ($cartItems as $item)
+                                @php
+                                    $itemTotal = $item->product->price * $item->quantity;
+                                    $grandTotal += $itemTotal;
+                                @endphp
+                                <tr data-id="{{ $item->id }}">
                                     <td>
-                                        <img src="{{ asset('storage/' . $item['image']) }}" width="80"
-                                            class="product-image" alt="{{ $item['name'] }}">
+                                        <img src="{{ asset('storage/' . $item->product->image) }}" width="80"
+                                            class="product-image" alt="{{ $item->product->name_uz }}">
                                     </td>
-                                    <td>{{ $item['name'] }}</td>
-                                    <td class="unit-price" data-price="{{ $item['price'] }}">
-                                        {{ number_format($item['price']) }} uzs
+                                    <td>{{ $item->product->name_uz }}</td>
+                                    <td class="unit-price" data-price="{{ $item->product->price }}">
+                                        {{ number_format($item->product->price) }} uzs
                                     </td>
                                     <td>
                                         <div class="quantity-controls">
                                             <button type="button"
                                                 class="btn btn-gradient-outline btn-sm qty-minus">−</button>
-                                            <input type="number" name="quantities[{{ $id }}]"
-                                                value="{{ $item['quantity'] }}" min="1" class="quantity-input">
+                                            <input type="number" name="quantities[{{ $item->id }}]"
+                                                value="{{ $item->quantity }}" min="1" class="quantity-input">
                                             <button type="button"
                                                 class="btn btn-gradient-outline btn-sm qty-plus">+</button>
                                         </div>
@@ -180,11 +184,11 @@
                                         {{ number_format($itemTotal) }} uzs
                                     </td>
                                     <td>
-                                        <a href="{{ route('cart.remove', [app()->getLocale(), $id]) }}"
-                                            class="btn btn-danger-outline btn-sm"
-                                            onclick="return confirm('Are you sure you want to remove this item?')">
+                                        <a href="{{ route('cart.remove', ['locale' => app()->getLocale(), 'id' => $item->product_id]) }}"
+                                            class="btn btn-danger btn-sm">
                                             {{ __('messages.cart_remove') }}
                                         </a>
+
                                     </td>
                                 </tr>
                             @endforeach
@@ -192,7 +196,6 @@
                     </table>
 
                     <div class="row">
-
                         <div class="col-md-6">
                             <div class="cart-total">
                                 <div class="d-flex justify-content-between">
@@ -203,8 +206,10 @@
                                 <div class="mt-3">
                                     <a href="{{ route('store', app()->getLocale()) }}"
                                         class="btn btn-outline-secondary mr-2">{{ __('messages.continue_shopping') }}</a>
-                                    <button type="button"
-                                        class="btn btn-gradient">{{ __('messages.formalization') }}</button>
+                                    <a href="{{ route('checkout', app()->getLocale()) }}" class="btn btn-gradient">
+                                        {{ __('messages.formalization') }}
+                                    </a>
+
                                 </div>
                             </div>
                         </div>
@@ -213,10 +218,10 @@
             @else
                 <div class="text-center py-5">
                     <h4>{{ __('messages.cart_empty') }}</h4>
-                    <p>{{ __('messages.empty_message') }}
-                    <p>
-                        <a href="{{ route('store', app()->getLocale()) }}"
-                            class="btn btn-gradient">{{ __('messages.go_to_store') }}</a>
+                    <p>{{ __('messages.empty_message') }}</p>
+                    <a href="{{ route('store', app()->getLocale()) }}" class="btn btn-gradient">
+                        {{ __('messages.go_to_store') }}
+                    </a>
                 </div>
             @endif
         </div>
@@ -236,15 +241,13 @@
                     <ul class="list-unstyled">
                         @foreach ($footer_categories as $category)
                             <li>
-                                <a
-                                    href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">
+                                <a href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">
                                     {{ $category->name_uz }}
                                 </a>
                             </li>
                         @endforeach
                     </ul>
                 </div>
-
                 <div class="col-md-6 col-lg-3">
                     <div class="block-5 mb-5">
                         <h3 class="footer-heading mb-4">{{ __('messages.contact_info') }}</h3>
@@ -269,7 +272,6 @@
             </div>
         </div>
     </footer>
-    </div>
 
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('js/jquery-ui.js') }}"></script>
@@ -282,28 +284,19 @@
 
     <script>
         $(document).ready(function() {
-            // Function to update item total and grand total
             function updateTotals() {
                 let grandTotal = 0;
-
                 $('.quantity-input').each(function() {
                     const row = $(this).closest('tr');
                     const quantity = parseInt($(this).val()) || 1;
                     const unitPrice = parseFloat(row.find('.unit-price').data('price'));
                     const itemTotal = unitPrice * quantity;
-
-                    // Update item total
                     row.find('.item-total').text(itemTotal.toLocaleString() + ' uzs');
-
-                    // Add to grand total
                     grandTotal += itemTotal;
                 });
-
-                // Update grand total
                 $('.grand-total').text(grandTotal.toLocaleString() + ' uzs');
             }
 
-            // Plus button click handler
             $(document).on('click', '.qty-plus', function(e) {
                 e.preventDefault();
                 const input = $(this).siblings('.quantity-input');
@@ -312,7 +305,6 @@
                 updateTotals();
             });
 
-            // Minus button click handler
             $(document).on('click', '.qty-minus', function(e) {
                 e.preventDefault();
                 const input = $(this).siblings('.quantity-input');
@@ -323,26 +315,13 @@
                 }
             });
 
-            // Handle manual input changes
             $(document).on('input', '.quantity-input', function() {
                 let quantity = parseInt($(this).val());
-
-                // Ensure minimum quantity is 1
                 if (quantity < 1 || isNaN(quantity)) {
-                    quantity = 1;
                     $(this).val(1);
                 }
-
                 updateTotals();
             });
-
-            // Auto-submit form on quantity change (optional)
-            // Uncomment if you want automatic updates
-            /*
-            $(document).on('change', '.quantity-input', function() {
-                $('#cart-form').submit();
-            });
-            */
         });
     </script>
 </body>
