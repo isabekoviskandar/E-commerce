@@ -48,16 +48,21 @@ class BotController extends Controller
                 // Update all orders with this phone to have chat_id
                 Order::where('phone', $phone)->update(['chat_id' => $chatId]);
 
-                // Fetch latest orders for this phone
-                $orders = Order::where('phone', $phone)->latest()->get();
+                // Fetch only orders with status 'created' for this phone
+                $orders = Order::where('phone', $phone)
+                    ->where('status', 'created')
+                    ->latest()
+                    ->get();
 
                 if ($orders->count() > 0) {
                     foreach ($orders as $order) {
                         $message = "✅ Order Found!\n\n" .
+                            "Order ID: #{$order->id}\n" .
                             "👤 {$order->first_name} {$order->last_name}\n" .
                             "📍 {$order->address}\n" .
                             "📞 {$order->phone}\n" .
-                            "💰 Total: {$order->total}\n\n" .
+                            "💰 Total: {$order->total}\n" .
+                            "📊 Status: {$order->status}\n\n" .
                             "📸 Please send payment screenshot";
 
                         Http::post($apiUrl, [
@@ -68,7 +73,7 @@ class BotController extends Controller
                 } else {
                     Http::post($apiUrl, [
                         'chat_id' => $chatId,
-                        'text' => "❌ No orders found for this phone number."
+                        'text' => "❌ No pending orders found for this phone number."
                     ]);
                 }
             }
@@ -78,8 +83,11 @@ class BotController extends Controller
                 $photo = end($data['message']['photo']); // Get highest resolution
                 $fileId = $photo['file_id'];
 
-                // Get user's latest order
-                $order = Order::where('chat_id', $chatId)->latest()->first();
+                // Get user's latest order with status 'created'
+                $order = Order::where('chat_id', $chatId)
+                    ->where('status', 'created')
+                    ->latest()
+                    ->first();
 
                 if ($order) {
                     // Forward photo to admin channel
@@ -88,10 +96,12 @@ class BotController extends Controller
                         'chat_id' => $channelId,
                         'photo' => $fileId,
                         'caption' => "💳 Payment Screenshot\n\n" .
+                            "Order ID: #{$order->id}\n" .
                             "👤 {$order->first_name} {$order->last_name}\n" .
                             "📞 {$order->phone}\n" .
                             "📍 {$order->address}\n" .
-                            "💰 Total: {$order->total}",
+                            "💰 Total: {$order->total}\n" .
+                            "📊 Status: {$order->status}",
                         'reply_markup' => json_encode([
                             'inline_keyboard' => [[
                                 ['text' => '✅ Approve', 'callback_data' => "approve_{$order->id}"],
@@ -107,7 +117,7 @@ class BotController extends Controller
                 } else {
                     Http::post($apiUrl, [
                         'chat_id' => $chatId,
-                        'text' => "❌ Please share your phone number first using /start"
+                        'text' => "❌ No pending orders found. Please create an order first or contact support."
                     ]);
                 }
             }
@@ -126,13 +136,15 @@ class BotController extends Controller
 
             if ($order) {
                 if ($action === 'approve') {
-                    // Update order status
-                    $order->update(['status' => 'confirmed']);
+                    // Update order status to 'approved'
+                    $order->update(['status' => 'approved']);
 
                     // Notify customer
                     Http::post($apiUrl, [
                         'chat_id' => $order->chat_id,
                         'text' => "✅ Your payment has been approved!\n\n" .
+                            "Order ID: #{$order->id}\n" .
+                            "Status: Approved\n\n" .
                             "Your order is confirmed and will be processed soon."
                     ]);
 
@@ -141,19 +153,24 @@ class BotController extends Controller
                         'chat_id' => $channelId,
                         'message_id' => $messageId,
                         'caption' => "✅ APPROVED\n\n" .
+                            "Order ID: #{$order->id}\n" .
                             "👤 {$order->first_name} {$order->last_name}\n" .
                             "📞 {$order->phone}\n" .
-                            "💰 Total: {$order->total}"
+                            "📍 {$order->address}\n" .
+                            "💰 Total: {$order->total}\n" .
+                            "📊 Status: approved"
                     ]);
                 } elseif ($action === 'reject') {
-                    // Update order status
+                    // Update order status to 'rejected'
                     $order->update(['status' => 'rejected']);
 
                     // Notify customer
                     Http::post($apiUrl, [
                         'chat_id' => $order->chat_id,
                         'text' => "❌ Your payment was not approved.\n\n" .
-                            "Please contact support or try again."
+                            "Order ID: #{$order->id}\n" .
+                            "Status: Rejected\n\n" .
+                            "Please contact support or try again with a valid payment."
                     ]);
 
                     // Update admin message
@@ -161,16 +178,19 @@ class BotController extends Controller
                         'chat_id' => $channelId,
                         'message_id' => $messageId,
                         'caption' => "❌ REJECTED\n\n" .
+                            "Order ID: #{$order->id}\n" .
                             "👤 {$order->first_name} {$order->last_name}\n" .
                             "📞 {$order->phone}\n" .
-                            "💰 Total: {$order->total}"
+                            "📍 {$order->address}\n" .
+                            "💰 Total: {$order->total}\n" .
+                            "📊 Status: rejected"
                     ]);
                 }
 
                 // Answer callback query
                 Http::post("https://api.telegram.org/bot{$token}/answerCallbackQuery", [
                     'callback_query_id' => $callbackId,
-                    'text' => $action === 'approve' ? '✅ Approved' : '❌ Rejected'
+                    'text' => $action === 'approve' ? '✅ Order Approved' : '❌ Order Rejected'
                 ]);
             }
         }
