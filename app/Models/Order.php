@@ -16,6 +16,7 @@ class Order extends Model
         'total',
         'chat_id',
         'status',
+        'language',
     ];
 
     public function items()

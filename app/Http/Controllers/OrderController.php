@@ -80,7 +80,6 @@ class OrderController extends Controller
             $message .= "- {$item->product->name_uz} x {$item->quantity} = {$item->price}\n";
         }
 
-        Log::info($message);
         TelegramService::sendMessage($message);
 
         // Send notification to user if they have chat_id
