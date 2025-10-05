@@ -124,4 +124,14 @@ return [
     'continue_shopping' => 'Продолжить покупки',
     'formalization' => 'Формализация',
     'cart_remove' => 'Удалять',
+    'place_order' => 'Разместить заказ',
+    'first_name' => 'Имя',
+    'last_name' => 'Фамилия',
+    'user_address' => 'Адрес',
+    'user_phone' => 'Телефон',
+    'products' => 'Продукты',
+    'price' => 'Цена',
+    'total' => 'Итого',
+
+
 ];

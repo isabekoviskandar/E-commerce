@@ -125,4 +125,14 @@ return [
     'continue_shopping' => 'Savdoni davom ettiring',
     'formalization' => 'Rasmiylashtirish',
     'cart_remove' => 'Olib tashlash',
+    'place_order' => 'Buyurtma berish',
+    'first_name' => 'Ism',
+    'last_name' => 'Familiya',
+    'user_address' => 'Manzil',
+    'user_phone' => 'Telefon raqam',
+    'products' => 'Mahsulotlar',
+    'price' => 'Narx',
+    'total' => 'Jami',
+
+
 ];

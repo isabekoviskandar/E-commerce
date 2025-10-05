@@ -2,7 +2,7 @@
 <html lang="{{ app()->getLocale() }}">
 
 <head>
-    <title>Pharmative</title>
+    <title>Sinotip</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
@@ -166,7 +166,8 @@
                                         <img src="{{ asset('storage/' . $item->product->image) }}" width="80"
                                             class="product-image" alt="{{ $item->product->name_uz }}">
                                     </td>
-                                    <td>{{ $item->product->name_uz }}</td>
+                                    <td>{{ $item->product->{'name_' . app()->getLocale()} }}</td>
+
                                     <td class="unit-price" data-price="{{ $item->product->price }}">
                                         {{ number_format($item->product->price) }} uzs
                                     </td>

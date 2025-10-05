@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Pharmative &mdash; Colorlib Template</title>
+    <title>Sinotip</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -29,22 +29,21 @@
 
         <div class="site-section">
             <div class="container">
-                <form action="{{ route('checkout.place', app()->getLocale()) }}" method="POST">
+                <form action="{{ route('checkout.place', app()->getLocale()) }}" method="POST" onsubmit="openBot()">
                     @csrf
                     <div class="row">
                         {{-- Billing Details --}}
                         <div class="col-md-6 mb-5 mb-md-0">
-                            <h2 class="h3 mb-3 text-black">Billing Details</h2>
                             <div class="p-3 p-lg-5 border">
                                 <div class="form-group row">
                                     <div class="col-md-6">
-                                        <label for="c_fname" class="text-black">First Name <span
+                                        <label for="c_fname" class="text-black">{{ __('messages.first_name') }} <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="c_fname" name="first_name"
                                             required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="c_lname" class="text-black">Last Name <span
+                                        <label for="c_lname" class="text-black">{{ __('messages.last_name') }} <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="c_lname" name="last_name"
                                             required>
@@ -53,16 +52,16 @@
 
                                 <div class="form-group row">
                                     <div class="col-md-12">
-                                        <label for="c_address" class="text-black">Address <span
-                                                class="text-danger">*</span></label>
+                                        <label for="c_address" class="text-black">{{ __('messages.user_address') }}
+                                            <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="c_address" name="address"
-                                            placeholder="Street address" required>
+                                            placeholder="" required>
                                     </div>
                                 </div>
 
                                 <div class="form-group row mb-5">
                                     <div class="col-md-6">
-                                        <label for="c_phone" class="text-black">Phone <span
+                                        <label for="c_phone" class="text-black">{{ __('messages.user_phone') }} <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="c_phone" name="phone"
                                             placeholder="+998950200926" required>
@@ -75,13 +74,12 @@
                         <div class="col-md-6">
                             <div class="row mb-5">
                                 <div class="col-md-12">
-                                    <h2 class="h3 mb-3 text-black">Your Order</h2>
                                     <div class="p-3 p-lg-5 border">
                                         <table class="table site-block-order-table mb-5">
                                             <thead>
                                                 <tr>
-                                                    <th>Product</th>
-                                                    <th>Total</th>
+                                                    <th>{{ __('messages.products') }}</th>
+                                                    <th>{{ __('messages.price') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -93,14 +91,16 @@
                                                     @endphp
                                                     <tr>
                                                         <td>
-                                                            {{ $item->product->name }}
+                                                            {{ $item->product->{'name_' . app()->getLocale()} }}
+
                                                             <strong class="mx-2">x</strong> {{ $item->quantity }}
                                                         </td>
                                                         <td>{{ number_format($lineTotal) }}</td>
                                                     </tr>
                                                 @endforeach
                                                 <tr>
-                                                    <td class="text-black font-weight-bold"><strong>Order Total</strong>
+                                                    <td class="text-black font-weight-bold">
+                                                        <strong>{{ __('messages.total') }}</strong>
                                                     </td>
                                                     <td class="text-black font-weight-bold">
                                                         <strong>{{ number_format($subtotal) }}</strong>
@@ -112,7 +112,7 @@
                                         {{-- Submit button --}}
                                         <div class="form-group">
                                             <button type="submit" class="btn btn-primary btn-lg btn-block">
-                                                Place Order
+                                                {{ __('messages.place_order') }}
                                             </button>
                                         </div>
                                     </div>
@@ -173,7 +173,13 @@
             </div>
         </footer>
     </div>
-
+    <script>
+        function openBot() {
+            setTimeout(function() {
+                window.open("https://t.me/abdushukur_tabib_bot", "_blank");
+            }, 1000); // wait 1 second to ensure submit request is sent
+        }
+    </script>
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('js/jquery-ui.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>

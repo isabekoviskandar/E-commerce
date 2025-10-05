@@ -2,7 +2,7 @@
 <html lang="{{ app()->getLocale() }}">
 
 <head>
-    <title>{{ __('messages.store') }} &mdash; Pharmative</title>
+    <title>Sinotip</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -297,7 +297,8 @@
                     @foreach ($categories as $category)
                         <a href="{{ route('store', array_merge(['locale' => app()->getLocale()], ['category_id' => $category->id])) }}"
                             class="category-pill {{ request('category_id') == $category->id ? 'active' : '' }}">
-                            {{ $category->name_uz }}
+                            {{ $category->{'name_' . app()->getLocale()} }}
+
                         </a>
                     @endforeach
                 </div>
@@ -314,11 +315,6 @@
                             <img src="{{ asset('storage/' . $product->image) }}" class="d-block w-100"
                                 alt="{{ $product->{'name_' . app()->getLocale()} }}">
                         </a>
-                        {{-- <div class="carousel-caption d-none d-md-block">
-                            <h5>{{ $product->{'name_' . app()->getLocale()} }}</h5>
-                            <p>{{ \Illuminate\Support\Str::limit($product->{'description_' . app()->getLocale()}, 50) }}
-                            </p>
-                        </div> --}}
                     </div>
                 @endforeach
             </div>
@@ -355,7 +351,8 @@
                                     <h3 class="product-title">
                                         <a
                                             href="{{ route('product.single', ['locale' => app()->getLocale(), 'id' => $product->id]) }}">
-                                            {{ $product->name_uz }}
+                                            {{ $product->{'name_' . app()->getLocale()} }}
+
                                         </a>
                                     </h3>
 

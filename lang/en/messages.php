@@ -128,5 +128,12 @@ return [
     'continue_shopping' => 'Continue shopping',
     'formalization' => 'Formalization',
     'cart_remove' => 'Remove',
-
+    'place_order' => 'Place order',
+    'first_name' => 'First name',
+    'last_name' => 'Last name',
+    'user_address' => 'Address',
+    'user_phone' => 'Phone',
+    'products' => 'Products',
+    'price' => 'Price',
+    'total' => 'Total',
 ];
