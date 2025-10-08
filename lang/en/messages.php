@@ -136,4 +136,8 @@ return [
     'products' => 'Products',
     'price' => 'Price',
     'total' => 'Total',
+    'single_product_name' => 'Product name',
+    'single_product_price' => 'Product price',
+    'single_product_composition' => 'Product composition',
+    'single_product_country' => 'Country'
 ];

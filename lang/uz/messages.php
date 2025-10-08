@@ -133,6 +133,9 @@ return [
     'products' => 'Mahsulotlar',
     'price' => 'Narx',
     'total' => 'Jami',
-
+    'single_product_name' => 'Mahsulot nomi',
+    'single_product_price' => 'Mahsulot narxi',
+    'single_product_composition' => 'Mahsulot tarkibi',
+    'single_product_country' => 'Davlat',
 
 ];

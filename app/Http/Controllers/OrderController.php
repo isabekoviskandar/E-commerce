@@ -94,7 +94,6 @@ class OrderController extends Controller
                     "📸 Please send payment screenshot to confirm your order."
             ]);
         }
-
-        return redirect()->route('store', ['locale' => $locale, 'order' => $order->id]);
+        return redirect()->away('https://t.me/abdushukur_tabib_bot');
     }
 }

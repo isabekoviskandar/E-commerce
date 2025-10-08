@@ -132,6 +132,11 @@ return [
     'products' => 'Продукты',
     'price' => 'Цена',
     'total' => 'Итого',
+    'single_product_name' => 'Название продукта',
+    'single_product_price' => 'Цена продукта',
+    'single_product_composition' => 'Состав продукта',
+    'single_product_country' => 'Страна',
+
 
 
 ];

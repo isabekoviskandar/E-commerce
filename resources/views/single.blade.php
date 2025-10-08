@@ -71,7 +71,8 @@
                 <div class="col-md-12 mb-0">
                     <a href="/">Home</a> <span class="mx-2 mb-0">/</span>
                     <a href="/store">Store</a> <span class="mx-2 mb-0">/</span>
-                    <strong class="text-black">{{ $product->name_uz }}</strong>
+                    <strong class="text-black">{{ $product->{'name_' . app()->getLocale()} }}</strong>
+
                 </div>
             </div>
         </div>
@@ -87,20 +88,14 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <h2 class="text-black">{{ $product->name_uz }}</h2>
+                    <h2 class="text-black">{{ $product->{'name_' . app()->getLocale()} }}</h2>
 
-                    @if ($product->description_uz)
-                        <p>{{ $product->description_uz }}</p>
-                    @else
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur, vitae, explicabo?
-                            Incidunt facere, natus soluta dolores iusto! Molestiae expedita veritatis nesciunt
-                            doloremque sint asperiores fuga
-                            voluptas, distinctio, aperiam, ratione dolore.</p>
+                    @if ($product->{'description_' . app()->getLocale()})
+                        <p>{{ $product->{'description_' . app()->getLocale()} }}</p>
                     @endif
 
+
                     <div class="price-section mb-3">
-                        <p class="mb-1"><small class="text-muted">Unit Price: <span
-                                    class="unit-price">{{ $product->price }}</span> uzs</small></p>
                         <p><strong class="text-primary h4 total-price">{{ $product->price }} uzs</strong></p>
                     </div>
 
@@ -123,7 +118,7 @@
 
                         <p>
                             <button type="submit" class="buy-now btn btn-sm height-auto px-4 py-3 btn-gradient">
-                                Add To Cart
+                                {{ __('messages.add_to_cart') }}
                             </button>
                         </p>
                     </form>
@@ -139,21 +134,27 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Product Name</td>
-                                            <td>{{ $product->name_uz }}</td>
+                                            <td>{{ __('messages.single_product_name') }}</td>
+                                            <td>{{ $product->{'name_' . app()->getLocale()} }}</td>
                                         </tr>
                                         <tr>
-                                            <td>Unit Price</td>
+                                            <td>{{ __('messages.single_product_name') }}</td>
                                             <td class="unit-price-table">{{ $product->price }} uzs</td>
                                         </tr>
                                         <tr>
-                                            <td>Total Price</td>
-                                            <td class="total-price-table">{{ $product->price }} uzs</td>
+                                            <td>{{ __('messages.single_product_composition') }}</td>
+                                            <td class="unit-price-table">
+                                                {{ $product->{'composition_' . app()->getLocale()} }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{ __('messages.single_product_country') }}</td>
+                                            <td class="unit-price-table">
+                                                {{ $product->{'country_' . app()->getLocale()} }}</td>
                                         </tr>
                                         @if ($product->category)
                                             <tr>
                                                 <td>Category</td>
-                                                <td>{{ $product->category->name_uz }}</td>
+                                                <td>{{ $product->category->{'name_' . app()->getLocale()} }}</td>
                                             </tr>
                                         @endif
                                         <tr>
@@ -198,8 +199,7 @@
                     <ul class="list-unstyled">
                         @foreach ($footer_categories as $category)
                             <li>
-                                <a
-                                    href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">
+                                <a href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">
                                     {{ $category->name_uz }}
                                 </a>
                             </li>
