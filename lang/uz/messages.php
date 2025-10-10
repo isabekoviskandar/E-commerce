@@ -90,6 +90,7 @@ return [
     'timeline_tibet_period' => '2000-yillar',
     'timeline_tibet_desc' => 'Tibet an’anaviy tibbiyoti va ovqatlanish amaliyotini o‘rganib, qadimiy donolikni zamonaviy dietologiya bilan uyg‘unlashtirdi.',
 
+    
     'timeline_sea_title' => 'Janubi-Sharqiy Osiyo amaliyoti',
     'timeline_sea_period' => '2010-yillar',
     'timeline_sea_desc' => 'Malayziyaning Kuala Lumpur shahrida amaliyot olib borib, tropik ovqatlanish va ko‘p millatli aholining turli xil ehtiyojlari bo‘yicha tajriba orttirdi.',

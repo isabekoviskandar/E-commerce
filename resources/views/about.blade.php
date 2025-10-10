@@ -250,7 +250,7 @@
     <!-- Navigation -->
     @include('helpers.navbar')
 
-    <!-- Hero Section -->
+
     <div class="hero-about">
         <div class="container">
             <div class="row align-items-center">
@@ -288,7 +288,7 @@
         </div>
     </div>
 
-    <!-- Personal Info Section -->
+
     <div class="site-section">
         <div class="container">
             <h2 class="section-title" data-aos="fade-up">{{ __('messages.personal_information') }}</h2>
@@ -325,8 +325,6 @@
         </div>
     </div>
 
-
-    <!-- Expertise Section -->
     <div class="expertise-section">
         <div class="container">
             <h2 class="section-title" data-aos="fade-up">{{ __('messages.areas_of_expertise') }}</h2>
@@ -389,8 +387,6 @@
         </div>
     </div>
 
-
-    <!-- Professional Journey Timeline -->
     <div class="timeline-section">
         <div class="container">
             <h2 class="section-title" data-aos="fade-up">{{ __('messages.professional_journey') }}</h2>
@@ -438,8 +434,6 @@
         </div>
     </div>
 
-
-    <!-- Philosophy Section -->
     <div class="site-section bg-light">
         <div class="container">
             <div class="row justify-content-center">
@@ -503,9 +497,6 @@
             </div>
         </div>
     </div>
-
-
-    <!-- Social Media Section -->
     <div class="social-media-section">
         <div class="container">
             <div class="row justify-content-center text-center">
@@ -563,17 +554,6 @@
                             <li class="email">abdushukurtabiboriginal@gmail.com</li>
                         </ul>
                     </div>
-                </div>
-            </div>
-            <div class="row pt-5 mt-5 text-center">
-                <div class="col-md-12">
-                    <p>
-                        &copy;
-                        <script>
-                            document.write(new Date().getFullYear());
-                        </script>
-                        {{ __('messages.copyright') }}
-                    </p>
                 </div>
             </div>
         </div>
