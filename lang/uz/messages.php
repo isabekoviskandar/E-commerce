@@ -48,7 +48,7 @@ return [
     'about' => 'Haqida',
     'full_name' => 'Abdushukur Ismoil Jurayev',
     'specialist' => 'Professional dietolog va ovqatlanish bo\'yicha mutaxassis',
-    'info' => 'Dietologiya va ovqatlanish bo\'yicha 30 yildan ortiq maxsus tajribaga ega bo\'lgan doktor Abdushukur ko\'plab mamlakatlarda shaxsiylashtirilgan parhez aralashuvi va sog\'liqni saqlashning yaxlit yondashuvlari orqali minglab odamlarning hayotini o\'zgartirdi.',
+    'info' => 'Dietologiya va ovqatlanish bo\'yicha 30 yildan ortiq maxsus tajribaga ega bo\'lgan tabib Abdushukur ko\'plab mamlakatlarda shaxsiylashtirilgan parhez aralashuvi va sog\'liqni saqlashning yaxlit yondashuvlari orqali minglab odamlarning hayotini o\'zgartirdi.',
     'years_experience' => 'Yillik tajriba',
     'years_of_age' => 'Yosh',
     'cities_practiced' => 'Chetelda',
@@ -84,7 +84,7 @@ return [
 
     'timeline_early_title' => 'Dastlabki faoliyat va asoslar',
     'timeline_early_period' => '1990-yillar',
-    'timeline_early_desc' => 'Dietologiya va ovqatlanish yo‘lini boshladi, keyingi 30 yillik faoliyati uchun poydevor bo‘ladigan bilimlarni shakllantirdi.',
+    'timeline_early_desc' => 'tabiblik faoliyatini boshladi avval o\'zi ibn sinoning mashhur 6 ta ton kitoblarini o\'qib o\'rganib chiqdi',
 
     'timeline_tibet_title' => 'Xalqaro tajriba – Tibet',
     'timeline_tibet_period' => '2000-yillar',

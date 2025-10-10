@@ -560,7 +560,7 @@
                         <ul class="list-unstyled">
                             <li class="address">{{ __('messages.address') }}</li>
                             <li class="phone"><a href="#">+998 94 783 69 96</a></li>
-                            <li class="email">jurayevyunus783@gmail.com</li>
+                            <li class="email">abdushukurtabiboriginal@gmail.com</li>
                         </ul>
                     </div>
                 </div>

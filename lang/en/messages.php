@@ -87,7 +87,7 @@ return [
 
     'timeline_early_title' => 'Early Career & Foundation',
     'timeline_early_period' => '1990s',
-    'timeline_early_desc' => 'Began his journey in dietology and nutrition, establishing the foundational knowledge that would guide his three-decade career in health and wellness.',
+'timeline_early_desc' => 'He began his medical practice by first reading and studying Ibn Sina’s famous six-volume books',
 
     'timeline_tibet_title' => 'International Experience - Tibet',
     'timeline_tibet_period' => '2000s',
