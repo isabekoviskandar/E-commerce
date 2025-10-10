@@ -84,7 +84,7 @@ return [
 
     'timeline_early_title' => 'Dastlabki faoliyat va asoslar',
     'timeline_early_period' => '1990-yillar',
-    'timeline_early_desc' => 'tabiblik faoliyatini boshladi avval o\'zi ibn sinoning mashhur 6 ta ton kitoblarini o\'qib o\'rganib chiqdi',
+    'timeline_early_desc' => 'Tabiblik faoliyatini boshladi avval o\'zi ibn sinoning mashhur 6 ta ton kitoblarini o\'qib o\'rganib chiqdi',
 
     'timeline_tibet_title' => 'Xalqaro tajriba – Tibet',
     'timeline_tibet_period' => '2000-yillar',
