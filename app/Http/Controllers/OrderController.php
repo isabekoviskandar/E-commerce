@@ -94,6 +94,6 @@ class OrderController extends Controller
                     "📸 Please send payment screenshot to confirm your order."
             ]);
         }
-        return redirect()->away('https://t.me/abdushukur_tabib_bot');
+        return redirect()->away('https://t.me/php_bitrix_bot');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Order;
+use Illuminate\Support\Facades\Log;
 
 class BotController extends Controller
 {
@@ -34,7 +35,14 @@ class BotController extends Controller
             'menu_back' => "🔙 Back to Menu",
             'order_history' => "📦 Your Order History:",
             'no_history' => "📭 You don't have any orders yet.",
-            'order_details' => "Order Details"
+            'order_details' => "Order Details",
+            'payment_method' => '💳 Choose the payment method',
+            'humo' => "🏦 Humo (9860 1666 5364 4418)",
+            'visa' => "💳 Visa (4738 7203 4457 8541)",
+            'click' => "📱 Click (5614681626866978)",
+            'product' => "Product",
+            'price' => "Price",
+
         ],
         'ru' => [
             'welcome' => "🌍 Добро пожаловать! Пожалуйста, выберите язык:",
@@ -61,7 +69,14 @@ class BotController extends Controller
             'menu_back' => "🔙 Назад в Меню",
             'order_history' => "📦 История Ваших Заказов:",
             'no_history' => "📭 У вас пока нет заказов.",
-            'order_details' => "Детали Заказа"
+            'order_details' => "Детали Заказа",
+            'payment_method' => "💳 Выберите способ оплаты:",
+            'humo' => "🏦 Humo (9860 1666 5364 4418)",
+            'visa' => "💳 Visa (4738 7203 4457 8541)",
+            'click' => "📱 Click (5614681626866978)",
+            'product' => "Продукт",
+            'price' => "Цена",
+
         ],
         'uz' => [
             'welcome' => "🌍 Xush kelibsiz! Iltimos, tilni tanlang:",
@@ -88,7 +103,13 @@ class BotController extends Controller
             'menu_back' => "🔙 Menyuga Qaytish",
             'order_history' => "📦 Buyurtmalar Tarixi:",
             'no_history' => "📭 Sizda hali buyurtmalar yo'q.",
-            'order_details' => "Buyurtma Tafsilotlari"
+            'order_details' => "Buyurtma Tafsilotlari",
+            'payment_method' => "💳 To'lov usulini tanlang:",
+            'humo' => "🏦 Humo (9860 1666 5364 4418)",
+            'visa' => "💳 Visa (4738 7203 4457 8541)",
+            'click' => "📱 Click (5614681626866978)",
+            'product' => 'Mahsulot',
+            'price' => 'Narxi',
         ]
     ];
 
@@ -145,13 +166,11 @@ class BotController extends Controller
         $token = env('TELEGRAM_BOT_TOKEN');
         $apiUrl = "https://api.telegram.org/bot{$token}/sendMessage";
 
-        // Handle regular messages
         if (isset($data['message'])) {
             $chatId = $data['message']['chat']['id'];
             $text = $data['message']['text'] ?? '';
             $lang = $this->getUserLanguage($chatId);
 
-            // /start command
             if ($text === '/start') {
                 Http::post($apiUrl, [
                     'chat_id' => $chatId,
@@ -161,15 +180,18 @@ class BotController extends Controller
                 return response()->json(['ok' => true]);
             }
 
-            // Handle menu buttons
-            if (strpos($text, $this->trans('menu_orders', $lang)) !== false || 
-                strpos($text, '📦') === 0) {
+            if (
+                strpos($text, $this->trans('menu_orders', $lang)) !== false ||
+                strpos($text, '📦') === 0
+            ) {
                 $this->showOrderHistory($chatId, $lang, $token);
                 return response()->json(['ok' => true]);
             }
 
-            if (strpos($text, $this->trans('menu_language', $lang)) !== false || 
-                strpos($text, '🌍') === 0) {
+            if (
+                strpos($text, $this->trans('menu_language', $lang)) !== false ||
+                strpos($text, '🌍') === 0
+            ) {
                 Http::post($apiUrl, [
                     'chat_id' => $chatId,
                     'text' => $this->trans('welcome', $lang),
@@ -178,20 +200,16 @@ class BotController extends Controller
                 return response()->json(['ok' => true]);
             }
 
-            // If user shares contact
             if (isset($data['message']['contact'])) {
                 $phone = $data['message']['contact']['phone_number'];
 
-                // Update user with phone number
                 Order::updateOrCreate(
                     ['chat_id' => $chatId],
                     ['phone' => $phone]
                 );
 
-                // Update all orders with this phone to have chat_id
                 Order::where('phone', $phone)->update(['chat_id' => $chatId]);
 
-                // Fetch only orders with status 'created' for this phone
                 $orders = Order::where('phone', $phone)
                     ->where('status', 'created')
                     ->latest()
@@ -199,19 +217,25 @@ class BotController extends Controller
 
                 if ($orders->count() > 0) {
                     foreach ($orders as $order) {
-                        $message = "{$this->trans('orders_found', $lang)}\n\n" .
-                            "{$this->trans('order_id', $lang)}: #{$order->id}\n" .
+                        $message = "{$this->trans('orders_found',$lang)}\n\n" .
+                            "{$this->trans('order_id',$lang)}: #{$order->id}\n" .
                             "👤 {$order->first_name} {$order->last_name}\n" .
                             "📍 {$order->address}\n" .
                             "📞 {$order->phone}\n" .
-                            "💰 {$this->trans('total', $lang)}: {$order->total}\n" .
-                            "📊 {$this->trans('status', $lang)}: {$this->trans($order->status, $lang)}\n\n" .
+                            "💰 {$this->trans('total',$lang)}: {$order->total}\n" .
+                            "📊 {$this->trans('status',$lang)}: {$this->trans($order->status,$lang)}\n\n" .
                             $this->trans('send_payment', $lang);
+
+                        $keyboard = [
+                            'inline_keyboard' => [[
+                                ['text' => '💳 To\'lov qilish', 'callback_data' => "show_payment_{$order->id}"]
+                            ]]
+                        ];
 
                         Http::post($apiUrl, [
                             'chat_id' => $chatId,
                             'text' => $message,
-                            'reply_markup' => json_encode($this->getMainMenuKeyboard($lang))
+                            'reply_markup' => json_encode($keyboard)
                         ]);
                     }
                 } else {
@@ -223,21 +247,21 @@ class BotController extends Controller
                 }
             }
 
-            // If user sends photo (payment screenshot)
             if (isset($data['message']['photo'])) {
-                $photo = end($data['message']['photo']); // Get highest resolution
+                $photo = end($data['message']['photo']);
                 $fileId = $photo['file_id'];
 
-                // Get user's latest order with status 'created'
+                // Debug: Check if order exists
                 $order = Order::where('chat_id', $chatId)
                     ->where('status', 'created')
                     ->latest()
                     ->first();
 
                 if ($order) {
-                    // Forward photo to admin channel
                     $channelId = env('TELEGRAM_CHAT_ID');
-                    Http::post("https://api.telegram.org/bot{$token}/sendPhoto", [
+
+                    // Send photo to channel
+                    $response = Http::post("https://api.telegram.org/bot{$token}/sendPhoto", [
                         'chat_id' => $channelId,
                         'photo' => $fileId,
                         'caption' => "💳 Payment Screenshot\n\n" .
@@ -246,7 +270,8 @@ class BotController extends Controller
                             "📞 {$order->phone}\n" .
                             "📍 {$order->address}\n" .
                             "💰 Total: {$order->total}\n" .
-                            "📊 Status: {$order->status}",
+                            "📊 Status: {$order->status}\n" .
+                            "💳 Payment Method: {$order->payment_method}",
                         'reply_markup' => json_encode([
                             'inline_keyboard' => [[
                                 ['text' => '✅ Approve', 'callback_data' => "approve_{$order->id}"],
@@ -260,6 +285,7 @@ class BotController extends Controller
                         'text' => $this->trans('payment_received', $lang)
                     ]);
                 } else {
+
                     Http::post($apiUrl, [
                         'chat_id' => $chatId,
                         'text' => $this->trans('no_pending', $lang)
@@ -268,19 +294,93 @@ class BotController extends Controller
             }
         }
 
-        // Handle callback queries (language selection, approve/reject buttons)
         if (isset($data['callback_query'])) {
             $callbackId = $data['callback_query']['id'];
             $callbackData = $data['callback_query']['data'];
             $chatId = $data['callback_query']['message']['chat']['id'];
             $messageId = $data['callback_query']['message']['message_id'];
 
+            // Show payment methods
+            if (strpos($callbackData, 'show_payment_') === 0) {
+                $orderId = substr($callbackData, 13);
+                $order = Order::find($orderId);
+
+                if ($order && $order->status === 'created') {
+                    $lang = $this->getUserLanguage($chatId);
+
+                    Http::post("https://api.telegram.org/bot{$token}/answerCallbackQuery", [
+                        'callback_query_id' => $callbackId,
+                        'text' => $this->trans('payment_method', $lang)
+                    ]);
+
+                    Http::post($apiUrl, [
+                        'chat_id' => $chatId,
+                        'text' => $this->trans('payment_method', $lang),
+                        'reply_markup' => json_encode($this->getPaymentMethodsKeyboard())
+                    ]);
+                }
+
+                return response()->json(['ok' => true]);
+            }
+
+            // Payment method selected
+            if (strpos($callbackData, 'payment_') === 0) {
+                $paymentMethod = substr($callbackData, 8);
+                $lang = $this->getUserLanguage($chatId);
+
+                $paymentDetails = [
+                    'humo' => [
+                        'name' => 'Humo Virtual',
+                        'card' => '9860 1666 5364 4418',
+                        'owner' => 'Jurayev Y'
+                    ],
+                    'visa' => [
+                        'name' => 'Visa',
+                        'card' => '4738 7203 4457 8541',
+                        'owner' => 'Yunus Jurayev'
+                    ],
+                    'click' => [
+                        'name' => 'Click',
+                        'card' => '5614681626866978',
+                        'owner' => 'Jurayev Ismoil'
+                    ]
+                ];
+
+                $details = $paymentDetails[$paymentMethod];
+
+                $message = "💳 To'lov tafsilotlari:\n\n" .
+                    "Usuli: {$details['name']}\n" .
+                    "Karta: {$details['card']}\n" .
+                    "Egasi: {$details['owner']}\n\n" .
+                    "📸 To'lovdan keyin skrinshot yuboring\n" .
+                    "⏱ Admin 15-30 daqiqada tasdiqlaydi";
+
+                Http::post($apiUrl, [
+                    'chat_id' => $chatId,
+                    'text' => $message,
+                    'reply_markup' => json_encode($this->getMainMenuKeyboard($lang))
+                ]);
+
+                // Save payment method
+                Order::where('chat_id', $chatId)
+                    ->where('status', 'created')
+                    ->latest()
+                    ->first()
+                    ?->update(['payment_method' => $paymentMethod]);
+
+                Http::post("https://api.telegram.org/bot{$token}/answerCallbackQuery", [
+                    'callback_query_id' => $callbackId,
+                    'text' => '✅ To\'lov usuli tanlab olindi'
+                ]);
+
+                return response()->json(['ok' => true]);
+            }
+
             // Language selection
             if (strpos($callbackData, 'lang_') === 0) {
                 $selectedLang = substr($callbackData, 5);
                 $this->setUserLanguage($chatId, $selectedLang);
 
-                // Show phone sharing keyboard
                 $keyboard = [
                     'keyboard' => [
                         [
@@ -314,63 +414,68 @@ class BotController extends Controller
                 return response()->json(['ok' => true]);
             }
 
-            // Order approval/rejection
-            list($action, $orderId) = explode('_', $callbackData);
-            $order = Order::find($orderId);
+            // Approve or Reject payment
+            if (strpos($callbackData, 'approve_') === 0 || strpos($callbackData, 'reject_') === 0) {
+                list($action, $orderId) = explode('_', $callbackData);
+                $order = Order::find($orderId);
 
-            if ($order) {
-                $lang = $this->getUserLanguage($order->chat_id);
+                if ($order) {
+                    $userChatId = $order->chat_id;
+                    $lang = $this->getUserLanguage($userChatId);
 
-                if ($action === 'approve') {
-                    $order->update(['status' => 'approved']);
+                    if ($action === 'approve') {
+                        $order->update(['status' => 'approved']);
 
-                    Http::post($apiUrl, [
-                        'chat_id' => $order->chat_id,
-                        'text' => "{$this->trans('payment_approved', $lang)}\n\n" .
-                            "{$this->trans('order_id', $lang)}: #{$order->id}\n" .
-                            "{$this->trans('status', $lang)}: {$this->trans('approved', $lang)}\n\n" .
-                            $this->trans('order_confirmed', $lang)
-                    ]);
+                        Http::post($apiUrl, [
+                            'chat_id' => $userChatId,
+                            'text' => "{$this->trans('payment_approved',$lang)}\n\n" .
+                                "{$this->trans('order_id',$lang)}: #{$order->id}\n" .
+                                "{$this->trans('status',$lang)}: {$this->trans('approved',$lang)}\n\n" .
+                                $this->trans('order_confirmed', $lang)
+                        ]);
 
-                    Http::post("https://api.telegram.org/bot{$token}/editMessageCaption", [
-                        'chat_id' => $chatId,
-                        'message_id' => $messageId,
-                        'caption' => "✅ APPROVED\n\n" .
-                            "Order ID: #{$order->id}\n" .
-                            "👤 {$order->first_name} {$order->last_name}\n" .
-                            "📞 {$order->phone}\n" .
-                            "📍 {$order->address}\n" .
-                            "💰 Total: {$order->total}\n" .
-                            "📊 Status: approved"
-                    ]);
-                } elseif ($action === 'reject') {
-                    $order->update(['status' => 'rejected']);
+                        Http::post("https://api.telegram.org/bot{$token}/editMessageCaption", [
+                            'chat_id' => $chatId,
+                            'message_id' => $messageId,
+                            'caption' => "✅ APPROVED\n\n" .
+                                "Order ID: #{$order->id}\n" .
+                                "👤 {$order->first_name} {$order->last_name}\n" .
+                                "📞 {$order->phone}\n" .
+                                "📍 {$order->address}\n" .
+                                "💰 Total: {$order->total}\n" .
+                                "📊 Status: approved"
+                        ]);
+                    } elseif ($action === 'reject') {
+                        $order->update(['status' => 'rejected']);
 
-                    Http::post($apiUrl, [
-                        'chat_id' => $order->chat_id,
-                        'text' => "{$this->trans('payment_rejected', $lang)}\n\n" .
-                            "{$this->trans('order_id', $lang)}: #{$order->id}\n" .
-                            "{$this->trans('status', $lang)}: {$this->trans('rejected', $lang)}\n\n" .
-                            $this->trans('contact_support', $lang)
-                    ]);
+                        Http::post($apiUrl, [
+                            'chat_id' => $userChatId,
+                            'text' => "{$this->trans('payment_rejected',$lang)}\n\n" .
+                                "{$this->trans('order_id',$lang)}: #{$order->id}\n" .
+                                "{$this->trans('status',$lang)}: {$this->trans('rejected',$lang)}\n\n" .
+                                $this->trans('contact_support', $lang)
+                        ]);
 
-                    Http::post("https://api.telegram.org/bot{$token}/editMessageCaption", [
-                        'chat_id' => $chatId,
-                        'message_id' => $messageId,
-                        'caption' => "❌ REJECTED\n\n" .
-                            "Order ID: #{$order->id}\n" .
-                            "👤 {$order->first_name} {$order->last_name}\n" .
-                            "📞 {$order->phone}\n" .
-                            "📍 {$order->address}\n" .
-                            "💰 Total: {$order->total}\n" .
-                            "📊 Status: rejected"
+                        Http::post("https://api.telegram.org/bot{$token}/editMessageCaption", [
+                            'chat_id' => $chatId,
+                            'message_id' => $messageId,
+                            'caption' => "❌ REJECTED\n\n" .
+                                "Order ID: #{$order->id}\n" .
+                                "👤 {$order->first_name} {$order->last_name}\n" .
+                                "📞 {$order->phone}\n" .
+                                "📍 {$order->address}\n" .
+                                "💰 Total: {$order->total}\n" .
+                                "📊 Status: rejected"
+                        ]);
+                    }
+
+                    Http::post("https://api.telegram.org/bot{$token}/answerCallbackQuery", [
+                        'callback_query_id' => $callbackId,
+                        'text' => $action === 'approve' ? '✅ Order Approved' : '❌ Order Rejected'
                     ]);
                 }
 
-                Http::post("https://api.telegram.org/bot{$token}/answerCallbackQuery", [
-                    'callback_query_id' => $callbackId,
-                    'text' => $action === 'approve' ? '✅ Order Approved' : '❌ Order Rejected'
-                ]);
+                return response()->json(['ok' => true]);
             }
         }
 
@@ -380,21 +485,21 @@ class BotController extends Controller
     private function showOrderHistory($chatId, $lang, $token)
     {
         $apiUrl = "https://api.telegram.org/bot{$token}/sendMessage";
-        
+
         $orders = Order::where('chat_id', $chatId)
             ->orderBy('created_at', 'desc')
             ->get();
 
         if ($orders->count() > 0) {
-            $message = "{$this->trans('order_history', $lang)}\n\n";
-            
+            $message = "{$this->trans('order_history',$lang)}\n\n";
+
             foreach ($orders as $order) {
                 $message .= "━━━━━━━━━━━━━━━\n";
-                $message .= "{$this->trans('order_id', $lang)}: #{$order->id}\n";
+                $message .= "{$this->trans('order_id',$lang)}: #{$order->id}\n";
                 $message .= "👤 {$order->first_name} {$order->last_name}\n";
                 $message .= "📍 {$order->address}\n";
-                $message .= "💰 {$this->trans('total', $lang)}: {$order->total}\n";
-                $message .= "📊 {$this->trans('status', $lang)}: {$this->trans($order->status, $lang)}\n";
+                $message .= "💰 {$this->trans('total',$lang)}: {$order->total}\n";
+                $message .= "📊 {$this->trans('status',$lang)}: {$this->trans($order->status,$lang)}\n";
                 $message .= "📅 {$order->created_at->format('d.m.Y H:i')}\n\n";
             }
         } else {
@@ -406,5 +511,22 @@ class BotController extends Controller
             'text' => $message,
             'reply_markup' => json_encode($this->getMainMenuKeyboard($lang))
         ]);
+    }
+    private function getPaymentMethodsKeyboard()
+    {
+        return [
+            'inline_keyboard' => [
+                [
+                    ['text' => '🏦 Humo Virtual', 'callback_data' => 'payment_humo'],
+                    ['text' => '💳 Visa', 'callback_data' => 'payment_visa']
+                ],
+                [
+                    ['text' => '📱 Click', 'callback_data' => 'payment_click']
+                ],
+                [
+                    ['text' => '🔙 Orqaga', 'callback_data' => 'back_to_menu']
+                ]
+            ]
+        ];
     }
 }
