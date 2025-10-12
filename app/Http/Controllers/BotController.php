@@ -8,7 +8,7 @@ use App\Models\Order;
 use Illuminate\Support\Facades\Log;
 
 class BotController extends Controller
-{
+{    
     private $translations = [
         'en' => [
             'welcome' => "🌍 Welcome! Please choose your language:",
@@ -42,7 +42,6 @@ class BotController extends Controller
             'click' => "📱 Click (5614681626866978)",
             'product' => "Product",
             'price' => "Price",
-
         ],
         'ru' => [
             'welcome' => "🌍 Добро пожаловать! Пожалуйста, выберите язык:",
@@ -76,7 +75,6 @@ class BotController extends Controller
             'click' => "📱 Click (5614681626866978)",
             'product' => "Продукт",
             'price' => "Цена",
-
         ],
         'uz' => [
             'welcome' => "🌍 Xush kelibsiz! Iltimos, tilni tanlang:",
@@ -112,6 +110,17 @@ class BotController extends Controller
             'price' => 'Narxi',
         ]
     ];
+
+    private function normalizePhone($phone)
+    {
+        $cleaned = preg_replace('/[^0-9]/', '', $phone);
+        
+        if (strlen($cleaned) === 9) {
+            $cleaned = '998' . $cleaned;
+        }
+        
+        return $cleaned;
+    }
 
     private function trans($key, $lang)
     {
@@ -200,22 +209,44 @@ class BotController extends Controller
                 return response()->json(['ok' => true]);
             }
 
+            // YANGILANGAN: Telefon raqam qabul qilish
             if (isset($data['message']['contact'])) {
                 $phone = $data['message']['contact']['phone_number'];
+                $normalizedPhone = $this->normalizePhone($phone);
+                
+                // Debug uchun log qo'shish
+                Log::info('Phone received', [
+                    'original' => $phone,
+                    'normalized' => $normalizedPhone,
+                    'chat_id' => $chatId
+                ]);
 
+                // Chat ID ni yangilash
                 Order::updateOrCreate(
                     ['chat_id' => $chatId],
-                    ['phone' => $phone]
+                    ['phone' => $normalizedPhone]
                 );
 
-                Order::where('phone', $phone)->update(['chat_id' => $chatId]);
+                // Barcha mos keladigan orderlarni yangilash
+                Order::where('phone', 'LIKE', '%' . substr($normalizedPhone, -9))
+                    ->update(['chat_id' => $chatId]);
 
+                // Orderlarni izlash - LIKE operatori bilan
+                $orders = Order::where(function($query) use ($normalizedPhone) {
+                    $query->where('phone', $normalizedPhone)
+                          ->orWhere('phone', 'LIKE', '%' . substr($normalizedPhone, -9))
+                          ->orWhere('phone', '+' . $normalizedPhone);
+                })
+                ->where('status', 'created')
+                ->whereNotNull('address')
+                ->latest()
+                ->get();
 
-                $orders = Order::where('phone', $phone)
-                    ->where('status', 'created')
-                    ->whereNotNull('address')
-                    ->latest()
-                    ->get();
+                // Debug log
+                Log::info('Orders found', [
+                    'count' => $orders->count(),
+                    'normalized_phone' => $normalizedPhone
+                ]);
 
                 if ($orders->isNotEmpty()) {  
                     foreach ($orders as $order) {
@@ -253,7 +284,6 @@ class BotController extends Controller
                 $photo = end($data['message']['photo']);
                 $fileId = $photo['file_id'];
 
-                // Debug: Check if order exists
                 $order = Order::where('chat_id', $chatId)
                     ->where('status', 'created')
                     ->latest()
@@ -262,7 +292,6 @@ class BotController extends Controller
                 if ($order) {
                     $channelId = env('TELEGRAM_CHAT_ID');
 
-                    // Send photo to channel
                     $response = Http::post("https://api.telegram.org/bot{$token}/sendPhoto", [
                         'chat_id' => $channelId,
                         'photo' => $fileId,
@@ -287,7 +316,6 @@ class BotController extends Controller
                         'text' => $this->trans('payment_received', $lang)
                     ]);
                 } else {
-
                     Http::post($apiUrl, [
                         'chat_id' => $chatId,
                         'text' => $this->trans('no_pending', $lang)
@@ -302,7 +330,6 @@ class BotController extends Controller
             $chatId = $data['callback_query']['message']['chat']['id'];
             $messageId = $data['callback_query']['message']['message_id'];
 
-            // Show payment methods
             if (strpos($callbackData, 'show_payment_') === 0) {
                 $orderId = substr($callbackData, 13);
                 $order = Order::find($orderId);
@@ -325,7 +352,6 @@ class BotController extends Controller
                 return response()->json(['ok' => true]);
             }
 
-            // Payment method selected
             if (strpos($callbackData, 'payment_') === 0) {
                 $paymentMethod = substr($callbackData, 8);
                 $lang = $this->getUserLanguage($chatId);
@@ -363,7 +389,6 @@ class BotController extends Controller
                     'reply_markup' => json_encode($this->getMainMenuKeyboard($lang))
                 ]);
 
-                // Save payment method
                 Order::where('chat_id', $chatId)
                     ->where('status', 'created')
                     ->latest()
@@ -378,7 +403,6 @@ class BotController extends Controller
                 return response()->json(['ok' => true]);
             }
 
-            // Language selection
             if (strpos($callbackData, 'lang_') === 0) {
                 $selectedLang = substr($callbackData, 5);
                 $this->setUserLanguage($chatId, $selectedLang);
@@ -416,7 +440,6 @@ class BotController extends Controller
                 return response()->json(['ok' => true]);
             }
 
-            // Approve or Reject payment
             if (strpos($callbackData, 'approve_') === 0 || strpos($callbackData, 'reject_') === 0) {
                 list($action, $orderId) = explode('_', $callbackData);
                 $order = Order::find($orderId);
@@ -514,6 +537,7 @@ class BotController extends Controller
             'reply_markup' => json_encode($this->getMainMenuKeyboard($lang))
         ]);
     }
+    
     private function getPaymentMethodsKeyboard()
     {
         return [
