@@ -210,8 +210,10 @@ class BotController extends Controller
 
                 Order::where('phone', $phone)->update(['chat_id' => $chatId]);
 
+                // ONLY get orders that have session_id (product data exists)
                 $orders = Order::where('phone', $phone)
                     ->where('status', 'created')
+                    ->whereNotNull('session_id')
                     ->latest()
                     ->get();
 
