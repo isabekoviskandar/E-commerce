@@ -210,13 +210,14 @@ class BotController extends Controller
 
                 Order::where('phone', $phone)->update(['chat_id' => $chatId]);
 
+
                 $orders = Order::where('phone', $phone)
                     ->where('status', 'created')
-                    ->whereNotNull('address_id')
+                    ->whereNotNull('address')
                     ->latest()
                     ->get();
 
-                if ($orders->count() > 0) {
+                if ($orders->isNotEmpty()) {  
                     foreach ($orders as $order) {
                         $message = "{$this->trans('orders_found',$lang)}\n\n" .
                             "{$this->trans('order_id',$lang)}: #{$order->id}\n" .
