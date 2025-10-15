@@ -8,7 +8,7 @@ use App\Models\Order;
 use Illuminate\Support\Facades\Log;
 
 class BotController extends Controller
-{    
+{
     private $translations = [
         'en' => [
             'welcome' => "🌍 Welcome! Please choose your language:",
@@ -114,11 +114,11 @@ class BotController extends Controller
     private function normalizePhone($phone)
     {
         $cleaned = preg_replace('/[^0-9]/', '', $phone);
-        
+
         if (strlen($cleaned) === 9) {
             $cleaned = '998' . $cleaned;
         }
-        
+
         return $cleaned;
     }
 
@@ -157,8 +157,8 @@ class BotController extends Controller
 
     private function getUserLanguage($chatId)
     {
-        $user = Order::where('chat_id', $chatId)->first();
-        return $user ? $user->language : 'en';
+        $order = Order::where('chat_id', $chatId)->first();
+        return $order && $order->language ? $order->language : 'en';
     }
 
     private function setUserLanguage($chatId, $language)
@@ -181,14 +181,39 @@ class BotController extends Controller
             $lang = $this->getUserLanguage($chatId);
 
             if ($text === '/start') {
-                Http::post($apiUrl, [
-                    'chat_id' => $chatId,
-                    'text' => $this->trans('welcome', 'en'),
-                    'reply_markup' => json_encode($this->getLanguageKeyboard())
-                ]);
+                $existingOrder = Order::where('chat_id', $chatId)->first();
+
+                if ($existingOrder && $existingOrder->language) {
+                    $lang = $existingOrder->language;
+
+                    $keyboard = [
+                        'keyboard' => [
+                            [
+                                [
+                                    'text' => $this->trans('phone_button', $lang),
+                                    'request_contact' => true
+                                ]
+                            ]
+                        ],
+                        'one_time_keyboard' => true,
+                        'resize_keyboard' => true
+                    ];
+
+                    Http::post($apiUrl, [
+                        'chat_id' => $chatId,
+                        'text' => $this->trans('share_phone', $lang),
+                        'reply_markup' => json_encode($keyboard)
+                    ]);
+                } else {
+                    // New user, ask for language
+                    Http::post($apiUrl, [
+                        'chat_id' => $chatId,
+                        'text' => $this->trans('welcome', 'en'),
+                        'reply_markup' => json_encode($this->getLanguageKeyboard())
+                    ]);
+                }
                 return response()->json(['ok' => true]);
             }
-
             if (
                 strpos($text, $this->trans('menu_orders', $lang)) !== false ||
                 strpos($text, '📦') === 0
@@ -213,13 +238,6 @@ class BotController extends Controller
             if (isset($data['message']['contact'])) {
                 $phone = $data['message']['contact']['phone_number'];
                 $normalizedPhone = $this->normalizePhone($phone);
-                
-                // Debug uchun log qo'shish
-                Log::info('Phone received', [
-                    'original' => $phone,
-                    'normalized' => $normalizedPhone,
-                    'chat_id' => $chatId
-                ]);
 
                 // Chat ID ni yangilash
                 Order::updateOrCreate(
@@ -232,23 +250,18 @@ class BotController extends Controller
                     ->update(['chat_id' => $chatId]);
 
                 // Orderlarni izlash - LIKE operatori bilan
-                $orders = Order::where(function($query) use ($normalizedPhone) {
+                $orders = Order::where(function ($query) use ($normalizedPhone) {
                     $query->where('phone', $normalizedPhone)
-                          ->orWhere('phone', 'LIKE', '%' . substr($normalizedPhone, -9))
-                          ->orWhere('phone', '+' . $normalizedPhone);
+                        ->orWhere('phone', 'LIKE', '%' . substr($normalizedPhone, -9))
+                        ->orWhere('phone', '+' . $normalizedPhone);
                 })
-                ->where('status', 'created')
-                ->whereNotNull('address')
-                ->latest()
-                ->get();
+                    ->where('status', 'created')
+                    ->whereNotNull('address')
+                    ->latest()
+                    ->get();
 
-                // Debug log
-                Log::info('Orders found', [
-                    'count' => $orders->count(),
-                    'normalized_phone' => $normalizedPhone
-                ]);
 
-                if ($orders->isNotEmpty()) {  
+                if ($orders->isNotEmpty()) {
                     foreach ($orders as $order) {
                         $message = "{$this->trans('orders_found',$lang)}\n\n" .
                             "{$this->trans('order_id',$lang)}: #{$order->id}\n" .
@@ -537,7 +550,7 @@ class BotController extends Controller
             'reply_markup' => json_encode($this->getMainMenuKeyboard($lang))
         ]);
     }
-    
+
     private function getPaymentMethodsKeyboard()
     {
         return [
