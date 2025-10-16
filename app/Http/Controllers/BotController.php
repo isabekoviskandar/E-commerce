@@ -284,6 +284,13 @@ class BotController extends Controller
                             'reply_markup' => json_encode($keyboard)
                         ]);
                     }
+
+                    // Remove phone button and show main menu
+                    Http::post($apiUrl, [
+                        'chat_id' => $chatId,
+                        'text' => '✅',
+                        'reply_markup' => json_encode($this->getMainMenuKeyboard($lang))
+                    ]);
                 } else {
                     Http::post($apiUrl, [
                         'chat_id' => $chatId,
@@ -299,11 +306,18 @@ class BotController extends Controller
 
                 $order = Order::where('chat_id', $chatId)
                     ->where('status', 'created')
+                    ->with('items.product')
                     ->latest()
                     ->first();
 
                 if ($order) {
                     $channelId = env('TELEGRAM_CHAT_ID');
+
+                    // Build products list
+                    $productsList = "";
+                    foreach ($order->items as $item) {
+                        $productsList .= "   • {$item->product->name_uz} x{$item->quantity} - {$item->price} so'm\n";
+                    }
 
                     $response = Http::post("https://api.telegram.org/bot{$token}/sendPhoto", [
                         'chat_id' => $channelId,
@@ -312,14 +326,14 @@ class BotController extends Controller
                             "Order ID: #{$order->id}\n" .
                             "👤 {$order->first_name} {$order->last_name}\n" .
                             "📞 {$order->phone}\n" .
-                            "📍 {$order->address}\n" .
+                            "📍 {$order->address}\n\n" .
+                            "🛒 Maxsulotlar:\n{$productsList}\n" .
                             "💰 Total: {$order->total}\n" .
-                            "📊 Status: {$order->status}\n" .
-                            "💳 Payment Method: {$order->payment_method}",
+                            "📊 Status: {$order->status}\n" ,
                         'reply_markup' => json_encode([
                             'inline_keyboard' => [[
-                                ['text' => '✅ Approve', 'callback_data' => "approve_{$order->id}"],
-                                ['text' => '❌ Reject', 'callback_data' => "reject_{$order->id}"]
+                                ['text' => '✅ Tasdiqlash', 'callback_data' => "approve_{$order->id}"],
+                                ['text' => '❌ Bekor qilish', 'callback_data' => "reject_{$order->id}"]
                             ]]
                         ])
                     ]);
