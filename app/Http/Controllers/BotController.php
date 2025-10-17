@@ -42,6 +42,9 @@ class BotController extends Controller
             'click' => "📱 Click (5614681626866978)",
             'product' => "Product",
             'price' => "Price",
+            'menu_unpaid_orders' => 'Unpaid Orders',
+            'no_unpaid_orders' => 'You have no unpaid orders.',
+
         ],
         'ru' => [
             'welcome' => "🌍 Добро пожаловать! Пожалуйста, выберите язык:",
@@ -75,6 +78,9 @@ class BotController extends Controller
             'click' => "📱 Click (5614681626866978)",
             'product' => "Продукт",
             'price' => "Цена",
+            'menu_unpaid_orders' => 'Неоплаченные заказы',
+            'no_unpaid_orders' => 'У вас нет неоплаченных заказов.',
+
         ],
         'uz' => [
             'welcome' => "🌍 Xush kelibsiz! Iltimos, tilni tanlang:",
@@ -108,6 +114,9 @@ class BotController extends Controller
             'click' => "📱 Click (5614681626866978)",
             'product' => 'Mahsulot',
             'price' => 'Narxi',
+            'menu_unpaid_orders' => 'To‘lanmagan buyurtmalar',
+            'no_unpaid_orders' => 'Sizda to‘lanmagan buyurtmalar yo‘q.',
+
         ]
     ];
 
@@ -133,12 +142,14 @@ class BotController extends Controller
             'keyboard' => [
                 [
                     ['text' => $this->trans('menu_orders', $lang)],
+                    ['text' => $this->trans('menu_unpaid_orders', $lang)],
                     ['text' => $this->trans('menu_language', $lang)]
                 ]
             ],
             'resize_keyboard' => true
         ];
     }
+
 
     private function getLanguageKeyboard()
     {
@@ -233,6 +244,55 @@ class BotController extends Controller
                 ]);
                 return response()->json(['ok' => true]);
             }
+            if (
+                strpos($text, $this->trans('menu_unpaid_orders', $lang)) !== false
+            ) {
+                $orders = Order::where('chat_id', $chatId)
+                    ->where('status', 'created')
+                    ->whereNotNull('address')
+                    ->latest()
+                    ->get();
+
+                if ($orders->isNotEmpty()) {
+                    foreach ($orders as $order) {
+                        $message = "{$this->trans('orders_found',$lang)}\n\n" .
+                            "{$this->trans('order_id',$lang)}: #{$order->id}\n" .
+                            "👤 {$order->first_name} {$order->last_name}\n" .
+                            "📍 {$order->address}\n" .
+                            "📞 {$order->phone}\n" .
+                            "💰 {$this->trans('total',$lang)}: {$order->total}\n" .
+                            "📊 {$this->trans('status',$lang)}: {$this->trans($order->status,$lang)}\n\n" .
+                            $this->trans('send_payment', $lang);
+
+                        $keyboard = [
+                            'inline_keyboard' => [[
+                                ['text' => '💳 To\'lov qilish', 'callback_data' => "show_payment_{$order->id}"]
+                            ]]
+                        ];
+
+                        Http::post($apiUrl, [
+                            'chat_id' => $chatId,
+                            'text' => $message,
+                            'reply_markup' => json_encode($keyboard)
+                        ]);
+                    }
+
+                    Http::post($apiUrl, [
+                        'chat_id' => $chatId,
+                        'text' => '✅',
+                        'reply_markup' => json_encode($this->getMainMenuKeyboard($lang))
+                    ]);
+                } else {
+                    Http::post($apiUrl, [
+                        'chat_id' => $chatId,
+                        'text' => $this->trans('no_unpaid_orders', $lang),
+                        'reply_markup' => json_encode($this->getMainMenuKeyboard($lang))
+                    ]);
+                }
+
+                return response()->json(['ok' => true]);
+            }
+
 
             // YANGILANGAN: Telefon raqam qabul qilish
             if (isset($data['message']['contact'])) {
@@ -312,8 +372,6 @@ class BotController extends Controller
 
                 if ($order) {
                     $channelId = env('TELEGRAM_CHAT_ID');
-
-                    // Build products list
                     $productsList = "";
                     foreach ($order->items as $item) {
                         $productsList .= "   • {$item->product->name_uz} x{$item->quantity} - {$item->price} so'm\n";
@@ -329,7 +387,7 @@ class BotController extends Controller
                             "📍 {$order->address}\n\n" .
                             "🛒 Maxsulotlar:\n{$productsList}\n" .
                             "💰 Total: {$order->total}\n" .
-                            "📊 Status: {$order->status}\n" ,
+                            "📊 Status: {$order->status}\n",
                         'reply_markup' => json_encode([
                             'inline_keyboard' => [[
                                 ['text' => '✅ Tasdiqlash', 'callback_data' => "approve_{$order->id}"],
