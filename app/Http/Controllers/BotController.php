@@ -44,6 +44,7 @@ class BotController extends Controller
             'price' => "Price",
             'menu_unpaid_orders' => 'Unpaid Orders',
             'no_unpaid_orders' => 'You have no unpaid orders.',
+            'products' => 'Products',
 
         ],
         'ru' => [
@@ -80,6 +81,7 @@ class BotController extends Controller
             'price' => "Цена",
             'menu_unpaid_orders' => 'Неоплаченные заказы',
             'no_unpaid_orders' => 'У вас нет неоплаченных заказов.',
+            'products' => 'Продуктu'
 
         ],
         'uz' => [
@@ -116,6 +118,7 @@ class BotController extends Controller
             'price' => 'Narxi',
             'menu_unpaid_orders' => 'To‘lanmagan buyurtmalar',
             'no_unpaid_orders' => 'Sizda to‘lanmagan buyurtmalar yo‘q.',
+            'products' => 'Mahsulotlar'
 
         ]
     ];
@@ -225,6 +228,7 @@ class BotController extends Controller
                 }
                 return response()->json(['ok' => true]);
             }
+
             if (
                 strpos($text, $this->trans('menu_orders', $lang)) !== false ||
                 strpos($text, '📦') === 0
@@ -244,23 +248,31 @@ class BotController extends Controller
                 ]);
                 return response()->json(['ok' => true]);
             }
+
             if (
                 strpos($text, $this->trans('menu_unpaid_orders', $lang)) !== false
             ) {
                 $orders = Order::where('chat_id', $chatId)
                     ->where('status', 'created')
                     ->whereNotNull('address')
+                    ->with('items.product')
                     ->latest()
                     ->get();
 
                 if ($orders->isNotEmpty()) {
                     foreach ($orders as $order) {
+                        $productsList = "";
+                        foreach ($order->items as $item) {
+                            $productsList .= "   • {$item->product->name_uz} x{$item->quantity} - {$item->price} so'm\n";
+                        }
+
                         $message = "{$this->trans('orders_found',$lang)}\n\n" .
                             "{$this->trans('order_id',$lang)}: #{$order->id}\n" .
                             "👤 {$order->first_name} {$order->last_name}\n" .
                             "📍 {$order->address}\n" .
-                            "📞 {$order->phone}\n" .
-                            "💰 {$this->trans('total',$lang)}: {$order->total}\n" .
+                            "📞 {$order->phone}\n\n" .
+                            "🛒 {$this->trans('products',$lang)}:\n{$productsList}\n" .
+                            "💰 {$this->trans('total',$lang)}: {$order->total} so'm\n" .
                             "📊 {$this->trans('status',$lang)}: {$this->trans($order->status,$lang)}\n\n" .
                             $this->trans('send_payment', $lang);
 
@@ -293,23 +305,22 @@ class BotController extends Controller
                 return response()->json(['ok' => true]);
             }
 
-
-            // YANGILANGAN: Telefon raqam qabul qilish
+            // Phone number handling
             if (isset($data['message']['contact'])) {
                 $phone = $data['message']['contact']['phone_number'];
                 $normalizedPhone = $this->normalizePhone($phone);
 
-                // Chat ID ni yangilash
+                // Update chat ID
                 Order::updateOrCreate(
                     ['chat_id' => $chatId],
                     ['phone' => $normalizedPhone]
                 );
 
-                // Barcha mos keladigan orderlarni yangilash
+                // Update all matching orders
                 Order::where('phone', 'LIKE', '%' . substr($normalizedPhone, -9))
                     ->update(['chat_id' => $chatId]);
 
-                // Orderlarni izlash - LIKE operatori bilan
+                // Find orders with LIKE operator
                 $orders = Order::where(function ($query) use ($normalizedPhone) {
                     $query->where('phone', $normalizedPhone)
                         ->orWhere('phone', 'LIKE', '%' . substr($normalizedPhone, -9))
@@ -317,18 +328,24 @@ class BotController extends Controller
                 })
                     ->where('status', 'created')
                     ->whereNotNull('address')
+                    ->with('items.product')
                     ->latest()
                     ->get();
 
-
                 if ($orders->isNotEmpty()) {
                     foreach ($orders as $order) {
+                        $productsList = "";
+                        foreach ($order->items as $item) {
+                            $productsList .= "   • {$item->product->name_uz} x{$item->quantity} - {$item->price} so'm\n";
+                        }
+
                         $message = "{$this->trans('orders_found',$lang)}\n\n" .
                             "{$this->trans('order_id',$lang)}: #{$order->id}\n" .
                             "👤 {$order->first_name} {$order->last_name}\n" .
                             "📍 {$order->address}\n" .
-                            "📞 {$order->phone}\n" .
-                            "💰 {$this->trans('total',$lang)}: {$order->total}\n" .
+                            "📞 {$order->phone}\n\n" .
+                            "🛒 {$this->trans('products',$lang)}:\n{$productsList}\n" .
+                            "💰 {$this->trans('total',$lang)}: {$order->total} so'm\n" .
                             "📊 {$this->trans('status',$lang)}: {$this->trans($order->status,$lang)}\n\n" .
                             $this->trans('send_payment', $lang);
 
@@ -360,6 +377,7 @@ class BotController extends Controller
                 }
             }
 
+            // Photo handling (payment screenshot)
             if (isset($data['message']['photo'])) {
                 $photo = end($data['message']['photo']);
                 $fileId = $photo['file_id'];
@@ -386,7 +404,7 @@ class BotController extends Controller
                             "📞 {$order->phone}\n" .
                             "📍 {$order->address}\n\n" .
                             "🛒 Maxsulotlar:\n{$productsList}\n" .
-                            "💰 Total: {$order->total}\n" .
+                            "💰 Total: {$order->total} so'm\n" .
                             "📊 Status: {$order->status}\n",
                         'reply_markup' => json_encode([
                             'inline_keyboard' => [[
@@ -409,6 +427,7 @@ class BotController extends Controller
             }
         }
 
+        // Callback query handling
         if (isset($data['callback_query'])) {
             $callbackId = $data['callback_query']['id'];
             $callbackData = $data['callback_query']['data'];
@@ -527,11 +546,16 @@ class BotController extends Controller
 
             if (strpos($callbackData, 'approve_') === 0 || strpos($callbackData, 'reject_') === 0) {
                 list($action, $orderId) = explode('_', $callbackData);
-                $order = Order::find($orderId);
+                $order = Order::with('items.product')->find($orderId);
 
                 if ($order) {
                     $userChatId = $order->chat_id;
                     $lang = $this->getUserLanguage($userChatId);
+
+                    $productsList = "";
+                    foreach ($order->items as $item) {
+                        $productsList .= "   • {$item->product->name_uz} x{$item->quantity} - {$item->price} so'm\n";
+                    }
 
                     if ($action === 'approve') {
                         $order->update(['status' => 'approved']);
@@ -540,6 +564,8 @@ class BotController extends Controller
                             'chat_id' => $userChatId,
                             'text' => "{$this->trans('payment_approved',$lang)}\n\n" .
                                 "{$this->trans('order_id',$lang)}: #{$order->id}\n" .
+                                "🛒 {$this->trans('products',$lang)}:\n{$productsList}\n" .
+                                "💰 {$this->trans('total',$lang)}: {$order->total} so'm\n" .
                                 "{$this->trans('status',$lang)}: {$this->trans('approved',$lang)}\n\n" .
                                 $this->trans('order_confirmed', $lang)
                         ]);
@@ -551,8 +577,9 @@ class BotController extends Controller
                                 "Order ID: #{$order->id}\n" .
                                 "👤 {$order->first_name} {$order->last_name}\n" .
                                 "📞 {$order->phone}\n" .
-                                "📍 {$order->address}\n" .
-                                "💰 Total: {$order->total}\n" .
+                                "📍 {$order->address}\n\n" .
+                                "🛒 Maxsulotlar:\n{$productsList}\n" .
+                                "💰 Total: {$order->total} so'm\n" .
                                 "📊 Status: approved"
                         ]);
                     } elseif ($action === 'reject') {
@@ -562,6 +589,8 @@ class BotController extends Controller
                             'chat_id' => $userChatId,
                             'text' => "{$this->trans('payment_rejected',$lang)}\n\n" .
                                 "{$this->trans('order_id',$lang)}: #{$order->id}\n" .
+                                "🛒 {$this->trans('products',$lang)}:\n{$productsList}\n" .
+                                "💰 {$this->trans('total',$lang)}: {$order->total} so'm\n" .
                                 "{$this->trans('status',$lang)}: {$this->trans('rejected',$lang)}\n\n" .
                                 $this->trans('contact_support', $lang)
                         ]);
@@ -573,8 +602,9 @@ class BotController extends Controller
                                 "Order ID: #{$order->id}\n" .
                                 "👤 {$order->first_name} {$order->last_name}\n" .
                                 "📞 {$order->phone}\n" .
-                                "📍 {$order->address}\n" .
-                                "💰 Total: {$order->total}\n" .
+                                "📍 {$order->address}\n\n" .
+                                "🛒 Maxsulotlar:\n{$productsList}\n" .
+                                "💰 Total: {$order->total} so'm\n" .
                                 "📊 Status: rejected"
                         ]);
                     }
