@@ -69,20 +69,17 @@ class ProductResource extends Resource
                     ->label('Country (English)')
                     ->maxLength(255),
 
-                Forms\Components\Textarea::make('composition_uz')
-                    ->label('Composition (Uzbek)')
-                    ->columnSpanFull(),
-
-                Forms\Components\Textarea::make('composition_ru')
-                    ->label('Composition (Russian)')
-                    ->columnSpanFull(),
-
-                Forms\Components\Textarea::make('composition_en')
-                    ->label('Composition (English)')
-                    ->columnSpanFull(),
-                Forms\Components\FileUpload::make('image')
-                    ->label('Image')
+                Forms\Components\FileUpload::make('image1')
+                    ->label('Image1')
                     ->image(),
+                Forms\Components\FileUpload::make('image2')
+                    ->label('Image2')
+                    ->image(),
+                Forms\Components\FileUpload::make('image3')
+                    ->label('Image3')
+                    ->image(),
+                Forms\Components\FileUpload::make('file')
+                    ->label('File'),
 
                 Forms\Components\TextInput::make('count')
                     ->label('Count')
@@ -102,11 +99,11 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name_uz')
-                        ->searchable(),
+                    ->searchable(),
                 TextColumn::make('description_uz')->limit(50),
-                ImageColumn::make('image')
-                        ->label('Image')
-                        ->square(),
+                ImageColumn::make('image1')
+                    ->label('Image')
+                    ->square(),
                 TextColumn::make('price'),
                 TextColumn::make('count'),
 

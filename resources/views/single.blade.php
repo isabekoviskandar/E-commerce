@@ -142,11 +142,6 @@
                                             <td class="unit-price-table">{{ $product->price }} uzs</td>
                                         </tr>
                                         <tr>
-                                            <td>{{ __('messages.single_product_composition') }}</td>
-                                            <td class="unit-price-table">
-                                                {{ $product->{'composition_' . app()->getLocale()} }}</td>
-                                        </tr>
-                                        <tr>
                                             <td>{{ __('messages.single_product_country') }}</td>
                                             <td class="unit-price-table">
                                                 {{ $product->{'country_' . app()->getLocale()} }}</td>

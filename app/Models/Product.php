@@ -18,12 +18,12 @@ class Product extends Model
         'country_uz',
         'country_ru',
         'country_eng',
-        'composition_uz',
-        'composition_ru',
-        'composition_en',
+        'file',
         'count',
         'price',
-        'image',
+        'image1',
+        'image2',
+        'image3',
     ];
 
     public function category()
@@ -34,11 +34,5 @@ class Product extends Model
     public function items()
     {
         return $this->hasMany(CartItem::class);
-    }
-
-    public function getNameAttribute()
-    {
-        $locale = app()->getLocale() === 'en' ? 'eng' : app()->getLocale();
-        return $this->{'name_' . $locale};
     }
 }
