@@ -40,7 +40,7 @@ class ProductResource extends Resource
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\TextInput::make('name_eng')
+                Forms\Components\TextInput::make('name_en')
                     ->label('Name (English)')
                     ->required()
                     ->maxLength(255),
@@ -53,7 +53,7 @@ class ProductResource extends Resource
                     ->label('Description (Russian)')
                     ->columnSpanFull(),
 
-                Forms\Components\Textarea::make('description_eng')
+                Forms\Components\Textarea::make('description_en')
                     ->label('Description (English)')
                     ->columnSpanFull(),
 
@@ -65,7 +65,7 @@ class ProductResource extends Resource
                     ->label('Country (Russian)')
                     ->maxLength(255),
 
-                Forms\Components\TextInput::make('country_eng')
+                Forms\Components\TextInput::make('country_en')
                     ->label('Country (English)')
                     ->maxLength(255),
 
@@ -77,7 +77,7 @@ class ProductResource extends Resource
                     ->label('Composition (Russian)')
                     ->columnSpanFull(),
 
-                Forms\Components\Textarea::make('composition_eng')
+                Forms\Components\Textarea::make('composition_en')
                     ->label('Composition (English)')
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('image')

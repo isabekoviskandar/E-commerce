@@ -27,7 +27,7 @@ class CategoryResource extends Resource
             ->schema([
                 TextInput::make('name_uz'),
                 TextInput::make('name_ru'),
-                TextInput::make('name_eng'),
+                TextInput::make('name_en'),
             ]);
     }
 
@@ -40,7 +40,7 @@ class CategoryResource extends Resource
                     ->searchable(),
                 TextColumn::make('name_ru')
                     ->searchable(),
-                TextColumn::make('name_eng')
+                TextColumn::make('name_en')
                     ->searchable(),
             ])
             ->filters([

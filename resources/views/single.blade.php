@@ -138,7 +138,7 @@
                                             <td>{{ $product->{'name_' . app()->getLocale()} }}</td>
                                         </tr>
                                         <tr>
-                                            <td>{{ __('messages.single_product_name') }}</td>
+                                            <td>{{ __('messages.single_product_price') }}</td>
                                             <td class="unit-price-table">{{ $product->price }} uzs</td>
                                         </tr>
                                         <tr>

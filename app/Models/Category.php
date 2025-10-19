@@ -10,7 +10,7 @@ class Category extends Model
     [
         'name_uz',
         'name_ru',
-        'name_eng',
+        'name_en',
     ];
 
     public function product()
