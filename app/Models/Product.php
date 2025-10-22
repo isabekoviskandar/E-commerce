@@ -17,7 +17,7 @@ class Product extends Model
         'description_en',
         'country_uz',
         'country_ru',
-        'country_eng',
+        'country_en',
         'file',
         'count',
         'price',

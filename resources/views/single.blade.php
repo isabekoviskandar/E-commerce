@@ -60,6 +60,20 @@
     .total-price {
         transition: all 0.3s ease;
     }
+
+    /* Thumbnail hover effect */
+    .thumbnail-wrapper {
+        transition: all 0.3s ease;
+    }
+
+    .thumbnail-wrapper:hover {
+        border-color: #181a9e !important;
+        transform: scale(1.05);
+    }
+
+    .thumbnail-image {
+        transition: opacity 0.3s ease;
+    }
 </style>
 
 <body>
@@ -72,7 +86,6 @@
                     <a href="/">Home</a> <span class="mx-2 mb-0">/</span>
                     <a href="/store">Store</a> <span class="mx-2 mb-0">/</span>
                     <strong class="text-black">{{ $product->{'name_' . app()->getLocale()} }}</strong>
-
                 </div>
             </div>
         </div>
@@ -82,9 +95,39 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-5 mr-auto">
-                    <div class="border text-center">
-                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name_uz }}"
+                    <div class="border text-center mb-3">
+                        <img id="main-image" src="{{ asset('storage/' . $product->image1) }}" alt="{{ $product->name_uz }}"
                             class="img-fluid p-5">
+                    </div>
+                    
+                    <!-- Thumbnail Gallery -->
+                    <div class="d-flex justify-content-center gap-2">
+                        @if($product->image1)
+                        <div class="border thumbnail-wrapper" style="cursor: pointer; padding: 10px; width: 80px; height: 80px;">
+                            <img src="{{ asset('storage/' . $product->image1) }}" 
+                                 class="img-fluid thumbnail-image" 
+                                 data-image="{{ asset('storage/' . $product->image1) }}"
+                                 style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        @endif
+                        
+                        @if($product->image2)
+                        <div class="border thumbnail-wrapper" style="cursor: pointer; padding: 10px; width: 80px; height: 80px; margin-left: 10px;">
+                            <img src="{{ asset('storage/' . $product->image2) }}" 
+                                 class="img-fluid thumbnail-image" 
+                                 data-image="{{ asset('storage/' . $product->image2) }}"
+                                 style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        @endif
+                        
+                        @if($product->image3)
+                        <div class="border thumbnail-wrapper" style="cursor: pointer; padding: 10px; width: 80px; height: 80px; margin-left: 10px;">
+                            <img src="{{ asset('storage/' . $product->image3) }}" 
+                                 class="img-fluid thumbnail-image" 
+                                 data-image="{{ asset('storage/' . $product->image3) }}"
+                                 style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        @endif
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -93,7 +136,6 @@
                     @if ($product->{'description_' . app()->getLocale()})
                         <p>{{ $product->{'description_' . app()->getLocale()} }}</p>
                     @endif
-
 
                     <div class="price-section mb-3">
                         <p><strong class="text-primary h4 total-price">{{ $product->price }} uzs</strong></p>
@@ -297,6 +339,14 @@
 
             // Initialize with correct price on page load
             updateTotalPrice();
+
+            // Image gallery functionality
+            $('.thumbnail-image').on('click', function() {
+                const newImageSrc = $(this).data('image');
+                $('#main-image').fadeOut(200, function() {
+                    $(this).attr('src', newImageSrc).fadeIn(200);
+                });
+            });
         });
     </script>
 </body>
