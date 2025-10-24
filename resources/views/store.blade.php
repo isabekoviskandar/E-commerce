@@ -312,8 +312,10 @@
                     <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
                         <a
                             href="{{ route('product.single', ['locale' => app()->getLocale(), 'id' => $product->id]) }}">
-                            <img src="{{ asset('storage/' . $product->image) }}" class="d-block w-100"
-                                alt="{{ $product->{'name_' . app()->getLocale()} }}">
+                            <img src="{{ asset('storage/' . ($product->image1 ?? 'default.png')) }}"
+                                alt="{{ $product->name_uz }}">
+
+
                         </a>
                     </div>
                 @endforeach
@@ -342,8 +344,9 @@
                                 <div class="product-image">
                                     <a
                                         href="{{ route('product.single', ['locale' => app()->getLocale(), 'id' => $product->id]) }}">
-                                        <img src="{{ asset('storage/' . $product->image) }}"
+                                        <img src="{{ asset('storage/' . ($product->image1 ?? 'default.png')) }}"
                                             alt="{{ $product->name_uz }}">
+
                                     </a>
                                 </div>
 
@@ -429,7 +432,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row pt-5 mt-5 text-center">
+            {{-- <div class="row pt-5 mt-5 text-center">
                 <div class="col-md-12">
                     <p>
                         &copy;
@@ -439,7 +442,7 @@
                         {{ __('messages.copyright') }}
                     </p>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </footer>
 

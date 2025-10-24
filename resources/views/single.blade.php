@@ -19,7 +19,6 @@
 </head>
 
 <style>
-    /* Gradient Blur Button */
     .btn-gradient {
         background: linear-gradient(45deg, #181a9e, #172496);
         border: none;
@@ -36,11 +35,6 @@
         box-shadow: 0 8px 20px rgba(24, 26, 158, 0.3);
     }
 
-    .btn-gradient:active {
-        transform: translateY(0);
-    }
-
-    /* Gradient Outline for +/- */
     .btn-gradient-outline {
         background: transparent;
         border: 2px solid #181a9e;
@@ -56,9 +50,33 @@
         transform: translateY(-2px);
     }
 
-    /* Price display styling */
-    .total-price {
+    .thumbnail-wrapper {
         transition: all 0.3s ease;
+    }
+
+    .thumbnail-wrapper:hover {
+        border-color: #181a9e !important;
+        transform: scale(1.05);
+    }
+
+    .thumbnail-image {
+        transition: opacity 0.3s ease;
+    }
+
+    #main-image {
+        transition: transform 0.3s ease;
+        cursor: zoom-in;
+    }
+
+    #main-image:hover {
+        transform: scale(1.03);
+    }
+
+    @media (max-width: 768px) {
+        .thumbnail-wrapper {
+            width: 60px !important;
+            height: 60px !important;
+        }
     }
 </style>
 
@@ -72,7 +90,6 @@
                     <a href="/">Home</a> <span class="mx-2 mb-0">/</span>
                     <a href="/store">Store</a> <span class="mx-2 mb-0">/</span>
                     <strong class="text-black">{{ $product->{'name_' . app()->getLocale()} }}</strong>
-
                 </div>
             </div>
         </div>
@@ -82,11 +99,33 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-5 mr-auto">
-                    <div class="border text-center">
-                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name_uz }}"
-                            class="img-fluid p-5">
+                    @php
+                        $mainImage = $product->image1 ?? $product->image2 ?? $product->image3 ?? null;
+                    @endphp
+                    <div class="border text-center mb-3">
+                        @if ($mainImage)
+                            <img id="main-image" src="{{ asset('storage/' . $mainImage) }}" alt="{{ $product->name_uz }}"
+                                class="img-fluid p-5">
+                        @else
+                            <img id="main-image" src="{{ asset('images/default.png') }}" alt="No image"
+                                class="img-fluid p-5">
+                        @endif
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                        @foreach ([$product->image1, $product->image2, $product->image3] as $img)
+                            @if ($img)
+                                <div class="border thumbnail-wrapper"
+                                    style="cursor:pointer; padding:8px; width:80px; height:80px;">
+                                    <img src="{{ asset('storage/' . $img) }}" class="img-fluid thumbnail-image"
+                                        data-image="{{ asset('storage/' . $img) }}"
+                                        style="width:100%; height:100%; object-fit:contain;">
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
+
                 <div class="col-md-6">
                     <h2 class="text-black">{{ $product->{'name_' . app()->getLocale()} }}</h2>
 
@@ -94,9 +133,9 @@
                         <p>{{ $product->{'description_' . app()->getLocale()} }}</p>
                     @endif
 
-
                     <div class="price-section mb-3">
-                        <p><strong class="text-primary h4 total-price">{{ $product->price }} uzs</strong></p>
+                        <p><strong class="text-primary h4 total-price">{{ number_format($product->price, 0, '.', ' ') }}
+                                uzs</strong></p>
                     </div>
 
                     <form action="{{ route('cart.add', ['locale' => app()->getLocale(), 'id' => $product->id]) }}"
@@ -105,8 +144,7 @@
                         <div class="mb-5">
                             <div class="input-group mb-3" style="max-width: 220px;">
                                 <div class="input-group-prepend">
-                                    <button class="btn btn-gradient-outline js-btn-minus"
-                                        type="button">&minus;</button>
+                                    <button class="btn btn-gradient-outline js-btn-minus" type="button">&minus;</button>
                                 </div>
                                 <input type="number" name="quantity" id="quantity-input"
                                     class="form-control text-center" value="1" min="1">
@@ -124,56 +162,28 @@
                     </form>
 
                     <div class="mt-5">
-                        <ul class="nav nav-pills mb-3 custom-pill" id="pills-tab" role="tablist">
-                        </ul>
-                        <div class="tab-content" id="pills-tabContent">
-                            <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
-                                aria-labelledby="pills-home-tab">
-                                <table class="table custom-table">
-                                    <thead>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>{{ __('messages.single_product_name') }}</td>
-                                            <td>{{ $product->{'name_' . app()->getLocale()} }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{{ __('messages.single_product_price') }}</td>
-                                            <td class="unit-price-table">{{ $product->price }} uzs</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{{ __('messages.single_product_country') }}</td>
-                                            <td class="unit-price-table">
-                                                {{ $product->{'country_' . app()->getLocale()} }}</td>
-                                        </tr>
-                                        @if ($product->category)
-                                            <tr>
-                                                <td>Category</td>
-                                                <td>{{ $product->category->{'name_' . app()->getLocale()} }}</td>
-                                            </tr>
-                                        @endif
-                                        <tr>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="tab-pane fade" id="pills-profile" role="tabpanel"
-                                aria-labelledby="pills-profile-tab">
-                                <table class="table custom-table">
-                                    <tbody>
-                                        <tr>
-                                            <td>Product ID</td>
-                                            <td class="bg-light">{{ $product->id }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Available</td>
-                                            <td class="bg-light">Yes</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <table class="table custom-table">
+                            <tbody>
+                                <tr>
+                                    <td>{{ __('messages.single_product_name') }}</td>
+                                    <td>{{ $product->{'name_' . app()->getLocale()} }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ __('messages.single_product_price') }}</td>
+                                    <td class="unit-price-table">{{ $product->price }} uzs</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ __('messages.single_product_country') }}</td>
+                                    <td>{{ $product->{'country_' . app()->getLocale()} }}</td>
+                                </tr>
+                                @if ($product->category)
+                                    <tr>
+                                        <td>Category</td>
+                                        <td>{{ $product->category->{'name_' . app()->getLocale()} }}</td>
+                                    </tr>
+                                @endif
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -194,14 +204,12 @@
                     <ul class="list-unstyled">
                         @foreach ($footer_categories as $category)
                             <li>
-                                <a href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">
-                                    {{ $category->name_uz }}
-                                </a>
+                                <a
+                                    href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">{{ $category->name_uz }}</a>
                             </li>
                         @endforeach
                     </ul>
                 </div>
-
                 <div class="col-md-6 col-lg-3">
                     <div class="block-5 mb-5">
                         <h3 class="footer-heading mb-4">{{ __('messages.contact_info') }}</h3>
@@ -211,17 +219,6 @@
                             <li class="email">jurayevyunus783@gmail.com</li>
                         </ul>
                     </div>
-                </div>
-            </div>
-            <div class="row pt-5 mt-5 text-center">
-                <div class="col-md-12">
-                    <p>
-                        &copy;
-                        <script>
-                            document.write(new Date().getFullYear());
-                        </script>
-                        {{ __('messages.copyright') }}
-                    </p>
                 </div>
             </div>
         </div>
@@ -238,64 +235,42 @@
 
     <script>
         $(document).ready(function() {
-            // Get the unit price from PHP (remove any non-numeric characters and parse as float)
             const unitPrice = parseFloat('{{ $product->price }}'.replace(/[^\d.-]/g, ''));
 
-            // Function to update the total price display
             function updateTotalPrice() {
                 const quantity = parseInt($('#quantity-input').val()) || 1;
                 const totalPrice = unitPrice * quantity;
-
-                // Format the price with thousand separators if needed
-                const formattedPrice = totalPrice.toLocaleString();
-
-                // Update all price displays without animation
-                $('.total-price').text(formattedPrice + ' uzs');
-                $('.total-price-table').text(formattedPrice + ' uzs');
+                $('.total-price').text(totalPrice.toLocaleString() + ' uzs');
+                $('.unit-price-table').text(totalPrice.toLocaleString() + ' uzs');
             }
 
-            // Remove any existing event handlers to prevent conflicts
-            $('.js-btn-plus').off('click');
-            $('.js-btn-minus').off('click');
-
-            // Plus button click handler
             $('.js-btn-plus').on('click', function(e) {
                 e.preventDefault();
-                e.stopPropagation();
-
                 const quantityInput = $('#quantity-input');
-                let currentQuantity = parseInt(quantityInput.val()) || 1;
-                quantityInput.val(currentQuantity + 1);
+                quantityInput.val(parseInt(quantityInput.val()) + 1);
                 updateTotalPrice();
             });
 
-            // Minus button click handler
             $('.js-btn-minus').on('click', function(e) {
                 e.preventDefault();
-                e.stopPropagation();
-
                 const quantityInput = $('#quantity-input');
-                let currentQuantity = parseInt(quantityInput.val()) || 1;
-                if (currentQuantity > 1) {
-                    quantityInput.val(currentQuantity - 1);
-                    updateTotalPrice();
-                }
-            });
-
-            // Handle manual input changes
-            $('#quantity-input').on('input', function() {
-                let quantity = parseInt($(this).val());
-
-                // Ensure minimum quantity is 1
-                if (quantity < 1 || isNaN(quantity)) {
-                    quantity = 1;
-                    $(this).val(1);
-                }
-
+                const currentQuantity = parseInt(quantityInput.val());
+                if (currentQuantity > 1) quantityInput.val(currentQuantity - 1);
                 updateTotalPrice();
             });
 
-            // Initialize with correct price on page load
+            $('#quantity-input').on('input', function() {
+                if (parseInt($(this).val()) < 1 || isNaN($(this).val())) $(this).val(1);
+                updateTotalPrice();
+            });
+
+            $('.thumbnail-image').on('click', function() {
+                const newImageSrc = $(this).data('image');
+                $('#main-image').fadeOut(200, function() {
+                    $(this).attr('src', newImageSrc).fadeIn(200);
+                });
+            });
+
             updateTotalPrice();
         });
     </script>

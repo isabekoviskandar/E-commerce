@@ -101,9 +101,11 @@ class ProductResource extends Resource
                 TextColumn::make('name_uz')
                     ->searchable(),
                 TextColumn::make('description_uz')->limit(50),
-                ImageColumn::make('image1')
+                ImageColumn::make('image_preview')
                     ->label('Image')
+                    ->getStateUsing(fn($record) => $record->image1 ?? $record->image2 ?? $record->image3)
                     ->square(),
+
                 TextColumn::make('price'),
                 TextColumn::make('count'),
 
