@@ -124,6 +124,36 @@
                             @endif
                         @endforeach
                     </div>
+                    
+                    <!-- Thumbnail Gallery -->
+                    <div class="d-flex justify-content-center gap-2">
+                        @if($product->image1)
+                        <div class="border thumbnail-wrapper" style="cursor: pointer; padding: 10px; width: 80px; height: 80px;">
+                            <img src="{{ asset('storage/' . $product->image1) }}" 
+                                 class="img-fluid thumbnail-image" 
+                                 data-image="{{ asset('storage/' . $product->image1) }}"
+                                 style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        @endif
+                        
+                        @if($product->image2)
+                        <div class="border thumbnail-wrapper" style="cursor: pointer; padding: 10px; width: 80px; height: 80px; margin-left: 10px;">
+                            <img src="{{ asset('storage/' . $product->image2) }}" 
+                                 class="img-fluid thumbnail-image" 
+                                 data-image="{{ asset('storage/' . $product->image2) }}"
+                                 style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        @endif
+                        
+                        @if($product->image3)
+                        <div class="border thumbnail-wrapper" style="cursor: pointer; padding: 10px; width: 80px; height: 80px; margin-left: 10px;">
+                            <img src="{{ asset('storage/' . $product->image3) }}" 
+                                 class="img-fluid thumbnail-image" 
+                                 data-image="{{ asset('storage/' . $product->image3) }}"
+                                 style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="col-md-6">
@@ -272,6 +302,14 @@
             });
 
             updateTotalPrice();
+
+            // Image gallery functionality
+            $('.thumbnail-image').on('click', function() {
+                const newImageSrc = $(this).data('image');
+                $('#main-image').fadeOut(200, function() {
+                    $(this).attr('src', newImageSrc).fadeIn(200);
+                });
+            });
         });
     </script>
 </body>
