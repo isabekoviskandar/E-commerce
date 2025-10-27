@@ -537,21 +537,34 @@
                     <ul class="list-unstyled">
                         @foreach ($footer_categories as $category)
                             <li>
-                                <a href="{{ route('store'  , app()->getLocale() ,  ['category_id' => $category->id]) }}">
-                                    {{ $category->name_uz }}
-                                </a>
+                                <a
+                                    href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">{{ $category->name_uz }}</a>
                             </li>
                         @endforeach
                     </ul>
                 </div>
-
                 <div class="col-md-6 col-lg-3">
                     <div class="block-5 mb-5">
                         <h3 class="footer-heading mb-4">{{ __('messages.contact_info') }}</h3>
                         <ul class="list-unstyled">
-                            <li class="address">{{ __('messages.address') }}</li>
-                            <li class="phone"><a href="#">+998 94 783 69 96</a></li>
-                            <li class="email">abdushukurtabiboriginal@gmail.com</li>
+                            <li class="location">
+                                <a href="https://www.google.com/maps/search/?api=1&query=Your+Address"
+                                    target="_blank">
+                                    {{ __('messages.address') }}
+                                </a>
+                            </li>
+
+                            <li class="phone">
+                                <a href="tel:+998947836996">+998 94 783 69 96</a>
+                            </li>
+                            <li class="phone">
+                                <a href="tel:+998984446969">+998 98 444 69 69</a>
+                            </li>
+                            <li class="email">
+                                <a href="mailto:abdushukurtabiboriginal@gmail.com">
+                                    abdushukurtabiboriginal@gmail.com</a>
+                            </li>
+
                         </ul>
                     </div>
                 </div>

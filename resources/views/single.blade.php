@@ -100,12 +100,12 @@
             <div class="row">
                 <div class="col-md-5 mr-auto">
                     @php
-                        $mainImage = $product->image1 ?? $product->image2 ?? $product->image3 ?? null;
+                        $mainImage = $product->image1 ?? ($product->image2 ?? ($product->image3 ?? null));
                     @endphp
                     <div class="border text-center mb-3">
                         @if ($mainImage)
-                            <img id="main-image" src="{{ asset('storage/' . $mainImage) }}" alt="{{ $product->name_uz }}"
-                                class="img-fluid p-5">
+                            <img id="main-image" src="{{ asset('storage/' . $mainImage) }}"
+                                alt="{{ $product->name_uz }}" class="img-fluid p-5">
                         @else
                             <img id="main-image" src="{{ asset('images/default.png') }}" alt="No image"
                                 class="img-fluid p-5">
@@ -124,36 +124,6 @@
                             @endif
                         @endforeach
                     </div>
-                    
-                    <!-- Thumbnail Gallery -->
-                    <div class="d-flex justify-content-center gap-2">
-                        @if($product->image1)
-                        <div class="border thumbnail-wrapper" style="cursor: pointer; padding: 10px; width: 80px; height: 80px;">
-                            <img src="{{ asset('storage/' . $product->image1) }}" 
-                                 class="img-fluid thumbnail-image" 
-                                 data-image="{{ asset('storage/' . $product->image1) }}"
-                                 style="width: 100%; height: 100%; object-fit: contain;">
-                        </div>
-                        @endif
-                        
-                        @if($product->image2)
-                        <div class="border thumbnail-wrapper" style="cursor: pointer; padding: 10px; width: 80px; height: 80px; margin-left: 10px;">
-                            <img src="{{ asset('storage/' . $product->image2) }}" 
-                                 class="img-fluid thumbnail-image" 
-                                 data-image="{{ asset('storage/' . $product->image2) }}"
-                                 style="width: 100%; height: 100%; object-fit: contain;">
-                        </div>
-                        @endif
-                        
-                        @if($product->image3)
-                        <div class="border thumbnail-wrapper" style="cursor: pointer; padding: 10px; width: 80px; height: 80px; margin-left: 10px;">
-                            <img src="{{ asset('storage/' . $product->image3) }}" 
-                                 class="img-fluid thumbnail-image" 
-                                 data-image="{{ asset('storage/' . $product->image3) }}"
-                                 style="width: 100%; height: 100%; object-fit: contain;">
-                        </div>
-                        @endif
-                    </div>
                 </div>
 
                 <div class="col-md-6">
@@ -164,7 +134,8 @@
                     @endif
 
                     <div class="price-section mb-3">
-                        <p><strong class="text-primary h4 total-price">{{ number_format($product->price, 0, '.', ' ') }}
+                        <p><strong
+                                class="text-primary h4 total-price">{{ number_format($product->price, 0, '.', ' ') }}
                                 uzs</strong></p>
                     </div>
 
@@ -174,7 +145,8 @@
                         <div class="mb-5">
                             <div class="input-group mb-3" style="max-width: 220px;">
                                 <div class="input-group-prepend">
-                                    <button class="btn btn-gradient-outline js-btn-minus" type="button">&minus;</button>
+                                    <button class="btn btn-gradient-outline js-btn-minus"
+                                        type="button">&minus;</button>
                                 </div>
                                 <input type="number" name="quantity" id="quantity-input"
                                     class="form-control text-center" value="1" min="1">
@@ -244,9 +216,23 @@
                     <div class="block-5 mb-5">
                         <h3 class="footer-heading mb-4">{{ __('messages.contact_info') }}</h3>
                         <ul class="list-unstyled">
-                            <li class="address">{{ __('messages.address') }}</li>
-                            <li class="phone"><a href="#">+998 94 783 69 96</a></li>
-                            <li class="email">jurayevyunus783@gmail.com</li>
+                            <li class="location">
+                                <a href="https://www.google.com/maps/search/?api=1&query=Your+Address" target="_blank">
+                                    {{ __('messages.address') }}
+                                </a>
+                            </li>
+
+                            <li class="phone">
+                                <a href="tel:+998947836996">+998 94 783 69 96</a>
+                            </li>
+                            <li class="phone">
+                                <a href="tel:+998984446969">+998 98 444 69 69</a>
+                            </li>
+                            <li class="email">
+                                <a href="mailto:abdushukurtabiboriginal@gmail.com">
+                                    abdushukurtabiboriginal@gmail.com</a>
+                            </li>
+
                         </ul>
                     </div>
                 </div>
@@ -302,14 +288,6 @@
             });
 
             updateTotalPrice();
-
-            // Image gallery functionality
-            $('.thumbnail-image').on('click', function() {
-                const newImageSrc = $(this).data('image');
-                $('#main-image').fadeOut(200, function() {
-                    $(this).attr('src', newImageSrc).fadeIn(200);
-                });
-            });
         });
     </script>
 </body>
