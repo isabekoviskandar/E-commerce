@@ -17,8 +17,6 @@
     <link rel="stylesheet" href="{{ asset('css/aos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
-
-
     <style>
         /* Enhanced Product Card Styles */
         .product-card {
@@ -67,6 +65,37 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             opacity: 0.9;
+        }
+
+        /* File Badge */
+        .product-file-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: linear-gradient(45deg, #28a745, #218838);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .product-file-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+        }
+
+        .product-file-badge svg {
+            width: 14px;
+            height: 14px;
         }
 
         .product-info {
@@ -119,7 +148,6 @@
             letter-spacing: 0.5px;
         }
 
-
         .category-scroll::-webkit-scrollbar {
             height: 4px;
         }
@@ -135,7 +163,6 @@
         }
 
         .category-pill {
-            /* background: rgba(255, 253, 253, 0.15); */
             color: rgb(0, 0, 0);
             padding: 5px 10px;
             border-radius: 25px;
@@ -143,10 +170,7 @@
             white-space: nowrap;
             font-weight: 500;
             transition: all 0.3s ease;
-            /* border: 2px solid transparent;
-            backdrop-filter: blur(10px); */
         }
-
 
         .category-pill.active {
             background: white;
@@ -155,9 +179,49 @@
             border-color: white;
         }
 
+        /* Download File Button */
+        .btn-download-file {
+            background: linear-gradient(45deg, #28a745, #218838);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            width: 100%;
+        }
+
+        .btn-download-file:hover {
+            background: linear-gradient(45deg, #218838, #1e7e34);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-download-file svg {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-download-file:hover svg {
+            transform: translateY(2px);
+        }
+
         /* Add to Cart Button */
         .add-to-cart-form {
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .btn-add-to-cart {
@@ -234,6 +298,18 @@
             box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
         }
 
+        /* Carousel Styles */
+        .carousel-item {
+            height: 410px;
+        }
+
+        .carousel-item img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .product-card {
@@ -266,18 +342,11 @@
                 padding: 8px 16px;
                 font-size: 13px;
             }
-        }
 
-        .carousel-item {
-            height: 410px;
-            /* product-card balandligi qanchaligini o'lchab qo'yasiz */
-        }
-
-        .carousel-item img {
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
-            border-radius: 12px;
+            .btn-download-file {
+                padding: 7px 14px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -298,13 +367,13 @@
                         <a href="{{ route('store', array_merge(['locale' => app()->getLocale()], ['category_id' => $category->id])) }}"
                             class="category-pill {{ request('category_id') == $category->id ? 'active' : '' }}">
                             {{ $category->{'name_' . app()->getLocale()} }}
-
                         </a>
                     @endforeach
                 </div>
             </div>
         </div>
     </div>
+
     <div class="container carousel-container">
         <div id="carouselExampleRide" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
@@ -314,8 +383,6 @@
                             href="{{ route('product.single', ['locale' => app()->getLocale(), 'id' => $product->id]) }}">
                             <img src="{{ asset('storage/' . ($product->image1 ?? 'default.png')) }}"
                                 alt="{{ $product->name_uz }}">
-
-
                         </a>
                     </div>
                 @endforeach
@@ -332,8 +399,6 @@
         </div>
     </div>
 
-
-
     <div class="site-section bg-light">
         <div class="container">
             <div class="row">
@@ -345,9 +410,19 @@
                                     <a
                                         href="{{ route('product.single', ['locale' => app()->getLocale(), 'id' => $product->id]) }}">
                                         <img src="{{ asset('storage/' . ($product->image1 ?? 'default.png')) }}"
-                                            alt="{{ $product->name_uz }}">
-
+                                            alt="{{ $product->{'name_' . app()->getLocale()} }}">
                                     </a>
+
+                                    {{-- File Badge - shows if product has a file --}}
+                                    {{-- @if ($product->file)
+                                        <div class="product-file-badge">
+                                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                <path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                            {{ __('messages.has_file') }}
+                                        </div>
+                                    @endif --}}
                                 </div>
 
                                 <div class="product-info">
@@ -355,11 +430,28 @@
                                         <a
                                             href="{{ route('product.single', ['locale' => app()->getLocale(), 'id' => $product->id]) }}">
                                             {{ $product->{'name_' . app()->getLocale()} }}
-
                                         </a>
                                     </h3>
 
                                     <div class="product-price">{{ number_format($product->price) }}</div>
+
+                                    {{-- Download File Button - shows if product has a file --}}
+                                    @if ($product->file)
+                                        <a href="{{ asset('storage/' . $product->file) }}" download
+                                            class="btn-download-file" target="_blank">
+                                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                                <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M12 15V3" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                            {{ __('messages.download_file') }}
+                                        </a>
+                                    @endif
 
                                     <form
                                         action="{{ route('cart.add', ['locale' => app()->getLocale(), 'id' => $product->id]) }}"
@@ -406,19 +498,24 @@
                     <div class="block-7">
                         <h3 class="footer-heading mb-4">{{ __('messages.about_title') }}</h3>
                         <p>{{ __('messages.about_text') }}</p>
+                        <img src="{{ asset('images/honey.webp') }}" alt="Honey"
+                            style="max-width: 100%; height: auto; margin-top: 10px;">
                     </div>
                 </div>
+
                 <div class="col-lg-3 mx-auto mb-5 mb-lg-0">
                     <h3 class="footer-heading mb-4">{{ __('messages.navigation') }}</h3>
                     <ul class="list-unstyled">
                         @foreach ($footer_categories as $category)
                             <li>
-                                <a
-                                    href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">{{ $category->name_uz }}</a>
+                                <a href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">
+                                    {{ $category->name_uz }}
+                                </a>
                             </li>
                         @endforeach
                     </ul>
                 </div>
+
                 <div class="col-md-6 col-lg-3">
                     <div class="block-5 mb-5">
                         <h3 class="footer-heading mb-4">{{ __('messages.contact_info') }}</h3>
@@ -429,7 +526,6 @@
                                     {{ __('messages.address') }}
                                 </a>
                             </li>
-
                             <li class="phone">
                                 <a href="tel:+998947836996">+998 94 783 69 96</a>
                             </li>
@@ -437,16 +533,16 @@
                                 <a href="tel:+998984446969">+998 98 444 69 69</a>
                             </li>
                             <li class="email">
-                                <a href="mailto:abdushukurtabiboriginal@gmail.com">
-                                    abdushukurtabiboriginal@gmail.com</a>
+                                <a
+                                    href="mailto:abdushukurtabiboriginal@gmail.com">abdushukurtabiboriginal@gmail.com</a>
                             </li>
-
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
+
 
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('js/jquery-ui.js') }}"></script>

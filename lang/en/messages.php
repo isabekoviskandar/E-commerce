@@ -139,5 +139,9 @@ return [
     'single_product_name' => 'Product name',
     'single_product_price' => 'Product price',
     'single_product_composition' => 'Product composition',
-    'single_product_country' => 'Country'
+    'single_product_country' => 'Country',
+    'download_file' => 'Download file',
+
+    'has_file' => 'File Available',
+    'download_file' => 'Download File',
 ];

@@ -136,7 +136,8 @@ return [
     'single_product_price' => 'Цена продукта',
     'single_product_composition' => 'Состав продукта',
     'single_product_country' => 'Страна',
-
+    'has_file' => 'Файл доступен',
+    'download_file' => 'Скачать файл',
 
 
 ];
