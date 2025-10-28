@@ -262,24 +262,39 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                    <div class="block-7">
-                        <h3 class="footer-heading mb-4">{{ __('messages.about_title') }}</h3>
-                        <p>{{ __('messages.about_text') }}</p>
-                        <img src="{{ asset('images/honey.png') }}" alt="Honey"
-                            style="max-width: 100%; height: auto; margin-top: 10px;">
+                    <div class="block-7 position-relative p-4 rounded" style="overflow: hidden;">
+                        <div class="about-bg"
+                            style="
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            background: url('{{ asset('images/honey.png') }}') center/contain no-repeat;
+                            opacity: 0.7;
+                            z-index: 1;
+                        ">
+                        </div>
+                        <div class="position-relative" style="z-index: 1;">
+                            <h3 class="footer-heading mb-4">{{ __('messages.about_title') }}</h3>
+                            <p>{{ __('messages.about_text') }}</p>
+                        </div>
                     </div>
                 </div>
+
                 <div class="col-lg-3 mx-auto mb-5 mb-lg-0">
                     <h3 class="footer-heading mb-4">{{ __('messages.navigation') }}</h3>
                     <ul class="list-unstyled">
                         @foreach ($footer_categories as $category)
                             <li>
-                                <a
-                                    href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">{{ $category->name_uz }}</a>
+                                <a href="{{ route('store', app()->getLocale(), ['category_id' => $category->id]) }}">
+                                    {{ $category->name_uz }}
+                                </a>
                             </li>
                         @endforeach
                     </ul>
                 </div>
+
                 <div class="col-md-6 col-lg-3">
                     <div class="block-5 mb-5">
                         <h3 class="footer-heading mb-4">{{ __('messages.contact_info') }}</h3>
@@ -290,24 +305,18 @@
                                     {{ __('messages.address') }}
                                 </a>
                             </li>
-
-                            <li class="phone">
-                                <a href="tel:+998947836996">+998 94 783 69 96</a>
+                            <li class="phone"><a href="tel:+998947836996">+998 94 783 69 96</a></li>
+                            <li class="phone"><a href="tel:+998984446969">+998 98 444 69 69</a></li>
+                            <li class="email"><a
+                                    href="mailto:abdushukurtabiboriginal@gmail.com">abdushukurtabiboriginal@gmail.com</a>
                             </li>
-                            <li class="phone">
-                                <a href="tel:+998984446969">+998 98 444 69 69</a>
-                            </li>
-                            <li class="email">
-                                <a href="mailto:abdushukurtabiboriginal@gmail.com">
-                                    abdushukurtabiboriginal@gmail.com</a>
-                            </li>
-
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
+
 
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('js/jquery-ui.js') }}"></script>
