@@ -72,10 +72,59 @@
         transform: scale(1.03);
     }
 
+    /* Download File Button Styles */
+    .btn-download-file {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(45deg, #181a9e, #172496);
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .btn-download-file:hover {
+        background: linear-gradient(45deg, #1b1da8, #1ea085);
+        color: #fff;
+        text-decoration: none;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(24, 26, 158, 0.3);
+    }
+
+    .btn-download-file svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+        .btn-download-file {
+            padding: 8px 16px;
+            font-size: 14px;
+            gap: 6px;
+        }
+
+        .btn-download-file svg {
+            width: 18px;
+            height: 18px;
+        }
+    }
+
     @media (max-width: 768px) {
         .thumbnail-wrapper {
             width: 60px !important;
             height: 60px !important;
+        }
+
+        .btn-download-file {
+            padding: 7px 14px;
+            font-size: 12px;
         }
     }
 </style>
@@ -184,6 +233,23 @@
                                         <td>{{ $product->category->{'name_' . app()->getLocale()} }}</td>
                                     </tr>
                                 @endif
+                                {{-- Download File Button - shows if product has a file --}}
+                                @if ($product->file)
+                                    <a href="{{ asset('storage/' . $product->file) }}" download
+                                        class="btn-download-file" target="_blank">
+                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round" />
+                                            <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round" />
+                                            <path d="M12 15V3" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        {{ __('messages.download_file') }}
+                                    </a>
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -199,6 +265,8 @@
                     <div class="block-7">
                         <h3 class="footer-heading mb-4">{{ __('messages.about_title') }}</h3>
                         <p>{{ __('messages.about_text') }}</p>
+                        <img src="{{ asset('images/honey.png') }}" alt="Honey"
+                            style="max-width: 100%; height: auto; margin-top: 10px;">
                     </div>
                 </div>
                 <div class="col-lg-3 mx-auto mb-5 mb-lg-0">
@@ -217,7 +285,8 @@
                         <h3 class="footer-heading mb-4">{{ __('messages.contact_info') }}</h3>
                         <ul class="list-unstyled">
                             <li class="location">
-                                <a href="https://www.google.com/maps/search/?api=1&query=Your+Address" target="_blank">
+                                <a href="https://www.google.com/maps/search/?api=1&query=Your+Address"
+                                    target="_blank">
                                     {{ __('messages.address') }}
                                 </a>
                             </li>
