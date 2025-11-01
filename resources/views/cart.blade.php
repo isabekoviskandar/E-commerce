@@ -176,7 +176,8 @@
                                             <button type="button"
                                                 class="btn btn-gradient-outline btn-sm qty-minus">−</button>
                                             <input type="number" name="quantities[{{ $item->id }}]"
-                                                value="{{ $item->quantity }}" min="1" class="quantity-input">
+                                                value="{{ $item->quantity }}" min="1" class="quantity-input"
+                                                data-item-id="{{ $item->id }}">
                                             <button type="button"
                                                 class="btn btn-gradient-outline btn-sm qty-plus">+</button>
                                         </div>
@@ -189,7 +190,6 @@
                                             class="btn btn-danger btn-sm">
                                             {{ __('messages.cart_remove') }}
                                         </a>
-
                                     </td>
                                 </tr>
                             @endforeach
@@ -207,10 +207,9 @@
                                 <div class="mt-3">
                                     <a href="{{ route('store', app()->getLocale()) }}"
                                         class="btn btn-outline-secondary mr-2">{{ __('messages.continue_shopping') }}</a>
-                                    <a href="{{ route('checkout', app()->getLocale()) }}" class="btn btn-gradient">
+                                    <button type="button" id="checkout-btn" class="btn btn-gradient">
                                         {{ __('messages.formalization') }}
-                                    </a>
-
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -257,7 +256,6 @@
                                     {{ __('messages.address') }}
                                 </a>
                             </li>
-
                             <li class="phone">
                                 <a href="tel:+998947836996">+998 94 783 69 96</a>
                             </li>
@@ -268,7 +266,6 @@
                                 <a href="mailto:abdushukurtabiboriginal@gmail.com">
                                     abdushukurtabiboriginal@gmail.com</a>
                             </li>
-
                         </ul>
                     </div>
                 </div>
@@ -287,6 +284,8 @@
 
     <script>
         $(document).ready(function() {
+            let quantitiesChanged = false;
+
             function updateTotals() {
                 let grandTotal = 0;
                 $('.quantity-input').each(function() {
@@ -306,6 +305,7 @@
                 let currentVal = parseInt(input.val()) || 1;
                 input.val(currentVal + 1);
                 updateTotals();
+                quantitiesChanged = true;
             });
 
             $(document).on('click', '.qty-minus', function(e) {
@@ -315,6 +315,7 @@
                 if (currentVal > 1) {
                     input.val(currentVal - 1);
                     updateTotals();
+                    quantitiesChanged = true;
                 }
             });
 
@@ -324,6 +325,38 @@
                     $(this).val(1);
                 }
                 updateTotals();
+                quantitiesChanged = true;
+            });
+
+            // Update cart button
+            $('#update-cart-btn').on('click', function() {
+                $('#cart-form').submit();
+            });
+
+            // Checkout button - update cart first if needed, then redirect
+            $('#checkout-btn').on('click', function(e) {
+                e.preventDefault();
+                
+                if (quantitiesChanged) {
+                    // Save quantities via AJAX first
+                    const formData = $('#cart-form').serialize();
+                    
+                    $.ajax({
+                        url: $('#cart-form').attr('action'),
+                        method: 'POST',
+                        data: formData,
+                        success: function(response) {
+                            // Redirect to checkout after updating
+                            window.location.href = '{{ route("checkout", app()->getLocale()) }}';
+                        },
+                        error: function() {
+                            alert('Error updating cart. Please try again.');
+                        }
+                    });
+                } else {
+                    // No changes, go directly to checkout
+                    window.location.href = '{{ route("checkout", app()->getLocale()) }}';
+                }
             });
         });
     </script>

@@ -123,6 +123,39 @@ class BotController extends Controller
         ]
     ];
 
+
+    // Add this method to get delivery fee based on total
+    private function getDeliveryFee($total)
+    {
+        return $total > 500000 ? 50000 : 0; // 20,000 delivery fee if total > 500,000
+    }
+
+    private function formatOrderMessage($order, $lang)
+    {
+        $productsList = "";
+        foreach ($order->items as $item) {
+            $productsList .= "   • {$item->product->name_uz} x{$item->quantity} - {$item->price} so'm\n";
+        }
+
+        $deliveryFee = $this->getDeliveryFee($order->total);
+        $finalTotal = $order->total + $deliveryFee;
+
+        $deliveryText = $deliveryFee > 0
+            ? "\n🚚 Yetkazib berish: {$deliveryFee} so'm"
+            : "\n🚚 Yetkazib berish: Bepul";
+
+        return "{$this->trans('orders_found',$lang)}\n\n" .
+            "{$this->trans('order_id',$lang)}: #{$order->id}\n" .
+            "👤 {$order->first_name} {$order->last_name}\n" .
+            "📍 {$order->address}\n" .
+            "📞 {$order->phone}\n\n" .
+            "🛒 {$this->trans('products',$lang)}:\n{$productsList}\n" .
+            "💰 {$this->trans('total',$lang)}: {$order->total} so'm" .
+            $deliveryText .
+            "\n💵 Jami to'lov: {$finalTotal} so'm\n" .
+            "📊 {$this->trans('status',$lang)}: {$this->trans($order->status,$lang)}\n\n" .
+            $this->trans('send_payment', $lang);
+    }
     private function normalizePhone($phone)
     {
         $cleaned = preg_replace('/[^0-9]/', '', $phone);
@@ -261,20 +294,7 @@ class BotController extends Controller
 
                 if ($orders->isNotEmpty()) {
                     foreach ($orders as $order) {
-                        $productsList = "";
-                        foreach ($order->items as $item) {
-                            $productsList .= "   • {$item->product->name_uz} x{$item->quantity} - {$item->price} so'm\n";
-                        }
-
-                        $message = "{$this->trans('orders_found',$lang)}\n\n" .
-                            "{$this->trans('order_id',$lang)}: #{$order->id}\n" .
-                            "👤 {$order->first_name} {$order->last_name}\n" .
-                            "📍 {$order->address}\n" .
-                            "📞 {$order->phone}\n\n" .
-                            "🛒 {$this->trans('products',$lang)}:\n{$productsList}\n" .
-                            "💰 {$this->trans('total',$lang)}: {$order->total} so'm\n" .
-                            "📊 {$this->trans('status',$lang)}: {$this->trans($order->status,$lang)}\n\n" .
-                            $this->trans('send_payment', $lang);
+                        $message = $this->formatOrderMessage($order, $lang);
 
                         $keyboard = [
                             'inline_keyboard' => [[
@@ -334,20 +354,28 @@ class BotController extends Controller
 
                 if ($orders->isNotEmpty()) {
                     foreach ($orders as $order) {
+                        // Build products list
                         $productsList = "";
                         foreach ($order->items as $item) {
-                            $productsList .= "   • {$item->product->name_uz} x{$item->quantity} - {$item->price} so'm\n";
+                            $productsList .= "   • {$item->product->name_uz} x{$item->quantity} - " . number_format($item->price * $item->quantity) . " so'm\n";
                         }
 
-                        $message = "{$this->trans('orders_found',$lang)}\n\n" .
+                        // Calculate delivery fee and final total
+                        $deliveryFee = $this->getDeliveryFee($order->total);
+                        $finalTotal = $order->total + $deliveryFee;
+                        $deliveryText = $deliveryFee > 0 ? "🚚 Yetkazib berish: " . number_format($deliveryFee) . " so'm\n" : "🚚 Yetkazib berish: Bepul\n";
+
+                        // Format complete message
+                        $message = "📦 {$this->trans('order_details',$lang)}\n\n" .
                             "{$this->trans('order_id',$lang)}: #{$order->id}\n" .
                             "👤 {$order->first_name} {$order->last_name}\n" .
-                            "📍 {$order->address}\n" .
-                            "📞 {$order->phone}\n\n" .
+                            "📞 {$order->phone}\n" .
+                            "📍 {$order->address}\n\n" .
                             "🛒 {$this->trans('products',$lang)}:\n{$productsList}\n" .
-                            "💰 {$this->trans('total',$lang)}: {$order->total} so'm\n" .
-                            "📊 {$this->trans('status',$lang)}: {$this->trans($order->status,$lang)}\n\n" .
-                            $this->trans('send_payment', $lang);
+                            "💰 {$this->trans('subtotal',$lang)}: " . number_format($order->total) . " so'm\n" .
+                            $deliveryText .
+                            "💵 {$this->trans('grand_total',$lang)}: " . number_format($finalTotal) . " so'm\n" .
+                            "📊 {$this->trans('status',$lang)}: {$this->trans('pending_payment',$lang)}";
 
                         $keyboard = [
                             'inline_keyboard' => [[
@@ -392,8 +420,12 @@ class BotController extends Controller
                     $channelId = env('TELEGRAM_CHAT_ID');
                     $productsList = "";
                     foreach ($order->items as $item) {
-                        $productsList .= "   • {$item->product->name_uz} x{$item->quantity} - {$item->price} so'm\n";
+                        $productsList .= "   • {$item->product->name_uz} x{$item->quantity} - " . number_format($item->price * $item->quantity) . " so'm\n";
                     }
+
+                    $deliveryFee = $this->getDeliveryFee($order->total);
+                    $finalTotal = $order->total + $deliveryFee;
+                    $deliveryText = $deliveryFee > 0 ? "🚚 Yetkazib berish: " . number_format($deliveryFee) . " so'm\n" : "🚚 Yetkazib berish: Bepul\n";
 
                     $response = Http::post("https://api.telegram.org/bot{$token}/sendPhoto", [
                         'chat_id' => $channelId,
@@ -404,7 +436,9 @@ class BotController extends Controller
                             "📞 {$order->phone}\n" .
                             "📍 {$order->address}\n\n" .
                             "🛒 Maxsulotlar:\n{$productsList}\n" .
-                            "💰 Total: {$order->total} so'm\n" .
+                            "💰 Subtotal: " . number_format($order->total) . " so'm\n" .
+                            $deliveryText .
+                            "💵 Jami to'lov: " . number_format($finalTotal) . " so'm\n" .
                             "📊 Status: {$order->status}\n",
                         'reply_markup' => json_encode([
                             'inline_keyboard' => [[
@@ -554,8 +588,12 @@ class BotController extends Controller
 
                     $productsList = "";
                     foreach ($order->items as $item) {
-                        $productsList .= "   • {$item->product->name_uz} x{$item->quantity} - {$item->price} so'm\n";
+                        $productsList .= "   • {$item->product->name_uz} x{$item->quantity} - " . number_format($item->price * $item->quantity) . " so'm\n";
                     }
+
+                    $deliveryFee = $this->getDeliveryFee($order->total);
+                    $finalTotal = $order->total + $deliveryFee;
+                    $deliveryText = $deliveryFee > 0 ? "🚚 Yetkazib berish: " . number_format($deliveryFee) . " so'm\n" : "🚚 Yetkazib berish: Bepul\n";
 
                     if ($action === 'approve') {
                         $order->update(['status' => 'approved']);
@@ -565,7 +603,9 @@ class BotController extends Controller
                             'text' => "{$this->trans('payment_approved',$lang)}\n\n" .
                                 "{$this->trans('order_id',$lang)}: #{$order->id}\n" .
                                 "🛒 {$this->trans('products',$lang)}:\n{$productsList}\n" .
-                                "💰 {$this->trans('total',$lang)}: {$order->total} so'm\n" .
+                                "💰 {$this->trans('subtotal',$lang)}: " . number_format($order->total) . " so'm\n" .
+                                $deliveryText .
+                                "💵 {$this->trans('grand_total',$lang)}: " . number_format($finalTotal) . " so'm\n" .
                                 "{$this->trans('status',$lang)}: {$this->trans('approved',$lang)}\n\n" .
                                 $this->trans('order_confirmed', $lang)
                         ]);
@@ -579,7 +619,9 @@ class BotController extends Controller
                                 "📞 {$order->phone}\n" .
                                 "📍 {$order->address}\n\n" .
                                 "🛒 Maxsulotlar:\n{$productsList}\n" .
-                                "💰 Total: {$order->total} so'm\n" .
+                                "💰 Subtotal: " . number_format($order->total) . " so'm\n" .
+                                $deliveryText .
+                                "💵 Jami to'lov: " . number_format($finalTotal) . " so'm\n" .
                                 "📊 Status: approved"
                         ]);
                     } elseif ($action === 'reject') {
@@ -590,7 +632,9 @@ class BotController extends Controller
                             'text' => "{$this->trans('payment_rejected',$lang)}\n\n" .
                                 "{$this->trans('order_id',$lang)}: #{$order->id}\n" .
                                 "🛒 {$this->trans('products',$lang)}:\n{$productsList}\n" .
-                                "💰 {$this->trans('total',$lang)}: {$order->total} so'm\n" .
+                                "💰 {$this->trans('subtotal',$lang)}: " . number_format($order->total) . " so'm\n" .
+                                $deliveryText .
+                                "💵 {$this->trans('grand_total',$lang)}: " . number_format($finalTotal) . " so'm\n" .
                                 "{$this->trans('status',$lang)}: {$this->trans('rejected',$lang)}\n\n" .
                                 $this->trans('contact_support', $lang)
                         ]);
@@ -604,7 +648,9 @@ class BotController extends Controller
                                 "📞 {$order->phone}\n" .
                                 "📍 {$order->address}\n\n" .
                                 "🛒 Maxsulotlar:\n{$productsList}\n" .
-                                "💰 Total: {$order->total} so'm\n" .
+                                "💰 Subtotal: " . number_format($order->total) . " so'm\n" .
+                                $deliveryText .
+                                "💵 Jami to'lov: " . number_format($finalTotal) . " so'm\n" .
                                 "📊 Status: rejected"
                         ]);
                     }

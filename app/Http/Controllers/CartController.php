@@ -20,7 +20,6 @@ class CartController extends Controller
     {
         $product = Product::findOrFail($id);
         $cart = $this->getCart();
-
         $item = $cart->items()->where('product_id', $id)->first();
 
         if ($item) {
@@ -40,9 +39,11 @@ class CartController extends Controller
         $cart = $this->getCart();
 
         if ($request->quantities) {
-            foreach ($request->quantities as $id => $quantity) {
-                $item = $cart->items()->where('product_id', $id)->first();
-                if ($item) {
+            foreach ($request->quantities as $itemId => $quantity) {
+                // Find by CartItem ID, not product_id
+                $item = CartItem::find($itemId);
+                
+                if ($item && $item->cart_id == $cart->id) {
                     if ($quantity <= 0) {
                         $item->delete();
                     } else {
@@ -50,6 +51,14 @@ class CartController extends Controller
                     }
                 }
             }
+        }
+
+        // Check if it's an AJAX request (for checkout auto-update)
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Cart updated successfully!'
+            ]);
         }
 
         return redirect()->route('cart.index', ['locale' => $locale])
@@ -60,7 +69,7 @@ class CartController extends Controller
     {
         $footer_categories = Category::limit(4)->get();
         $cart = $this->getCart()->load('items.product');
-
+        
         return view('cart', compact('cart', 'footer_categories'));
     }
 
@@ -85,10 +94,15 @@ class CartController extends Controller
     public function checkout($locale)
     {
         $footer_categories = Category::limit(4)->get();
-
         $cart = $this->getCart();
         $cartItems = $cart ? $cart->items()->with('product')->get() : collect();
+        
+        // Calculate grand total (price * quantity for each item)
+        $grandTotal = 0;
+        foreach ($cartItems as $item) {
+            $grandTotal += $item->product->price * $item->quantity;
+        }
 
-        return view('checkout', compact('cartItems', 'footer_categories'));
+        return view('checkout', compact('cartItems', 'footer_categories', 'grandTotal'));
     }
 }
