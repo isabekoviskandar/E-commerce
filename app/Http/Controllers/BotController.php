@@ -45,6 +45,12 @@ class BotController extends Controller
             'menu_unpaid_orders' => 'Unpaid Orders',
             'no_unpaid_orders' => 'You have no unpaid orders.',
             'products' => 'Products',
+            'subtotal' => 'Subtotal',
+            'grand_total' => 'Grand Total',
+            'pending_payment' => 'Pending payment',
+            'delivery_fee_info' => 'Delivery fee: 50,000 sum for orders under 500,000 sum',
+            'free_delivery_info' => 'Free delivery for orders 500,000 sum and above!',
+            'abroad_contact' => 'If you are abroad, the admin will contact you',
 
         ],
         'ru' => [
@@ -81,7 +87,15 @@ class BotController extends Controller
             'price' => "Цена",
             'menu_unpaid_orders' => 'Неоплаченные заказы',
             'no_unpaid_orders' => 'У вас нет неоплаченных заказов.',
-            'products' => 'Продуктu'
+            'products' => 'Продуктu',
+            'subtotal' => 'Промежуточный итог',
+            'grand_total' => 'Общая сумма',
+            'pending_payment' => 'Ожидается оплата',
+            'delivery_fee_info' => 'Стоимость доставки: 50,000 сум для заказов до 500,000 сум',
+            'free_delivery_info' => 'Бесплатная доставка для заказов от 500,000 сум!',
+            'abroad_contact' => 'Если вы находитесь за границей, администратор свяжется с вами',
+
+
 
         ],
         'uz' => [
@@ -118,7 +132,13 @@ class BotController extends Controller
             'price' => 'Narxi',
             'menu_unpaid_orders' => 'To‘lanmagan buyurtmalar',
             'no_unpaid_orders' => 'Sizda to‘lanmagan buyurtmalar yo‘q.',
-            'products' => 'Mahsulotlar'
+            'products' => 'Mahsulotlar',
+            'subtotal' => 'Oraliq summa',
+            'grand_total' => 'Umumiy summa',
+            'pending_payment' => 'Toʻlov kutilmoqda',
+            'delivery_fee_info' => '500,000 so\'mdan kam buyurtmalar uchun yetkazib berish 50,000 so\'m',
+            'free_delivery_info' => '500,000 so\'m va undan ko\'p buyurtmalar uchun yetkazib berish bepul!',
+            'abroad_contact' => 'Agar siz chet elda bo\'lsangiz admin siz bilan bog\'lanadi',
 
         ]
     ];
@@ -127,7 +147,7 @@ class BotController extends Controller
     // Add this method to get delivery fee based on total
     private function getDeliveryFee($total)
     {
-        return $total < 500000 ? 50000 : 0; 
+        return $total < 500000 ? 50000 : 0;
     }
 
     private function formatOrderMessage($order, $lang)
@@ -363,7 +383,15 @@ class BotController extends Controller
                         // Calculate delivery fee and final total
                         $deliveryFee = $this->getDeliveryFee($order->total);
                         $finalTotal = $order->total + $deliveryFee;
-                        $deliveryText = $deliveryFee > 0 ? "🚚 Yetkazib berish: " . number_format($deliveryFee) . " so'm\n" : "🚚 Yetkazib berish: Bepul\n";
+                        // In phone contact handling and unpaid orders sections, replace the deliveryText line with:
+
+                        $deliveryText = $deliveryFee > 0
+                            ? "🚚 Yetkazib berish: " . number_format($deliveryFee) . " so'm\n" .
+                            "ℹ️ {$this->trans('delivery_fee_info',$lang)}\n" .
+                            "🌍 {$this->trans('abroad_contact',$lang)}\n"
+                            : "🚚 Yetkazib berish: BEPUL ✅\n" .
+                            "ℹ️ {$this->trans('free_delivery_info',$lang)}\n" .
+                            "🌍 {$this->trans('abroad_contact',$lang)}\n";
 
                         // Format complete message
                         $message = "📦 {$this->trans('order_details',$lang)}\n\n" .

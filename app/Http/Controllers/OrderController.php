@@ -36,8 +36,17 @@ class OrderController extends Controller
             $total += $item->product->price * $item->quantity;
         }
 
-        // Check if user has existing chat_id by phone
-        $existingOrder = \App\Models\Order::where('phone', $request->phone)
+        // Normalize phone and find existing user
+        $normalizedPhone = preg_replace('/[^0-9]/', '', $request->phone);
+        if (strlen($normalizedPhone) === 9) {
+            $normalizedPhone = '998' . $normalizedPhone;
+        }
+
+        $existingOrder = \App\Models\Order::where(function ($query) use ($normalizedPhone) {
+            $query->where('phone', $normalizedPhone)
+                ->orWhere('phone', 'LIKE', '%' . substr($normalizedPhone, -9))
+                ->orWhere('phone', '+' . $normalizedPhone);
+        })
             ->whereNotNull('chat_id')
             ->latest()
             ->first();
@@ -47,9 +56,10 @@ class OrderController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'address' => $request->address,
-            'phone' => $request->phone,
+            'phone' => $normalizedPhone,
             'total' => $total,
-            'chat_id' => $existingOrder ? $existingOrder->chat_id : null
+            'chat_id' => $existingOrder ? $existingOrder->chat_id : null,
+            'language' => $existingOrder ? $existingOrder->language : 'uz'
         ]);
 
         foreach ($cart->items as $item) {
@@ -59,7 +69,6 @@ class OrderController extends Controller
                 'price' => $item->product->price,
             ]);
 
-            // Decrease product quantity
             $product = Product::find($item->product_id);
             if ($product) {
                 $product->decrement('count', $item->quantity);
@@ -68,7 +77,7 @@ class OrderController extends Controller
 
         $cart->items()->delete();
 
-        // Send order info to Telegram channel
+        // Send to admin channel
         $message = "<b>🛒 New Order Received!</b>\n\n"
             . "👤 Customer: {$order->first_name} {$order->last_name}\n"
             . "📞 Phone: {$order->phone}\n"
@@ -79,21 +88,54 @@ class OrderController extends Controller
         foreach ($order->items as $item) {
             $message .= "- {$item->product->name_uz} x {$item->quantity} = {$item->price}\n";
         }
-
         TelegramService::sendMessage($message);
 
         // Send notification to user if they have chat_id
         if ($order->chat_id) {
+            $productsList = "";
+            foreach ($order->items as $item) {
+                $productsList .= "   • {$item->product->name_uz} x{$item->quantity} - "
+                    . number_format($item->price * $item->quantity) . " so'm\n";
+            }
+
+            // Calculate delivery fee
+            $deliveryFee = $total < 500000 ? 50000 : 0;
+            $finalTotal = $total + $deliveryFee;
+
+            // Delivery fee explanation message
+            $deliveryText = $deliveryFee > 0
+                ? "🚚 Yetkazib berish: " . number_format($deliveryFee) . " so'm\n" .
+                "ℹ️ 500,000 so'mdan kam buyurtmalar uchun yetkazib berish 50,000 so'm\n"
+                : "🚚 Yetkazib berish: BEPUL ✅\n" .
+                "ℹ️ 500,000 so'm va undan ko'p buyurtmalar uchun yetkazib berish bepul!\n";
+
+            $lang = $order->language ?? 'uz';
+
+            $notificationMessage = "🆕 Yangi buyurtma yaratildi!\n\n" .
+                "Order ID: #{$order->id}\n" .
+                "👤 {$order->first_name} {$order->last_name}\n" .
+                "📞 {$order->phone}\n" .
+                "📍 {$order->address}\n\n" .
+                "🛒 Mahsulotlar:\n{$productsList}\n" .
+                "💰 Subtotal: " . number_format($total) . " so'm\n" .
+                $deliveryText .
+                "💵 Jami to'lov: " . number_format($finalTotal) . " so'm\n\n" .
+                "📊 Status: To'lov kutilmoqda";
+
+            // Add payment button
+            $keyboard = [
+                'inline_keyboard' => [[
+                    ['text' => '💳 To\'lov qilish', 'callback_data' => "show_payment_{$order->id}"]
+                ]]
+            ];
+
             Http::post("https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN') . "/sendMessage", [
                 'chat_id' => $order->chat_id,
-                'text' => "🛍️ New order created!\n\n" .
-                    "Order ID: #{$order->id}\n" .
-                    "📞 Phone: {$order->phone}\n" .
-                    "📍 Address: {$order->address}\n" .
-                    "💰 Total: {$order->total}\n\n" .
-                    "📸 Please send payment screenshot to confirm your order."
+                'text' => $notificationMessage,
+                'reply_markup' => json_encode($keyboard)
             ]);
         }
+
         return redirect()->away('https://t.me/abdushukur_tabib_bot');
     }
 }
