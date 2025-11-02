@@ -127,7 +127,7 @@ class BotController extends Controller
     // Add this method to get delivery fee based on total
     private function getDeliveryFee($total)
     {
-        return $total > 500000 ? 50000 : 0; // 20,000 delivery fee if total > 500,000
+        return $total < 500000 ? 50000 : 0; 
     }
 
     private function formatOrderMessage($order, $lang)
