@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C9X1B1MXDF"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G491H26105"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
 
