@@ -451,20 +451,26 @@ class BotController extends Controller
                         $productsList .= "   • {$item->product->name_uz} x{$item->quantity} - " . number_format($item->price * $item->quantity) . " so'm\n";
                     }
 
+                    // MUHIM: Delivery fee hisoblash
                     $deliveryFee = $this->getDeliveryFee($order->total);
                     $finalTotal = $order->total + $deliveryFee;
-                    $deliveryText = $deliveryFee > 0 ? "🚚 Yetkazib berish: " . number_format($deliveryFee) . " so'm\n" : "🚚 Yetkazib berish: Bepul\n";
 
+                    // Delivery text formatlash
+                    $deliveryText = $deliveryFee > 0
+                        ? "🚚 Yetkazib berish: " . number_format($deliveryFee) . " so'm\n"
+                        : "🚚 Yetkazib berish: BEPUL ✅\n";
+
+                    // Kanalga yuborish
                     $response = Http::post("https://api.telegram.org/bot{$token}/sendPhoto", [
                         'chat_id' => $channelId,
                         'photo' => $fileId,
-                        'caption' => "💳 Payment Screenshot\n\n" .
-                            "Order ID: #{$order->id}\n" .
+                        'caption' => "💳 To'lov Skrinshoti\n\n" .
+                            "Buyurtma ID: #{$order->id}\n" .
                             "👤 {$order->first_name} {$order->last_name}\n" .
                             "📞 {$order->phone}\n" .
                             "📍 {$order->address}\n\n" .
-                            "🛒 Maxsulotlar:\n{$productsList}\n" .
-                            "💰 Subtotal: " . number_format($order->total) . " so'm\n" .
+                            "🛒 Mahsulotlar:\n{$productsList}\n" .
+                            "💰 Oraliq summa: " . number_format($order->total) . " so'm\n" .
                             $deliveryText .
                             "💵 Jami to'lov: " . number_format($finalTotal) . " so'm\n" .
                             "📊 Status: {$order->status}\n",
@@ -476,6 +482,7 @@ class BotController extends Controller
                         ])
                     ]);
 
+                    // Userga javob
                     Http::post($apiUrl, [
                         'chat_id' => $chatId,
                         'text' => $this->trans('payment_received', $lang)
