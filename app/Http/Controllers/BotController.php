@@ -457,8 +457,12 @@ class BotController extends Controller
 
                     // Delivery text formatlash
                     $deliveryText = $deliveryFee > 0
-                        ? "🚚 Yetkazib berish: " . number_format($deliveryFee) . " so'm\n"
-                        : "🚚 Yetkazib berish: BEPUL ✅\n";
+                        ? "🚚 Yetkazib berish: " . number_format($deliveryFee) . " so'm\n" .
+                        "ℹ️ 500,000 so'mdan kam buyurtmalar uchun yetkazib berish 50,000 so'm\n" .
+                        "🌍 Agar chet elda bo'lsangiz admin siz bilan bog'lanadi\n"
+                        : "🚚 Yetkazib berish: BEPUL ✅\n" .
+                        "ℹ️ 500,000 so'm va undan ko'p buyurtmalar uchun yetkazib berish bepul!\n" .
+                        "🌍 Agar chet elda bo'lsangiz admin siz bilan bog'lanadi\n";
 
                     // Kanalga yuborish
                     $response = Http::post("https://api.telegram.org/bot{$token}/sendPhoto", [
